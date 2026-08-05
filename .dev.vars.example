@@ -4,3 +4,4 @@ META_WEBHOOK_VERIFY_TOKEN=replace-in-local-development-only
 INSTAGRAM_ACCESS_TOKEN=replace-in-local-development-only
 INSTAGRAM_ACCOUNT_ID=replace-in-local-development-only
 META_GRAPH_API_VERSION=replace-with-the-version-shown-in-meta-developers
+GOOGLE_SERVICE_ACCOUNT_JSON=replace-with-the-service-account-json-on-one-line

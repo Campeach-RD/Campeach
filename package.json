@@ -7,6 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "catalog:worker": "node scripts/generate-worker-catalog.mjs",
     "worker:types": "wrangler types worker-configuration.d.ts",
+    "worker:typecheck": "tsc -p tsconfig.worker.json",
     "worker:check": "npm run catalog:worker && wrangler deploy --dry-run",
     "worker:dev": "npm run catalog:worker && wrangler dev",
     "worker:deploy": "npm run catalog:worker && wrangler deploy",
