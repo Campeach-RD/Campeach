@@ -57,7 +57,7 @@ export const brand = {
   whatsapp: 'https://wa.me/18299370674',
   email: 'campingsrd@gmail.com',
   instagram: 'https://www.instagram.com/campeachrd/',
-  website: 'https://campeach-rd.github.io/Campeach-No-More-Manychat/',
+  website: 'https://campeach-rd.github.io/Campeach/',
 };
 
 const fallbackImages = [
