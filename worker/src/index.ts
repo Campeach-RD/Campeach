@@ -1,4 +1,5 @@
 import { classificationCatalog, createReply, type Selection } from './reply';
+import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
 
 const MAX_WEBHOOK_BYTES = 1_000_000;
 const DEDUP_TTL_SECONDS = 60 * 60 * 24 * 2;
@@ -92,6 +93,15 @@ const sendInstagramMessage = async (recipientId: string, text: string, env: Env)
   if (!response.ok) throw new Error(`instagram_send_${response.status}`);
 };
 
+const sendInstagramPrivateReply = async (commentId: string, text: string, env: Env) => {
+  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${env.INSTAGRAM_ACCOUNT_ID}/messages`, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ recipient: { comment_id: commentId }, message: { text } }),
+  });
+  if (!response.ok) throw new Error(`instagram_private_reply_${response.status}`);
+};
+
 const processWebhook = async (payload: MetaPayload, env: Env) => {
   let processed = 0;
   for (const entry of payload.entry ?? []) {
@@ -113,6 +123,35 @@ const processWebhook = async (payload: MetaPayload, env: Env) => {
       } catch (error) {
         if (incoming.mid) await env.DEDUP.delete(`message:${incoming.mid}`);
         console.error(JSON.stringify({ event: 'message_processing_error', error: error instanceof Error ? error.message : 'unknown' }));
+      }
+    }
+
+    for (const change of entry.changes ?? []) {
+      if (change.field !== 'comments') continue;
+      const comment = change.value;
+      const commentId = comment?.id;
+      const commenterId = comment?.from?.id ?? comment?.sender_id;
+      if (
+        !commentId ||
+        !comment?.text ||
+        commenterId === env.INSTAGRAM_ACCOUNT_ID ||
+        !requestsInformation(comment.text)
+      ) {
+        continue;
+      }
+
+      const key = `comment:${commentId}`;
+      if (await env.DEDUP.get(key)) continue;
+      await env.DEDUP.put(key, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
+
+      try {
+        await sendInstagramPrivateReply(commentId, COMMENT_PRIVATE_REPLY, env);
+        processed += 1;
+      } catch (error) {
+        await env.DEDUP.delete(key);
+        console.error(
+          JSON.stringify({ event: 'comment_processing_error', error: error instanceof Error ? error.message : 'unknown' }),
+        );
       }
     }
   }
@@ -161,6 +200,15 @@ type MetaPayload = {
     messaging?: Array<{
       sender?: { id?: string };
       message?: { text?: string; is_echo?: boolean; mid?: string };
+    }>;
+    changes?: Array<{
+      field?: string;
+      value?: {
+        id?: string;
+        text?: string;
+        sender_id?: string;
+        from?: { id?: string; username?: string };
+      };
     }>;
   }>;
 };
