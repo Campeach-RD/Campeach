@@ -23,6 +23,7 @@ try {
       food: camp.richInfo?.food ?? [],
       activities: camp.activities,
       rules: camp.rules,
+      pdfUrl: camp.pdfUrl ?? '',
     })),
     equipment: equipment.map((item) => ({
       id: item.name

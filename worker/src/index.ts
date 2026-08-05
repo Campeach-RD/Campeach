@@ -1,5 +1,7 @@
 import { classificationCatalog, createReply, type Selection } from './reply';
 import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
+import { publishDailyCarousel, serveDriveImage, verifyMediaSignature } from './instagram-publisher';
+import { createCommentReply, publishableCamps } from './publishing';
 
 const MAX_WEBHOOK_BYTES = 1_000_000;
 const DEDUP_TTL_SECONDS = 60 * 60 * 24 * 2;
@@ -145,7 +147,12 @@ const processWebhook = async (payload: MetaPayload, env: Env) => {
       await env.DEDUP.put(key, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
 
       try {
-        await sendInstagramPrivateReply(commentId, COMMENT_PRIVATE_REPLY, env);
+        const mediaId = comment.media?.id;
+        const context = mediaId
+          ? await env.DEDUP.get(`post:${mediaId}`, 'json') as { campId?: string } | null
+          : null;
+        const camp = context?.campId ? publishableCamps.find((item) => item.id === context.campId) : undefined;
+        await sendInstagramPrivateReply(commentId, camp ? createCommentReply(camp) : COMMENT_PRIVATE_REPLY, env);
         processed += 1;
       } catch (error) {
         await env.DEDUP.delete(key);
@@ -162,6 +169,12 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === '/health' && request.method === 'GET') return json({ ok: true, service: 'campeach-instagram' });
+    const mediaMatch = url.pathname.match(/^\/instagram\/media\/([a-zA-Z0-9_-]+)$/);
+    if (mediaMatch && request.method === 'GET') {
+      const fileId = mediaMatch[1];
+      if (!(await verifyMediaSignature(fileId, url.searchParams.get('sig'), env))) return new Response('Forbidden', { status: 403 });
+      return serveDriveImage(fileId, env);
+    }
 
     if (url.pathname !== '/instagram/webhook') return new Response('Not found', { status: 404 });
     if (request.method === 'GET') {
@@ -188,6 +201,13 @@ export default {
       return new Response('Invalid JSON', { status: 400 });
     }
   },
+  async scheduled(_controller, env, ctx): Promise<void> {
+    ctx.waitUntil(
+      publishDailyCarousel(env).catch((error) => {
+        console.error(JSON.stringify({ event: 'daily_carousel_error', error: error instanceof Error ? error.message : 'unknown' }));
+      }),
+    );
+  },
 } satisfies ExportedHandler<Env>;
 
 type OpenAIResponse = {
@@ -208,6 +228,7 @@ type MetaPayload = {
         text?: string;
         sender_id?: string;
         from?: { id?: string; username?: string };
+        media?: { id?: string; media_product_type?: string };
       };
     }>;
   }>;
