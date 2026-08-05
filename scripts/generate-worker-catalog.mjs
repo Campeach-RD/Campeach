@@ -6,7 +6,7 @@ const server = await createServer({ server: { middlewareMode: true }, appType: '
 try {
   const { brand, camps, equipment, equipmentCatalog } = await server.ssrLoadModule('/src/campeach/data.ts');
   const catalog = {
-    website: `${brand.website}/campeach`,
+    website: brand.website,
     equipmentCatalogUrl: equipmentCatalog.url,
     camps: camps.map((camp) => ({
       id: camp.id,
