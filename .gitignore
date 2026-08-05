@@ -7,6 +7,8 @@ output/
 .env
 .env.*
 !.env.example
+.dev.vars
+.wrangler/
 *.tsbuildinfo
 vite.config.js
 vite.config.d.ts
