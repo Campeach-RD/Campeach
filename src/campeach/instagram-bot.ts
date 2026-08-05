@@ -16,7 +16,7 @@ export const slugify = (value: string) =>
     .replace(/(^-|-$)/g, '');
 
 const normalize = (value: string) => ` ${slugify(value).replaceAll('-', ' ')} `;
-const siteUrl = `${brand.website}/campeach`;
+const siteUrl = brand.website;
 
 const directSelection = (message: string): BotSelection | undefined => {
   const normalized = normalize(message);

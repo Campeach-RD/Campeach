@@ -5,7 +5,7 @@ describe('Instagram bot', () => {
   it('links directly to a named camp', async () => {
     const reply = await createInstagramReply('Hola, quiero información de Villa Altagracia');
     expect(reply).toContain('Villa Altagracia');
-    expect(reply).toContain('/campeach?camp=villa-altagracia');
+    expect(reply).toContain('/Campeach/?camp=villa-altagracia');
   });
 
   it('returns the requested equipment information', async () => {
@@ -16,6 +16,6 @@ describe('Instagram bot', () => {
 
   it('sends general visitors to the website', async () => {
     const reply = await createInstagramReply('Hola');
-    expect(reply).toContain('https://campeachrd.com/campeach');
+    expect(reply).toContain('https://campeach-rd.github.io/Campeach/');
   });
 });

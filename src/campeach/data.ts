@@ -38,21 +38,26 @@ type EmbeddedMedia = {
 
 const embeddedImages = (embeddedMedia as EmbeddedMedia).images;
 
+const publicAsset = (path: string) => {
+  if (/^(?:data:|https?:)/.test(path)) return path;
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+};
+
 const localImages = (campId: string, count = 5) => {
   const baseImages =
     embeddedImages[campId] ??
     Array.from({ length: count }, (_, index) => `/campeach/media/${campId}/${String(index + 1).padStart(2, '0')}.jpg`);
-  return uniqueValues([...baseImages, ...(extraCampPhotoIds[campId] ?? []).map(driveImage)]);
+  return uniqueValues([...baseImages.map(publicAsset), ...(extraCampPhotoIds[campId] ?? []).map(driveImage)]);
 };
 
-export const logoImage = (embeddedMedia as EmbeddedMedia).logo || '/campeach/logo.png';
+export const logoImage = publicAsset((embeddedMedia as EmbeddedMedia).logo || '/campeach/logo.png');
 
 export const brand = {
   phone: '829-937-0674',
   whatsapp: 'https://wa.me/18299370674',
   email: 'campingsrd@gmail.com',
   instagram: 'https://www.instagram.com/campeachrd/',
-  website: 'https://campeachrd.com',
+  website: 'https://campeach-rd.github.io/Campeach/',
 };
 
 const fallbackImages = [
@@ -64,7 +69,7 @@ const fallbackImages = [
       '/campeach/media/villa-altagracia-04.jpg',
       '/campeach/media/villa-altagracia-05.jpg',
     ]),
-];
+].map(publicAsset);
 
 const campRecords: Camp[] = [
   {
@@ -408,7 +413,7 @@ const campRecords: Camp[] = [
       '/campeach/media/villa-altagracia-03.jpg',
       '/campeach/media/villa-altagracia-04.jpg',
       '/campeach/media/villa-altagracia-05.jpg',
-    ],
+    ].map(publicAsset),
   },
   {
     id: 'villa-pajon',
