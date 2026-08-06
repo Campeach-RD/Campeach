@@ -1,6 +1,6 @@
 import { classificationCatalog, createReply, type Selection } from './reply';
 import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
-import { publishDailyCarousel, serveDriveImage, verifyMediaSignature } from './instagram-publisher';
+import { publishDailyCarousel, publishReel, serveDriveImage, verifyMediaSignature } from './instagram-publisher';
 import { createCommentReply, publishableCamps } from './publishing';
 
 const MAX_WEBHOOK_BYTES = 1_000_000;
@@ -169,6 +169,37 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === '/health' && request.method === 'GET') return json({ ok: true, service: 'campeach-instagram' });
+
+    if (url.pathname === '/instagram/admin/publish-reel' && request.method === 'POST') {
+      const authorization = request.headers.get('authorization');
+      if (!safeSecretEqual(authorization, `Bearer ${env.ADMIN_API_TOKEN}`)) return new Response('Unauthorized', { status: 401 });
+      const body = await request.json<{
+        videoUrl?: string;
+        caption?: string;
+        campId?: string;
+        campName?: string;
+        pdfUrl?: string;
+      }>();
+      if (!body.videoUrl?.startsWith('https://') || !body.caption || !body.campId || !body.campName) {
+        return json({ error: 'invalid_publish_payload' }, 400);
+      }
+      try {
+        return json(await publishReel({
+          videoUrl: body.videoUrl,
+          caption: body.caption,
+          campId: body.campId,
+          campName: body.campName,
+          pdfUrl: body.pdfUrl,
+        }, env));
+      } catch (error) {
+        console.error(JSON.stringify({ event: 'manual_reel_error', error: error instanceof Error ? error.message : 'unknown' }));
+        return json({ error: 'reel_publish_failed', detail: error instanceof Error ? error.message.slice(0, 500) : 'unknown' }, 502);
+      }
+    }
+
+
+
+
     const mediaMatch = url.pathname.match(/^\/instagram\/media\/([a-zA-Z0-9_-]+)$/);
     if (mediaMatch && request.method === 'GET') {
       const fileId = mediaMatch[1];

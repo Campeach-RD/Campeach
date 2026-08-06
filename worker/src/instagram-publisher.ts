@@ -2,14 +2,32 @@ import { fetchDriveImage, listDriveImages } from './google-drive';
 import { CAMP_PHOTO_FOLDERS, chooseDailyCamp, choosePhotos, createCaption } from './publishing';
 
 const graphRequest = async <T>(path: string, env: Env, method = 'GET', body?: Record<string, unknown>) => {
-  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${path}`, {
-    method,
-    headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  const formBody = body ? new FormData() : undefined;
+  if (formBody && body) {
+    for (const [key, value] of Object.entries(body)) {
+      formBody.set(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
+    }
+    formBody.set('access_token', env.INSTAGRAM_ACCESS_TOKEN);
+  }
+  let response: Response | undefined;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${path}`, {
+        method,
+        headers: formBody ? undefined : { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
+        body: formBody,
+      });
+      break;
+    } catch (error) {
+      if (attempt === 2) throw error;
+      await scheduler.wait(500 * (attempt + 1));
+    }
+  }
+  if (!response) throw new Error('instagram_api_no_response');
   if (!response.ok) {
-    console.error(JSON.stringify({ event: 'instagram_publish_api_error', path, status: response.status }));
-    throw new Error(`instagram_api_${response.status}`);
+    const detail = (await response.text()).slice(0, 500);
+    console.error(JSON.stringify({ event: 'instagram_publish_api_error', path, status: response.status, detail }));
+    throw new Error(`instagram_api_${response.status}_${detail}`);
   }
   return response.json<T>();
 };
@@ -17,11 +35,11 @@ const graphRequest = async <T>(path: string, env: Env, method = 'GET', body?: Re
 const randomNumbers = (length: number) => Array.from(crypto.getRandomValues(new Uint32Array(length)));
 
 const waitForContainer = async (containerId: string, env: Env) => {
-  for (let attempt = 0; attempt < 10; attempt += 1) {
+  for (let attempt = 0; attempt < 60; attempt += 1) {
     const status = await graphRequest<{ status_code?: string }>(`${containerId}?fields=status_code`, env);
     if (status.status_code === 'FINISHED') return;
     if (status.status_code === 'ERROR' || status.status_code === 'EXPIRED') throw new Error(`instagram_container_${status.status_code}`);
-    await scheduler.wait(2_000);
+    await scheduler.wait(5_000);
   }
   throw new Error('instagram_container_timeout');
 };
@@ -51,6 +69,35 @@ export const serveDriveImage = async (fileId: string, env: Env) => {
   });
 };
 
+export const publishReel = async (
+  { videoUrl, caption, campId, campName, pdfUrl }: {
+    videoUrl: string;
+    caption: string;
+    campId: string;
+    campName: string;
+    pdfUrl?: string;
+  },
+  env: Env,
+) => {
+  const container = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
+    media_type: 'REELS',
+    video_url: videoUrl,
+    caption,
+    share_to_feed: true,
+  });
+  await waitForContainer(container.id, env);
+  const published = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env, 'POST', {
+    creation_id: container.id,
+  });
+  await env.DEDUP.put(
+    `post:${published.id}`,
+    JSON.stringify({ campId, name: campName, pdfUrl, publishedAt: new Date().toISOString(), format: 'reel' }),
+    { expirationTtl: 60 * 60 * 24 * 365 },
+  );
+  console.log(JSON.stringify({ event: 'reel_published', campId, mediaId: published.id }));
+  return { mediaId: published.id };
+};
+
 export const publishDailyCarousel = async (env: Env) => {
   const today = new Date().toISOString().slice(0, 10);
   if (await env.DEDUP.get(`daily-publish:${today}`)) return { skipped: true, reason: 'already_published' };
@@ -66,14 +113,21 @@ export const publishDailyCarousel = async (env: Env) => {
   try {
     const children: string[] = [];
     for (const photo of photos) {
-      const signature = await mediaSignature(photo.id, env);
-      const imageUrl = `${env.PUBLIC_WORKER_URL}/instagram/media/${encodeURIComponent(photo.id)}?sig=${signature}`;
-      const child = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
-        image_url: imageUrl,
-        is_carousel_item: true,
-      });
-      children.push(child.id);
-      await waitForContainer(child.id, env);
+      const imageUrl = `${env.PUBLIC_WORKER_URL}/instagram/media/${encodeURIComponent(photo.id)}?sig=${await mediaSignature(photo.id, env)}`;
+      try {
+        const child = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
+          image_url: imageUrl,
+          is_carousel_item: true,
+        });
+        children.push(child.id);
+      } catch (error) {
+        throw new Error(`child_create_${error instanceof Error ? error.message : 'unknown'}`);
+      }
+    }
+    try {
+      await Promise.all(children.map((childId) => waitForContainer(childId, env)));
+    } catch (error) {
+      throw new Error(`child_processing_${error instanceof Error ? error.message : 'unknown'}`);
     }
 
     const container = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {

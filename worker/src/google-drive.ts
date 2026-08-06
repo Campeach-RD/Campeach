@@ -67,7 +67,7 @@ export const listDriveImages = async (folderId: string, env: Env) => {
     if (!response.ok) throw new Error(`google_list_${response.status}`);
     const result = await response.json<{ files?: Array<{ id: string; name: string; mimeType: string }> }>();
     for (const file of result.files ?? []) {
-      if (file.mimeType.startsWith('image/')) images.push(file);
+      if (file.mimeType === 'image/jpeg') images.push(file);
       if (file.mimeType === 'application/vnd.google-apps.folder' && folder.depth < 3) {
         folders.push({ id: file.id, depth: folder.depth + 1 });
       }
@@ -80,5 +80,15 @@ export const fetchDriveImage = async (fileId: string, env: Env) => {
   const token = await getGoogleAccessToken(env);
   return fetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`, {
     headers: { authorization: `Bearer ${token}` },
+    cf: {
+      image: {
+        width: 1080,
+        height: 1350,
+        fit: 'cover',
+        gravity: 'auto',
+        format: 'jpeg',
+        quality: 88,
+      },
+    },
   });
 };
