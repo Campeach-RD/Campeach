@@ -727,6 +727,18 @@
   box-shadow: 0 14px 34px rgba(255, 152, 32, 0.24);
 }
 
+.detail-priority-actions .whatsapp-cta {
+  border-color: #128c4a;
+  background: linear-gradient(135deg, #25d366, #18ad55);
+  color: #fff;
+  box-shadow: 0 14px 34px rgba(37, 211, 102, 0.28);
+}
+
+.detail-priority-actions .whatsapp-cta:hover {
+  background: linear-gradient(135deg, #20c65d, #128c4a);
+  transform: translateY(-1px);
+}
+
 .detail-summary {
   margin: 20px 0;
   padding: 18px;

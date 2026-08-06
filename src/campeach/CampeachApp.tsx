@@ -98,6 +98,15 @@ const whatsappFor = (camp?: Camp, _intent: WhatsappIntent = 'availability', equi
   return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 };
 
+function WhatsappIcon({ size = 21 }: { size?: number }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" width={size} height={size} fill="none">
+      <path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3.5 20.5l1.3-4.2a8.5 8.5 0 1 1 15.7-4.6Z" fill="currentColor" />
+      <path d="M8.1 7.4c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.8 2c.1.3.1.5-.1.7l-.7.8c-.2.2-.1.5 0 .7.7 1.2 1.7 2.2 3 2.8.3.1.5.2.7-.1l.9-1.1c.2-.3.4-.3.7-.2l2 .9c.3.1.4.3.4.5 0 .3-.2 1.5-.7 2-.5.6-1.3.9-2.2.9-1 0-2.5-.5-4.2-1.5-1.4-.8-2.6-1.9-3.5-3.2-.8-1.1-1.5-2.5-1.4-3.7 0-.7.3-1.2.6-1.5Z" fill="#fff" />
+    </svg>
+  );
+}
+
 function InfoCard({ icon: Icon, label, value }: { icon: typeof Tent; label: string; value: string }) {
   return (
     <div className="detail-info-card">
@@ -246,9 +255,9 @@ function CampDetail({ camp, onClose }: { camp: Camp; onClose: () => void }) {
                 Solicitar revista por WhatsApp
               </a>
             )}
-            <a href={whatsappFor(camp, 'availability')} target="_blank" rel="noreferrer">
-              <MessageCircle size={19} />
-              WhatsApp con contexto listo
+            <a className="whatsapp-cta" href={whatsappFor(camp, 'availability')} target="_blank" rel="noreferrer">
+              <WhatsappIcon />
+              Pedir información por WhatsApp
             </a>
           </div>
 
