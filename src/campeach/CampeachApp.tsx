@@ -75,28 +75,26 @@ const getAmenityIcon = (label: string) => {
 
 type WhatsappIntent = 'availability' | 'quote' | 'equipment';
 
-const whatsappFor = (camp?: Camp, intent: WhatsappIntent = 'availability') => {
-  const intentText = {
-    availability: 'quiero consultar disponibilidad y condiciones',
-    quote: 'quiero una cotizacion para reservar',
-    equipment: 'quiero cotizar este campamento con equipos de camping',
-  }[intent];
-  const context = camp
-    ? [
-        `Campamento: ${camp.name}`,
-        `Ubicacion: ${camp.location}`,
-        `Fecha tentativa:`,
-        `Cantidad de personas:`,
-        `Interes: ${intentText}`,
-        `Precio visto: ${camp.priceNote}`,
-        camp.capacity ? `Capacidad indicada: hasta ${camp.capacity} personas` : '',
-        camp.distance ? `Distancia indicada: ${camp.distance}` : '',
-        camp.richInfo?.pricing?.[0] ? `Referencia de tarifa: ${camp.richInfo.pricing[0]}` : '',
-        camp.richInfo?.reservation?.[0] ? `Nota de reserva: ${camp.richInfo.reservation[0]}` : '',
-        'Por favor confirmen disponibilidad, precio final, que incluye y pasos para reservar.',
-      ].filter(Boolean)
-    : ['Hola Campeach RD, quiero informacion sobre campamentos y alquiler de equipos.', 'Fecha tentativa:', 'Cantidad de personas:', 'Equipos que necesito:'];
-  const text = camp ? `Hola Campeach RD, ${intentText}.\n\n${context.join('\n')}` : context.join('\n');
+const whatsappFor = (camp?: Camp, _intent: WhatsappIntent = 'availability', equipmentName?: string) => {
+  const campName = camp?.name ?? '(Nombre del campamento)';
+  const requestedEquipment = equipmentName ?? '';
+  const text = [
+    'Hola, Campeach RD. Espero se encuentren bien.',
+    '',
+    `Me gustaría consultar disponibilidad para el campamento en ${campName}.`,
+    '',
+    'Fechas:',
+    '',
+    'Cantidad de adultos y niños con sus edades:',
+    '',
+    'Tipo de alojamiento deseado:',
+    '',
+    `Equipos de camping requeridos: ${requestedEquipment}`,
+    '',
+    '¿Podrían confirmarme disponibilidad, precio total y los pasos para realizar la reserva?',
+    '',
+    'Quedo atent@, gracias.',
+  ].join('\n');
   return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 };
 
@@ -527,7 +525,7 @@ export default function CampeachApp() {
                 <h3>{item.name}</h3>
                 <strong>RD${item.price.toLocaleString('es-DO')}</strong>
                 <p>{item.detail}</p>
-                <a href={whatsappFor()} target="_blank" rel="noreferrer">
+                <a href={whatsappFor(undefined, 'equipment', item.name)} target="_blank" rel="noreferrer">
                   Cotizar equipo
                   <ArrowUpRight size={15} />
                 </a>
