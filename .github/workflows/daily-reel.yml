@@ -55,8 +55,12 @@ jobs:
           git config user.email "campingsrd@gmail.com"
           output=$(python -c 'import json; print(json.load(open("automation/work/result.json", encoding="utf-8"))["output"])')
           git add -- "$output"
-          git commit -m "Publica Reel diario $(date -u +%F)"
-          git push origin HEAD:main
+          if ! git diff --cached --quiet; then
+            git commit -m "Publica Reel diario $(date -u +%F)"
+            git push origin HEAD:main
+          else
+            git pull --rebase origin main
+          fi
           file_name=$(basename "$output")
           url="https://campeach-rd.github.io/Campeach/reels/${file_name}?rev=$(git rev-parse --short HEAD)"
           echo "url=$url" >> "$GITHUB_OUTPUT"
