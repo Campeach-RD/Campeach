@@ -10,5 +10,29 @@
     ],
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/playa-el-valle-2026-08-06.mp4?rev=149d39b",
     "instagramMediaId": "18131229205643716"
+  },
+  {
+    "date": "2026-08-07T15:33:34.421106+00:00",
+    "campId": "ocoa",
+    "campName": "Ocoa",
+    "files": [
+      "1QRLRVQAQ-6zIVjilZNg6DL4HnK2CiEuV",
+      "1QRTFRnlUvQI6mXg61kwjoHYyDWMRVSQn",
+      "1NaQgxyNINkD0NEWksf5MD0PljuKfl1zD",
+      "1RLrL_PTe_OdGDnMuXOTTKy_iBaIaL2fG"
+    ],
+    "fileNames": [
+      "20250119_123732.mp4",
+      "20250119_123747.mp4",
+      "20250119_132142.mp4",
+      "20240331_132710.mp4"
+    ],
+    "duration": 24.0,
+    "output": "public/reels/2026-08-07-ocoa.mp4",
+    "caption": "🏕️ Ocoa\n📍 Rancho Arriba, San Jose de Ocoa\n💰 Desde RD$800 por noche\n\n• Camping en montana\n• Balneario con rio y cascada\n• No requiere vehiculo 4x4\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento.\n\n#CampeachRD #CampingRD #ocoa #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1rDd2S1WGlxMxShxhtFfUvlVcPwczbE0q/preview",
+    "idempotencyKey": "reel:2026-08-07:ocoa",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-07-ocoa.mp4?rev=779af19",
+    "instagramMediaId": "17962934850158847"
   }
 ]
