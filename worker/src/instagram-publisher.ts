@@ -70,32 +70,52 @@ export const serveDriveImage = async (fileId: string, env: Env) => {
 };
 
 export const publishReel = async (
-  { videoUrl, caption, campId, campName, pdfUrl }: {
+  { videoUrl, caption, campId, campName, pdfUrl, idempotencyKey }: {
     videoUrl: string;
     caption: string;
     campId: string;
     campName: string;
     pdfUrl?: string;
+    idempotencyKey?: string;
   },
   env: Env,
 ) => {
-  const container = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
-    media_type: 'REELS',
-    video_url: videoUrl,
-    caption,
-    share_to_feed: true,
-  });
-  await waitForContainer(container.id, env);
-  const published = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env, 'POST', {
-    creation_id: container.id,
-  });
-  await env.DEDUP.put(
-    `post:${published.id}`,
-    JSON.stringify({ campId, name: campName, pdfUrl, publishedAt: new Date().toISOString(), format: 'reel' }),
-    { expirationTtl: 60 * 60 * 24 * 365 },
-  );
-  console.log(JSON.stringify({ event: 'reel_published', campId, mediaId: published.id }));
-  return { mediaId: published.id };
+  const dedupKey = idempotencyKey ? `reel-publish:${idempotencyKey}` : null;
+  if (dedupKey) {
+    const existing = await env.DEDUP.get(dedupKey, 'json') as { mediaId?: string; status?: string } | null;
+    if (existing?.mediaId) return { mediaId: existing.mediaId, skipped: true };
+    if (existing?.status === 'processing') throw new Error('reel_publish_in_progress');
+    await env.DEDUP.put(dedupKey, JSON.stringify({ status: 'processing' }), { expirationTtl: 60 * 60 });
+  }
+  try {
+    const container = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
+      media_type: 'REELS',
+      video_url: videoUrl,
+      caption,
+      share_to_feed: true,
+    });
+    await waitForContainer(container.id, env);
+    const published = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env, 'POST', {
+      creation_id: container.id,
+    });
+    const publishedAt = new Date().toISOString();
+    const writes = [env.DEDUP.put(
+      `post:${published.id}`,
+      JSON.stringify({ campId, name: campName, pdfUrl, publishedAt, format: 'reel' }),
+      { expirationTtl: 60 * 60 * 24 * 365 },
+    )];
+    if (dedupKey) {
+      writes.push(env.DEDUP.put(dedupKey, JSON.stringify({ mediaId: published.id, publishedAt }), {
+        expirationTtl: 60 * 60 * 24 * 365,
+      }));
+    }
+    await Promise.all(writes);
+    console.log(JSON.stringify({ event: 'reel_published', campId, mediaId: published.id, idempotencyKey }));
+    return { mediaId: published.id, skipped: false };
+  } catch (error) {
+    if (dedupKey) await env.DEDUP.delete(dedupKey);
+    throw error;
+  }
 };
 
 export const publishDailyCarousel = async (env: Env) => {

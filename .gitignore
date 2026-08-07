@@ -9,6 +9,8 @@ output/
 !.env.example
 .dev.vars
 .wrangler/
+automation/work/
+__pycache__/
 *.tsbuildinfo
 vite.config.js
 vite.config.d.ts

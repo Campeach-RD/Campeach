@@ -1,0 +1,109 @@
+name: Reel diario de Campeach
+
+on:
+  schedule:
+    - cron: "10 15 * * *"
+  workflow_dispatch:
+    inputs:
+      camp:
+        description: "ID opcional del campamento"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: campeach-daily-reel
+  cancel-in-progress: false
+
+jobs:
+  render-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      CAMPEACH_ADMIN_API_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
+      CAMPEACH_WORKER_URL: https://campeach-instagram.nomanychat.workers.dev
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Instalar herramientas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-liberation
+          python -m pip install -r automation/requirements.txt
+      - name: Producir y validar Reel
+        run: python scripts/cloud-daily-reel.py --camp "${{ inputs.camp }}"
+      - name: Publicar MP4 en GitHub Pages
+        id: asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Campeach Automation"
+          git config user.email "campingsrd@gmail.com"
+          output=$(python -c 'import json; print(json.load(open("automation/work/result.json", encoding="utf-8"))["output"])')
+          git add -- "$output"
+          git commit -m "Publica Reel diario $(date -u +%F)"
+          git push origin HEAD:main
+          file_name=$(basename "$output")
+          url="https://campeach-rd.github.io/Campeach/reels/${file_name}?rev=$(git rev-parse --short HEAD)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Esperar publicación de GitHub Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 60); do
+            type=$(curl -sSIL -o /dev/null -w '%{http_code} %{content_type}' '${{ steps.asset.outputs.url }}')
+            if [[ "$type" == 200\ video/mp4* ]]; then exit 0; fi
+            sleep 10
+          done
+          exit 1
+      - name: Publicar en Instagram y registrar historial
+        env:
+          VIDEO_URL: ${{ steps.asset.outputs.url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import requests
+
+          root = Path.cwd()
+          result = json.loads((root / "automation/work/result.json").read_text(encoding="utf-8"))
+          catalog = json.loads((root / "worker/catalog.generated.json").read_text(encoding="utf-8"))
+          camp = next(item for item in catalog["camps"] if item["id"] == result["campId"])
+          response = requests.post(
+              os.environ["CAMPEACH_WORKER_URL"] + "/instagram/admin/publish-reel",
+              headers={"Authorization": f"Bearer {os.environ['CAMPEACH_ADMIN_API_TOKEN']}"},
+              json={
+                  "videoUrl": os.environ["VIDEO_URL"],
+                  "caption": result["caption"],
+                  "campId": camp["id"],
+                  "campName": camp["name"],
+                  "pdfUrl": camp["pdfUrl"],
+                  "idempotencyKey": result["idempotencyKey"],
+              },
+              timeout=360,
+          )
+          response.raise_for_status()
+          published = response.json()
+          result["videoUrl"] = os.environ["VIDEO_URL"]
+          result["instagramMediaId"] = published["mediaId"]
+          history_path = root / "automation/reel-history.json"
+          history = json.loads(history_path.read_text(encoding="utf-8"))
+          if not any(item.get("idempotencyKey") == result["idempotencyKey"] for item in history):
+              history.append(result)
+          history_path.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
+          git pull --rebase origin main
+          git add automation/reel-history.json
+          git commit -m "Registra Reel diario $(date -u +%F)"
+          git push origin HEAD:main

@@ -179,8 +179,12 @@ export default {
         campId?: string;
         campName?: string;
         pdfUrl?: string;
+        idempotencyKey?: string;
       }>();
-      if (!body.videoUrl?.startsWith('https://') || !body.caption || !body.campId || !body.campName) {
+      if (
+        !body.videoUrl?.startsWith('https://') || !body.caption || !body.campId || !body.campName ||
+        (body.idempotencyKey && !/^[a-zA-Z0-9:_-]{1,120}$/.test(body.idempotencyKey))
+      ) {
         return json({ error: 'invalid_publish_payload' }, 400);
       }
       try {
@@ -190,6 +194,7 @@ export default {
           campId: body.campId,
           campName: body.campName,
           pdfUrl: body.pdfUrl,
+          idempotencyKey: body.idempotencyKey,
         }, env));
       } catch (error) {
         console.error(JSON.stringify({ event: 'manual_reel_error', error: error instanceof Error ? error.message : 'unknown' }));
