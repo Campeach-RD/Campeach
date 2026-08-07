@@ -1,5 +1,5 @@
 import { fetchDriveImage, listDriveImages } from './google-drive';
-import { CAMP_PHOTO_FOLDERS, chooseDailyCamp, choosePhotos, createCaption } from './publishing';
+import { CAMP_PHOTO_FOLDERS, chooseDailyCamp, choosePhotos, createCaption, publishableCamps } from './publishing';
 
 const graphRequest = async <T>(path: string, env: Env, method = 'GET', body?: Record<string, unknown>) => {
   const formBody = body ? new FormData() : undefined;
@@ -118,18 +118,23 @@ export const publishReel = async (
   }
 };
 
-export const publishDailyCarousel = async (env: Env) => {
+export const publishDailyCarousel = async (env: Env, requestedCampId?: string) => {
   const today = new Date().toISOString().slice(0, 10);
-  if (await env.DEDUP.get(`daily-publish:${today}`)) return { skipped: true, reason: 'already_published' };
+  const dailyKey = `daily-publish:${today}`;
+  const existing = await env.DEDUP.get(dailyKey);
+  if (existing) return { skipped: true, reason: existing === 'processing' ? 'publish_in_progress' : 'already_published', mediaId: existing === 'processing' ? undefined : existing };
 
   const lastCampId = await env.DEDUP.get('daily:last-camp');
-  const camp = chooseDailyCamp(lastCampId, randomNumbers(1)[0]);
+  const camp = requestedCampId
+    ? publishableCamps.find((item) => item.id === requestedCampId)
+    : chooseDailyCamp(lastCampId, randomNumbers(1)[0]);
+  if (!camp) throw new Error('invalid_camp_id');
   const files = await listDriveImages(CAMP_PHOTO_FOLDERS[camp.id], env);
   if (files.length < 4) throw new Error(`insufficient_images_${camp.id}`);
   const count = 4 + (randomNumbers(1)[0] % Math.min(7, files.length - 3));
   const photos = choosePhotos(files, count, randomNumbers(Math.max(files.length, 4)));
 
-  await env.DEDUP.put(`daily-publish:${today}`, 'processing', { expirationTtl: 60 * 60 * 24 * 3 });
+  await env.DEDUP.put(dailyKey, 'processing', { expirationTtl: 60 * 60 });
   try {
     const children: string[] = [];
     for (const photo of photos) {
@@ -163,12 +168,12 @@ export const publishDailyCarousel = async (env: Env) => {
     await Promise.all([
       env.DEDUP.put(`post:${published.id}`, context, { expirationTtl: 60 * 60 * 24 * 365 }),
       env.DEDUP.put('daily:last-camp', camp.id),
-      env.DEDUP.put(`daily-publish:${today}`, published.id, { expirationTtl: 60 * 60 * 24 * 30 }),
+      env.DEDUP.put(dailyKey, published.id, { expirationTtl: 60 * 60 * 24 * 30 }),
     ]);
     console.log(JSON.stringify({ event: 'daily_carousel_published', campId: camp.id, mediaId: published.id, photos: photos.length }));
     return { skipped: false, campId: camp.id, mediaId: published.id };
   } catch (error) {
-    await env.DEDUP.delete(`daily-publish:${today}`);
+    await env.DEDUP.delete(dailyKey);
     throw error;
   }
 };

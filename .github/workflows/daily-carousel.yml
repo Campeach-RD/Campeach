@@ -1,0 +1,46 @@
+name: Carrusel diario de Campeach
+
+on:
+  schedule:
+    # GitHub usa UTC. 20:00 UTC = 4:00 p. m. en Santo Domingo.
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+    inputs:
+      camp:
+        description: "ID opcional del campamento (por ejemplo, bonao)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: campeach-daily-carousel
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Publicar carrusel en Instagram
+        env:
+          ADMIN_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
+          CAMP_ID: ${{ inputs.camp }}
+          WORKER_URL: https://campeach-instagram.nomanychat.workers.dev
+        run: |
+          if [ -z "$ADMIN_TOKEN" ]; then
+            echo "Falta el secreto CAMPEACH_ADMIN_API_TOKEN" >&2
+            exit 1
+          fi
+          payload="{}"
+          if [ -n "$CAMP_ID" ]; then
+            payload=$(jq -nc --arg campId "$CAMP_ID" '{campId: $campId}')
+          fi
+          curl --fail-with-body --silent --show-error \
+            --retry 2 --retry-all-errors \
+            --request POST \
+            --header "Authorization: Bearer $ADMIN_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "$payload" \
+            "$WORKER_URL/instagram/admin/publish-carousel"

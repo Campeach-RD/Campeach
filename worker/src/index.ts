@@ -202,6 +202,19 @@ export default {
       }
     }
 
+    if (url.pathname === '/instagram/admin/publish-carousel' && request.method === 'POST') {
+      const authorization = request.headers.get('authorization');
+      if (!safeSecretEqual(authorization, `Bearer ${env.ADMIN_API_TOKEN}`)) return new Response('Unauthorized', { status: 401 });
+      const body: { campId?: string } = await request.json<{ campId?: string }>().catch(() => ({}));
+      if (body.campId && !/^[a-z0-9-]{1,80}$/.test(body.campId)) return json({ error: 'invalid_publish_payload' }, 400);
+      try {
+        return json(await publishDailyCarousel(env, body.campId));
+      } catch (error) {
+        console.error(JSON.stringify({ event: 'manual_carousel_error', error: error instanceof Error ? error.message : 'unknown' }));
+        return json({ error: 'carousel_publish_failed', detail: error instanceof Error ? error.message.slice(0, 500) : 'unknown' }, 502);
+      }
+    }
+
 
 
 

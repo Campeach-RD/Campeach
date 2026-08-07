@@ -29,8 +29,20 @@ export const publishableCamps = catalog.camps.filter(
   (camp): camp is PublishableCamp => Boolean(CAMP_PHOTO_FOLDERS[camp.id] && camp.pdfUrl),
 );
 
+export const PRIORITY_CAMP_IDS = [
+  'el-valle',
+  'ocoa',
+  'bonao',
+  'santiago',
+  'villa-altagracia',
+  'monsenor',
+  'jarabacoa',
+  'hato-mayor',
+] as const;
+
 export const chooseDailyCamp = (lastCampId: string | null, randomIndex = 0) => {
-  const candidates = publishableCamps.filter((camp) => camp.id !== lastCampId);
+  const priority = new Set<string>(PRIORITY_CAMP_IDS);
+  const candidates = publishableCamps.filter((camp) => priority.has(camp.id) && camp.id !== lastCampId);
   if (!candidates.length) throw new Error('no_publishable_camps');
   return candidates[Math.abs(randomIndex) % candidates.length];
 };

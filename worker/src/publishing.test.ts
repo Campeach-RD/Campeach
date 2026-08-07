@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chooseDailyCamp, choosePhotos, createCaption, createCommentReply, publishableCamps } from './publishing';
+import { chooseDailyCamp, choosePhotos, createCaption, createCommentReply, PRIORITY_CAMP_IDS, publishableCamps } from './publishing';
 
 describe('daily Instagram publishing', () => {
   it('only includes camps with photos and a PDF', () => {
@@ -8,8 +8,12 @@ describe('daily Instagram publishing', () => {
   });
 
   it('does not repeat the previous camp', () => {
-    const first = publishableCamps[0];
+    const first = publishableCamps.find((camp) => camp.id === PRIORITY_CAMP_IDS[0])!;
     expect(chooseDailyCamp(first.id, 0).id).not.toBe(first.id);
+  });
+
+  it('rotates the daily carousel through the priority camps', () => {
+    expect(PRIORITY_CAMP_IDS).toContain(chooseDailyCamp(null, 0).id as (typeof PRIORITY_CAMP_IDS)[number]);
   });
 
   it('selects between four and ten unique photos', () => {
