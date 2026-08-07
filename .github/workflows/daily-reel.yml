@@ -128,7 +128,10 @@ jobs:
               history.append(result)
           history_path.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           PY
-          git pull --rebase origin main
+          git restore -- automation/work
           git add automation/reel-history.json
-          git commit -m "Registra Reel diario $(date -u +%F)"
-          git push origin HEAD:main
+          if ! git diff --cached --quiet; then
+            git commit -m "Registra Reel diario $(date -u +%F)"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
