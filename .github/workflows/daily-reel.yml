@@ -2,7 +2,7 @@ name: Reel diario de Campeach
 
 on:
   schedule:
-    - cron: "10 15 * * *"
+    - cron: "0 15 * * *"
   workflow_dispatch:
     inputs:
       camp:
