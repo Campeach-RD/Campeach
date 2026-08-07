@@ -118,7 +118,7 @@ export const publishReel = async (
   }
 };
 
-export const publishDailyCarousel = async (env: Env, requestedCampId?: string) => {
+export const publishDailyCarousel = async (env: Env, requestedCampId?: string, publicImageUrls?: string[]) => {
   const today = new Date().toISOString().slice(0, 10);
   const dailyKey = `daily-publish:${today}`;
   const existing = await env.DEDUP.get(dailyKey);
@@ -129,16 +129,20 @@ export const publishDailyCarousel = async (env: Env, requestedCampId?: string) =
     ? publishableCamps.find((item) => item.id === requestedCampId)
     : chooseDailyCamp(lastCampId, randomNumbers(1)[0]);
   if (!camp) throw new Error('invalid_camp_id');
-  const files = await listDriveImages(CAMP_PHOTO_FOLDERS[camp.id], env);
-  if (files.length < 4) throw new Error(`insufficient_images_${camp.id}`);
-  const count = 4 + (randomNumbers(1)[0] % Math.min(7, files.length - 3));
-  const photos = choosePhotos(files, count, randomNumbers(Math.max(files.length, 4)));
+  const driveFiles = publicImageUrls ? [] : await listDriveImages(CAMP_PHOTO_FOLDERS[camp.id], env);
+  const availableCount = publicImageUrls?.length ?? driveFiles.length;
+  if (availableCount < 4) throw new Error(`insufficient_images_${camp.id}`);
+  const count = publicImageUrls ? publicImageUrls.length : 4 + (randomNumbers(1)[0] % Math.min(7, driveFiles.length - 3));
+  const photos: Array<string | { id: string; name: string; mimeType: string }> = publicImageUrls ??
+    choosePhotos(driveFiles, count, randomNumbers(Math.max(driveFiles.length, 4)));
 
   await env.DEDUP.put(dailyKey, 'processing', { expirationTtl: 60 * 60 });
   try {
     const children: string[] = [];
     for (const photo of photos) {
-      const imageUrl = `${env.PUBLIC_WORKER_URL}/instagram/media/${encodeURIComponent(photo.id)}?sig=${await mediaSignature(photo.id, env)}`;
+      const imageUrl = typeof photo === 'string'
+        ? photo
+        : `${env.PUBLIC_WORKER_URL}/instagram/media/${encodeURIComponent(photo.id)}?sig=${await mediaSignature(photo.id, env)}`;
       try {
         const child = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
           image_url: imageUrl,

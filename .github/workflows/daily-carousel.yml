@@ -2,45 +2,100 @@ name: Carrusel diario de Campeach
 
 on:
   schedule:
-    # GitHub usa UTC. 20:00 UTC = 4:00 p. m. en Santo Domingo.
     - cron: "0 20 * * *"
   workflow_dispatch:
     inputs:
       camp:
-        description: "ID opcional del campamento (por ejemplo, bonao)"
+        description: "ID opcional del campamento"
         required: false
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: campeach-daily-carousel
   cancel-in-progress: false
 
 jobs:
-  publish:
+  prepare-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      ADMIN_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
+      WORKER_URL: https://campeach-instagram.nomanychat.workers.dev
     steps:
-      - name: Publicar carrusel en Instagram
-        env:
-          ADMIN_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
-          CAMP_ID: ${{ inputs.camp }}
-          WORKER_URL: https://campeach-instagram.nomanychat.workers.dev
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Preparar fotos uniformes
         run: |
-          if [ -z "$ADMIN_TOKEN" ]; then
-            echo "Falta el secreto CAMPEACH_ADMIN_API_TOKEN" >&2
-            exit 1
+          python -m pip install -r automation/requirements.txt
+          python scripts/cloud-daily-carousel.py --camp "${{ inputs.camp }}"
+      - name: Guardar fotos en GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Campeach Automation"
+          git config user.email "campingsrd@gmail.com"
+          git add public/carousels automation/carousel-history.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Prepara carrusel diario $(date -u +%F)"
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
-          payload="{}"
-          if [ -n "$CAMP_ID" ]; then
-            payload=$(jq -nc --arg campId "$CAMP_ID" '{campId: $campId}')
-          fi
-          curl --fail-with-body --silent --show-error \
-            --retry 2 --retry-all-errors \
-            --request POST \
-            --header "Authorization: Bearer $ADMIN_TOKEN" \
-            --header "Content-Type: application/json" \
-            --data "$payload" \
-            "$WORKER_URL/instagram/admin/publish-carousel"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Construir web
+        run: |
+          npm ci
+          npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - name: Desplegar fotos en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Publicar carrusel en Instagram
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, time
+          from pathlib import Path
+          import requests
+
+          result = json.loads(Path("automation/work/carousel-result.json").read_text(encoding="utf-8"))
+          revision = os.popen("git rev-parse --short HEAD").read().strip()
+          urls = [f"https://campeach-rd.github.io/Campeach/carousels/{Path(path).name}?rev={revision}" for path in result["outputs"]]
+          for url in urls:
+              for _ in range(60):
+                  response = requests.get(url, timeout=30)
+                  if response.status_code == 200 and response.headers.get("content-type", "").startswith("image/jpeg"):
+                      break
+                  time.sleep(10)
+              else:
+                  raise RuntimeError(f"La foto no quedó pública: {url}")
+          response = requests.post(
+              os.environ["WORKER_URL"] + "/instagram/admin/publish-carousel",
+              headers={"Authorization": f"Bearer {os.environ['ADMIN_TOKEN']}"},
+              json={"campId": result["campId"], "imageUrls": urls},
+              timeout=360,
+          )
+          response.raise_for_status()
+          print(json.dumps(response.json(), ensure_ascii=False))
+          PY
