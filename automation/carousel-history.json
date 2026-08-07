@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "date": "2026-08-07",
+    "campId": "bonao",
+    "files": [
+      "1XDeHWQAuqxvNuZvDjEuY1_13zr7Xh9p_",
+      "1_mq6YbcCGJ2IVeDb08CE9EISJqy5nRZj",
+      "13XQ6l5Atwk2402VrQruSV3SD7b_Wmq7m",
+      "1Xu59QhjYBTU2KBLGAJjj05gPnBVlO941",
+      "1YVOuCAg2O89gFid9T_zeWE7ioijYWMb0",
+      "13Kma8i7m4R7xKdXu-mcFf0_HtggGfhMP"
+    ],
+    "outputs": [
+      "public/carousels/2026-08-07-bonao-01.jpg",
+      "public/carousels/2026-08-07-bonao-02.jpg",
+      "public/carousels/2026-08-07-bonao-03.jpg",
+      "public/carousels/2026-08-07-bonao-04.jpg",
+      "public/carousels/2026-08-07-bonao-05.jpg",
+      "public/carousels/2026-08-07-bonao-06.jpg"
+    ]
+  }
+]
