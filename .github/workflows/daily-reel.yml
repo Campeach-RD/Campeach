@@ -12,6 +12,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: campeach-daily-reel
@@ -21,6 +23,9 @@ jobs:
   render-and-publish:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     env:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
       CAMPEACH_ADMIN_API_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
@@ -55,6 +60,22 @@ jobs:
           file_name=$(basename "$output")
           url="https://campeach-rd.github.io/Campeach/reels/${file_name}?rev=$(git rev-parse --short HEAD)"
           echo "url=$url" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Construir sitio con el nuevo Reel
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - name: Desplegar sitio y Reel en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
       - name: Esperar publicación de GitHub Pages
         shell: bash
         run: |
