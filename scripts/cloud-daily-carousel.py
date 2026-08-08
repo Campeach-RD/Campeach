@@ -7,7 +7,7 @@ from pathlib import Path
 
 from google.auth.transport.requests import AuthorizedSession
 from google.oauth2 import service_account
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, UnidentifiedImageError
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "automation" / "work"
@@ -72,22 +72,34 @@ def main():
     if len(candidates) < 4:
         raise RuntimeError(f"No hay suficientes fotos para {camp}")
     random.Random(int(datetime.now(timezone.utc).strftime("%Y%m%d"))).shuffle(candidates)
-    selected = candidates[:min(6, len(candidates))]
+    selected = candidates
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     outputs = []
     WORK.mkdir(parents=True, exist_ok=True)
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    for index, item in enumerate(selected, 1):
+    used = []
+    for item in selected:
+        if len(outputs) == 6:
+            break
+        index = len(outputs) + 1
         source = WORK / f"carousel-source-{index}"
-        response = client.get(f"https://www.googleapis.com/drive/v3/files/{item['id']}?alt=media", timeout=180)
-        response.raise_for_status()
-        source.write_bytes(response.content)
-        output = OUTPUT / f"{stamp}-{camp}-{index:02}.jpg"
-        with Image.open(source) as image:
-            image = ImageOps.exif_transpose(image).convert("RGB")
-            ImageOps.fit(image, (1080, 1350), method=Image.Resampling.LANCZOS).save(output, "JPEG", quality=90, optimize=True)
-        outputs.append(str(output.relative_to(ROOT)).replace("\\", "/"))
-    entry = {"date": stamp, "campId": camp, "files": [item["id"] for item in selected], "outputs": outputs}
+        try:
+            response = client.get(f"https://www.googleapis.com/drive/v3/files/{item['id']}?alt=media", timeout=180)
+            response.raise_for_status()
+            source.write_bytes(response.content)
+            output = OUTPUT / f"{stamp}-{camp}-{index:02}.jpg"
+            with Image.open(source) as image:
+                image.load()
+                image = ImageOps.exif_transpose(image).convert("RGB")
+                ImageOps.fit(image, (1080, 1350), method=Image.Resampling.LANCZOS).save(output, "JPEG", quality=90, optimize=True)
+            outputs.append(str(output.relative_to(ROOT)).replace("\\", "/"))
+            used.append(item)
+        except (UnidentifiedImageError, OSError, ValueError) as error:
+            print(f"Se omite imagen incompatible {item['id']}: {type(error).__name__}")
+            source.unlink(missing_ok=True)
+    if len(outputs) < 4:
+        raise RuntimeError(f"No hay cuatro fotos válidas para {camp}")
+    entry = {"date": stamp, "campId": camp, "files": [item["id"] for item in used], "outputs": outputs}
     if not any(item.get("date") == stamp for item in history):
         history.append(entry)
     write_json(HISTORY, history)
