@@ -18,5 +18,25 @@
       "public/carousels/2026-08-07-bonao-05.jpg",
       "public/carousels/2026-08-07-bonao-06.jpg"
     ]
+  },
+  {
+    "date": "2026-08-08",
+    "campId": "villa-altagracia",
+    "files": [
+      "1z2HBYtQDW78sJclfsKXQAGOtLIrFqG0e",
+      "1PG_tE0gFlSlMCjzcp5mbO3FQ1lWXzyxK",
+      "1maOqnGdwpEhTT1PKYhAL6emAldaHx-ko",
+      "1lYqDXSKyKSxDpbn-OJPX206WSBPBstxL",
+      "1UQJfJ4oeXoEh_Cjt8LEWCqxcwEIWT6LV",
+      "1asYbpiq4L42OXl1UCtBNWSYT7C7_OP_8"
+    ],
+    "outputs": [
+      "public/carousels/2026-08-08-villa-altagracia-01.jpg",
+      "public/carousels/2026-08-08-villa-altagracia-02.jpg",
+      "public/carousels/2026-08-08-villa-altagracia-03.jpg",
+      "public/carousels/2026-08-08-villa-altagracia-04.jpg",
+      "public/carousels/2026-08-08-villa-altagracia-05.jpg",
+      "public/carousels/2026-08-08-villa-altagracia-06.jpg"
+    ]
   }
 ]
