@@ -34,5 +34,29 @@
     "idempotencyKey": "reel:2026-08-07:ocoa",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-07-ocoa.mp4?rev=779af19",
     "instagramMediaId": "17962934850158847"
+  },
+  {
+    "date": "2026-08-09T15:28:44.879053+00:00",
+    "campId": "monsenor",
+    "campName": "Monsenor",
+    "files": [
+      "1UD_qQwJNn-_VEPnnDz9FCHGUfpf7vQMt",
+      "1TLFqExD2nZfDzP7dZGx173NB0O7Rrr7J",
+      "1S_g1JIWeMIzudzCpwy2JeUs4Qw2y8pwJ",
+      "1S-SatXazakKSrj15C0450_ZDe3nzUVpr"
+    ],
+    "fileNames": [
+      "20250316_091850.mp4",
+      "20250316_092407.mp4",
+      "20250316_093534.mp4",
+      "20250316_093028.mp4"
+    ],
+    "duration": 24.021,
+    "output": "public/reels/2026-08-09-monsenor.mp4",
+    "caption": "🏕️ Monsenor\n📍 Canabon, Bonao\n💰 Desde RD$1,000 por noche\n\n• Camping en bosque\n• Balneario tipo presa\n• Cuenta con comida/restaurante\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento.\n\n#CampeachRD #CampingRD #monsenor #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1chaVkGfTeZxd7UMigCdEQcPEWixvJNG-/preview",
+    "idempotencyKey": "reel:2026-08-09:monsenor",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-09-monsenor.mp4?rev=036ff84",
+    "instagramMediaId": "18111376744806338"
   }
 ]
