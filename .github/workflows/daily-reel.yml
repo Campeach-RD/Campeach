@@ -2,7 +2,8 @@ name: Reel diario de Campeach
 
 on:
   schedule:
-    - cron: "0 15 * * *"
+    # Se inicia 5 minutos antes para compensar render y colas de GitHub; Meta publica cerca de las 11:00 AST.
+    - cron: "55 14 * * *"
   workflow_dispatch:
     inputs:
       camp:

@@ -2,7 +2,8 @@ name: Carrusel diario de Campeach
 
 on:
   schedule:
-    - cron: "0 20 * * *"
+    # Se inicia 5 minutos antes para compensar preparación y colas de GitHub; Meta publica cerca de las 4:00 AST.
+    - cron: "55 19 * * *"
   workflow_dispatch:
     inputs:
       camp:
