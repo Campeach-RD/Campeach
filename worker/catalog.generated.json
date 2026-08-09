@@ -5,7 +5,7 @@
     {
       "id": "taiku",
       "name": "Taiku",
-      "location": "Juan Adrian, Monsenor Nouel",
+      "location": "Juan Adrian, Monseñor Nouel",
       "priceNote": "Desde RD$600 por noche",
       "tags": [
         "Bosque",
@@ -22,7 +22,7 @@
         "Balneario de rio",
         "Se requiere vehiculo 4x4",
         "Basecamp en mini chozas",
-        "Tropical Hut con bano privado",
+        "Tropical Hut con baño privado",
         "Parqueo vigilado",
         "Bar y restaurante en la propiedad",
         "Capacidad maxima dentro del campamento: 40 personas.",
@@ -56,9 +56,9 @@
         "RD$ 1,900 por pareja",
         "4 unidades disponibles",
         "Tropical Hut:",
-        "Choza con bano privado, colchon Queen, balcon",
+        "Choza con baño privado, colchon Queen, balcon",
         "RD$ 2,900 por pareja",
-        "Colchoneta extra para ninos: RD$ 600",
+        "Colchoneta extra para niños: RD$ 600",
         "RD$ 600 por persona por noche"
       ],
       "lodging": [],
@@ -142,12 +142,12 @@
         "Check in: 3:00 pm Check out: 12:30 pm"
       ],
       "pricing": [
-        "Adultos: RD$ 1,400 por noche (llevando casa de campana).",
-        "Ninos 6 a 10 anos: RD$ 800 por noche.",
+        "Adultos: RD$ 1,400 por noche (llevando casa de campaña).",
+        "Niños 6 a 10 años: RD$ 800 por noche.",
         "Entrada de 3:00 pm a 7:00 pm / Salida 12:30 pm.",
         "Alquiler de equipos disponible con retiro en Santo Domingo.",
         "Adultos: RD$ 1,600",
-        "Ninos (6 a 10 anos): RD$ 900"
+        "Niños (6 a 10 años): RD$ 900"
       ],
       "lodging": [
         "Capacidad: 4 adultos.",
@@ -222,13 +222,13 @@
         "Camping Libre (llevando tus equipos):",
         "1 noche adultos: RD$ 1,000",
         "2 noches adultos: RD$ 1,500",
-        "1 noche ninos (4-10 anos): RD$ 750",
-        "2 noches ninos (4-10 anos): RD$ 1,125",
+        "1 noche niños (4-10 años): RD$ 750",
+        "2 noches niños (4-10 años): RD$ 1,125",
         "Todo Incluido (equipos + alimentos):",
         "1 noche adultos: RD$ 3,800",
         "2 noches adultos: RD$ 6,800",
-        "1 noche ninos (4-10 anos): RD$ 2,850",
-        "2 noches ninos (4-10 anos): RD$ 5,100",
+        "1 noche niños (4-10 años): RD$ 2,850",
+        "2 noches niños (4-10 años): RD$ 5,100",
         "Todo Incluido + Parrillada:",
         "1 noche adultos: RD$ 4,200"
       ],
@@ -261,7 +261,7 @@
       "location": "Bejuco Aplastado, Bonao",
       "priceNote": "Desde RD$700 por noche; no incluye equipos",
       "tags": [
-        "Montana",
+        "Montaña",
         "Rio",
         "Cascada",
         "Overland",
@@ -269,14 +269,14 @@
         "4x4"
       ],
       "highlights": [
-        "Camping en montana",
+        "Camping en montaña",
         "Balneario con rio y cascada",
         "No requiere vehiculo 4x4",
         "No cuenta con restaurante",
         "Plaza Ceremonial Taina",
         "Salto Arroyo Carlos",
         "Excelente para overlands",
-        "Buena senal Claro y Altice",
+        "Buena señal Claro y Altice",
         "Pets Friendly: Se permiten mascotas.",
         "Acceso a la Plaza Ceremonial Taina (dentro de la propiedad).",
         "Acceso al Salto Arroyo Carlos (dentro de la propiedad).",
@@ -292,13 +292,13 @@
         "No hay acceso en transporte publico.",
         "No hay electricidad.",
         "No hay delivery.",
-        "Buena senal de Claro y Altice.",
+        "Buena señal de Claro y Altice.",
         "Capacidad maxima dentro del campamento: 100 personas."
       ],
       "includes": [],
       "pricing": [
         "Lunes a Jueves:",
-        "Area de fogata y lena.",
+        "Area de fogata y leña.",
         "Area de mesas de picnic.",
         "Letrina en el area del camping.",
         "Letrina panoramica.",
@@ -384,13 +384,13 @@
         "Areas sociales y recreativas.",
         "Rio dentro de la propiedad.",
         "Piscina dentro de la propiedad.",
-        "Fogata: Si necesitas que se recolecte la lena por ti, RD$ 500.00."
+        "Fogata: Si necesitas que se recolecte la leña por ti, RD$ 500.00."
       ],
       "pricing": [
         "Plan sencillo: RD$ 700.00 por persona (incluye uso de espacio).",
         "Plan semi full: RD$ 1,000.00 por persona (incluye cafe y desayuno).",
         "Plan full: RD$ 1,700.00 por persona (incluye desayuno, almuerzo y refrigerios).",
-        "Ninos menores de 11 anos: Gratis, presentando un documento que valide la edad.",
+        "Niños menores de 11 años: Gratis, presentando un documento que valide la edad.",
         "Costo de las mascotas: RD$ 50.00 por cada una.",
         "Check in: 2:00 pm",
         "Check out: 12:00 pm",
@@ -411,11 +411,11 @@
         "Capacidad: 4 personas.",
         "Wifi gratis.",
         "2 camas twin.",
-        "Bano compartido fuera de la habitacion con agua caliente."
+        "Baño compartido fuera de la habitacion con agua caliente."
       ],
       "food": [
         "Restaurante y bar dentro del campamento, abierto al publico sabados y domingos (dias de semana bajo reserva previa).",
-        "Fogon de uso gratuito: Lena y utensilios alquilados por RD$ 500.00.",
+        "Fogon de uso gratuito: Leña y utensilios alquilados por RD$ 500.00.",
         "BBQ de uso gratuito: No incluye utensilios ni carbon.",
         "Cocina (kitchenette): Cargo extra por uso y gas RD$ 500.00 por grupo o RD$ 100.00 por persona.",
         "Varios restaurantes a menos de 20 minutos de la propiedad.",
@@ -428,7 +428,7 @@
         "River tubing",
         "Tours con reservacion previa 2 semanas antes, disponibles a partir de 8 personas.",
         "Paint ball: RD$ 2,000.00 por persona (equipos y refrigerio, 200 tiros).",
-        "Tour en caballo por la montana: RD$ 3,800.00 por persona (recorrido por rio y refrigerio).",
+        "Tour en caballo por la montaña: RD$ 3,800.00 por persona (recorrido por rio y refrigerio).",
         "Entrada, transporte y refrigerio a Monkey Jungle: RD$ 4,000.00 por persona.",
         "Paddle Board: RD$ 1,000.00 por tabla.",
         "Cuevas de Cabarete con transporte: RD$ 1,800.00 por persona."
@@ -501,7 +501,7 @@
         "Check in: 3:00 PM",
         "Check out: 12:00 PM",
         "Adultos: RD$ 2,200.00 por persona por noche.",
-        "Ninos (3-11 anos): RD$ 1,900.00 por persona por noche."
+        "Niños (3-11 años): RD$ 1,900.00 por persona por noche."
       ],
       "lodging": [],
       "food": [
@@ -545,24 +545,24 @@
       "location": "Constanza, La Vega",
       "priceNote": "Desde RD$1,500 por noche; camping no incluye equipos",
       "tags": [
-        "Montana",
+        "Montaña",
         "Clima fresco",
         "Restaurante",
         "Naturaleza"
       ],
       "highlights": [
-        "Camping de montana",
+        "Camping de montaña",
         "Cuenta con comida/restaurante",
         "No requiere vehiculo 4x4",
         "Ideal para clima fresco",
         "Destino de altura",
         "Ideal para desconexion",
-        "Paisajes de montana",
+        "Paisajes de montaña",
         "Pets Friendly: Se permiten mascotas.",
         "Restaurante, bar, mini market y gift shop dentro del campamento.",
         "Zip Line dentro del campamento.",
         "Apreciacion de animales de granja.",
-        "Suficiente senal de celulares."
+        "Suficiente señal de celulares."
       ],
       "intro": "Constanza combina Pets Friendly: Se permiten mascotas. Restaurante, bar, mini market y gift shop dentro del campamento. Zip Line dentro del campamento. Apreciacion de animales de granja. Fogata: Se enciende de cortesia los sabados; otros dias, debes comprar la madera (RD$ 100.00). Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
@@ -570,7 +570,7 @@
         "Restaurante, bar, mini market y gift shop dentro del campamento.",
         "Zip Line dentro del campamento.",
         "Apreciacion de animales de granja.",
-        "Suficiente senal de celulares.",
+        "Suficiente señal de celulares.",
         "Capacidad maxima dentro del campamento: 100 personas."
       ],
       "includes": [
@@ -589,7 +589,7 @@
       ],
       "pricing": [
         "Costo de entrada por pareja: RD$ 3,000.00.",
-        "Ninos de 0 a 2 anos: Gratis.",
+        "Niños de 0 a 2 años: Gratis.",
         "Check in: 3:00 pm",
         "Check out: 1:00 pm",
         "Ziplines: RD$ 350.00 por persona",
@@ -653,7 +653,7 @@
         "Excursiones disponibles con costo adicional.",
         "Area de masajes disponible con costo adicional."
       ],
-      "intro": "El Valle combina Pets Friendly: Se permiten mascotas. Restaurante con costo adicional. Frente a la playa. Excursiones disponibles con costo adicional. Bano y ducha. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
+      "intro": "El Valle combina Pets Friendly: Se permiten mascotas. Restaurante con costo adicional. Frente a la playa. Excursiones disponibles con costo adicional. Baño y ducha. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
         "Pets Friendly: Se permiten mascotas.",
         "Restaurante con costo adicional.",
@@ -664,21 +664,21 @@
         "Distancia desde Santo Domingo: 3 horas."
       ],
       "includes": [
-        "Bano y ducha.",
+        "Baño y ducha.",
         "Areas para camping.",
         "Luz en las instalaciones y conectores de electricidad en las areas comunes.",
         "Parqueos en propiedad privada.",
         "Areas sociales y recreativas.",
-        "Fogata con costo adicional: RD$ 1,000 (pequena) y RD$ 1,500 (grande)."
+        "Fogata con costo adicional: RD$ 1,000 (pequeña) y RD$ 1,500 (grande)."
       ],
       "pricing": [
-        "Costo de entrada ninos (3 a 11 anos): RD$ 400.00 por persona.",
-        "Ninos menores de 2 anos: Gratis.",
+        "Costo de entrada niños (3 a 11 años): RD$ 400.00 por persona.",
+        "Niños menores de 2 años: Gratis.",
         "Check in: 9:00 am hasta las 7:00 pm",
         "Check out: 5:00 pm"
       ],
       "lodging": [
-        "Casas de Campanas para parejas:",
+        "Casas de Campañas para parejas:",
         "RD$ 1,500 (carpas para 2 personas).",
         "RD$ 2,000 (carpas para 4 personas)."
       ],
@@ -753,7 +753,7 @@
         "Tour de Cafe, Cacao y Ambar.",
         "Fogata.",
         "Uso de kayak (costo adicional).",
-        "Bano con barro terapeutico.",
+        "Baño con barro terapeutico.",
         "Corriente electrica para celulares.",
         "Parqueos en propiedad privada.",
         "Areas sociales y recreativas.",
@@ -764,7 +764,7 @@
         "Check in: 9:00 am",
         "Check out: 5:00 pm",
         "Costo por noche adultos: RD$ 700.00 p/p.",
-        "Costo por noche ninos: RD$ 500.00 p/p (de 3 a 10 anos).",
+        "Costo por noche niños: RD$ 500.00 p/p (de 3 a 10 años).",
         "Planes Alimenticios Tipo Buffet:"
       ],
       "lodging": [],
@@ -855,14 +855,14 @@
         "RD$ 6,600.00 por 2 personas.",
         "RD$ 9,900.00 por 3 personas.",
         "RD$ 12,300.00 por 4 personas.",
-        "RD$ 2,400.00 por ninos de 4 a 10 anos."
+        "RD$ 2,400.00 por niños de 4 a 10 años."
       ],
       "food": [
         "Restaurante y Bar abierto de 8:00 am a 10:00 pm con cargo extra.",
         "Excursiones Guiadas Disponibles:",
         "Las excursiones incluyen chalecos salvavidas y guias expertos.",
         "Lista de Excursiones:",
-        "Canyoning Canon de Arroyo Frio: RD$ 1,800.00 p/p.",
+        "Canyoning Cañón de Arroyo Frio: RD$ 1,800.00 p/p.",
         "Canyoning en Cola de Pato: RD$ 1,600.00 p/p.",
         "Senderismo en Los Tinajones: RD$ 1,450.00 p/p.",
         "Senderismo en Las Caobas: RD$ 1,500.00 p/p.",
@@ -900,7 +900,7 @@
       "location": "Jarabacoa, La Vega",
       "priceNote": "Desde RD$800 por noche",
       "tags": [
-        "Montana",
+        "Montaña",
         "Rio",
         "Cascada",
         "Restaurante",
@@ -911,7 +911,7 @@
         "Cuenta con comida/restaurante",
         "Balneario con rio y cascada",
         "No requiere vehiculo 4x4",
-        "Destino clasico de montana",
+        "Destino clasico de montaña",
         "Informacion actualizada",
         "Ideal para aventura y desconexion",
         "Pets Friendly: Se permiten mascotas.",
@@ -942,7 +942,7 @@
       ],
       "pricing": [
         "Costo de adultos: RD$ 600.00 por persona.",
-        "Costo de ninos (3 a 7 anos): RD$ 400.00 por persona.",
+        "Costo de niños (3 a 7 años): RD$ 400.00 por persona.",
         "Check in: 9:00 am hasta las 8:00 pm",
         "Check out: 6:00 pm"
       ],
@@ -950,7 +950,7 @@
         "Capacidad maxima: 2 personas.",
         "Precio: RD$ 2,500.00 por noche.",
         "Precio: RD$ 1,500.00 por pareja.",
-        "Casa de Campana: Para 1 o 2 personas RD$ 1,500."
+        "Casa de Campaña: Para 1 o 2 personas RD$ 1,500."
       ],
       "food": [
         "Contamos con BBQ (debes de traer el carbon) y cocina equipada para que puedas preparar tus alimentos.",
@@ -1065,7 +1065,7 @@
       "location": "Los Cacaos, San Cristobal",
       "priceNote": "Desde RD$3,500 por noche; todo incluido",
       "tags": [
-        "Montana",
+        "Montaña",
         "Rio",
         "Todo incluido",
         "Sur"
@@ -1112,14 +1112,14 @@
       "pricing": [],
       "lodging": [
         "Capacidad maxima: 2 personas.",
-        "Capacidad maxima: 2 adultos + 1 nino por carpa."
+        "Capacidad maxima: 2 adultos + 1 niño por carpa."
       ],
       "food": [
         "Menu: Totalmente campesino y preestablecido, no se ofrece servicio a la carta.",
         "Recomendacion: Llevar picaderas y cualquier dieta que ingieran.",
         "Bar abierto: De 10:00 am a 11:00 pm con cargo extra.",
         "Llegadas a las 11:00 am: Incluyen el almuerzo de ese dia RD$ 600.00 extra por persona. Se debe notificar con un minimo de 24 horas.",
-        "Menu de alimentos (cocina a lena):",
+        "Menu de alimentos (cocina a leña):",
         "Desayuno (8:20 am a 9:20 am): Pan tostado, queso, huevos hervidos, chocolate y frutas.",
         "Almuerzo (12:20 pm a 2:20 pm): Arroz blanco, habichuelas guisadas, ensalada rusa o pasta, carne de cerdo o pollo guisado, jugos naturales y agua.",
         "Cena (8:20 pm a 9:20 pm): Mangu con huevo, salami frito y cebollitas.",
@@ -1156,9 +1156,9 @@
       "pdfUrl": "https://drive.google.com/file/d/1Br-2KC2vU9NJA5hUY3CqZuNZBqZZyTHT/preview"
     },
     {
-      "id": "monsenor",
-      "name": "Monsenor",
-      "location": "Canabon, Bonao",
+      "id": "monseñor",
+      "name": "Monseñor",
+      "location": "Cañabón, Bonao",
       "priceNote": "Desde RD$1,000 por noche",
       "tags": [
         "Bosque",
@@ -1167,7 +1167,7 @@
         "Presa Rincon",
         "Kayak",
         "Mascotas",
-        "Montana"
+        "Montaña"
       ],
       "highlights": [
         "Camping en bosque",
@@ -1176,16 +1176,16 @@
         "No requiere vehiculo 4x4",
         "Frente a la Presa Rincon",
         "Uso de kayak 30 minutos por dia",
-        "Cocina y horno de lena",
+        "Cocina y horno de leña",
         "Seguridad interna 24 horas",
-        "Campamento rodeado de montanas, frente a la Presa Rincon.",
+        "Campamento rodeado de montañas, frente a la Presa Rincon.",
         "Pets Friendly: Se permiten mascotas.",
         "Ideal para desconectarse de la monotonia, contacto cercano con la naturaleza y lo ecologico.",
         "Perfecto para actividades grupales, retiros, excursiones y actividades en pareja."
       ],
-      "intro": "Monsenor combina Campamento rodeado de montanas, frente a la Presa Rincon. Pets Friendly: Se permiten mascotas. Ideal para desconectarse de la monotonia, contacto cercano con la naturaleza y lo ecologico. Perfecto para actividades grupales, retiros, excursiones y actividades en pareja. Cocina a lena. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
+      "intro": "Monseñor combina Campamento rodeado de montañas, frente a la Presa Rincon. Pets Friendly: Se permiten mascotas. Ideal para desconectarse de la monotonia, contacto cercano con la naturaleza y lo ecologico. Perfecto para actividades grupales, retiros, excursiones y actividades en pareja. Cocina a leña. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
-        "Campamento rodeado de montanas, frente a la Presa Rincon.",
+        "Campamento rodeado de montañas, frente a la Presa Rincon.",
         "Pets Friendly: Se permiten mascotas.",
         "Ideal para desconectarse de la monotonia, contacto cercano con la naturaleza y lo ecologico.",
         "Perfecto para actividades grupales, retiros, excursiones y actividades en pareja.",
@@ -1196,8 +1196,8 @@
         "Equipos de camping de alquiler disponibles con retiro en Santo Domingo (solicitar catalogo)."
       ],
       "includes": [
-        "Cocina a lena.",
-        "Horno de pizza a lena y BBQ.",
+        "Cocina a leña.",
+        "Horno de pizza a leña y BBQ.",
         "Banos y duchas compartidos.",
         "Juegos de mesa.",
         "Hamacas.",
@@ -1214,10 +1214,10 @@
         "Check out: 3:00 pm",
         "Camping:",
         "RD$ 1,000 por persona por noche.",
-        "RD$ 750.00 ninos de 4 a 10 anos.",
+        "RD$ 750.00 niños de 4 a 10 años.",
         "RV Campers (casas rodantes):",
         "RD$ 900 por persona por noche.",
-        "RD$ 675.00 ninos de 4 a 10 anos.",
+        "RD$ 675.00 niños de 4 a 10 años.",
         "Nota: No incluye la casa rodante.",
         "Ambas opciones incluyen: Uso de areas comunes, agua, cafe y actividades.",
         "No incluye equipos de camping ni comidas. Puedes adquirir tu comida con costo adicional bajo reserva previa.",
@@ -1225,7 +1225,7 @@
       ],
       "lodging": [],
       "food": [
-        "Cocina a lena (fogon): Horno de pizza a lena y BBQ disponibles.",
+        "Cocina a leña (fogon): Horno de pizza a leña y BBQ disponibles.",
         "Nota: En caso de llevar perecederos, deben llevar neveritas con hielo para almacenaje.",
         "Restaurante tipico y colmado: A 20 minutos de la propiedad.",
         "Menu de Alimentos:",
@@ -1293,7 +1293,7 @@
         "Pets Friendly: Se permiten mascotas.",
         "Restaurante dentro del campamento.",
         "Rio dentro del campamento.",
-        "Area de juegos para ninos."
+        "Area de juegos para niños."
       ],
       "intro": "Montellano combina No hay acceso en transporte publico. Pets Friendly: Se permiten mascotas. Restaurante dentro del campamento. Rio dentro del campamento. Banos y duchas compartidos. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
@@ -1301,7 +1301,7 @@
         "Pets Friendly: Se permiten mascotas.",
         "Restaurante dentro del campamento.",
         "Rio dentro del campamento.",
-        "Area de juegos para ninos.",
+        "Area de juegos para niños.",
         "Capacidad maxima dentro de la propiedad: 50 personas.",
         "Distancia desde Santo Domingo: 3 horas y 20 minutos."
       ],
@@ -1323,10 +1323,10 @@
         "Estos precios incluyen el desayuno",
         "Si traes tus equipos de camping:",
         "Adultos: RD$ 900.00 por noche.",
-        "Ninos (6 a 12 anos): RD$ 500.00 por noche.",
+        "Niños (6 a 12 años): RD$ 500.00 por noche.",
         "Si no tienes equipos de camping:",
         "Adultos: RD$ 1,200.00 por noche.",
-        "Ninos (6 a 12 anos): RD$ 650.00 por noche (incluye casa de campana y colchonetas instaladas en el campamento).",
+        "Niños (6 a 12 años): RD$ 650.00 por noche (incluye casa de campaña y colchonetas instaladas en el campamento).",
         "Check in: 3:30 pm",
         "Check out: 5:00 pm",
         "Cerrado: Lunes",
@@ -1373,14 +1373,14 @@
       "location": "Rancho Arriba, San Jose de Ocoa",
       "priceNote": "Desde RD$800 por noche",
       "tags": [
-        "Montana",
+        "Montaña",
         "Rio",
         "Cascada",
         "Overland",
         "Mascotas"
       ],
       "highlights": [
-        "Camping en montana",
+        "Camping en montaña",
         "Balneario con rio y cascada",
         "No requiere vehiculo 4x4",
         "No cuenta con restaurante",
@@ -1407,14 +1407,14 @@
         "Areas para camping.",
         "Area de fogata.",
         "Corriente electrica para celulares.",
-        "BBQ, fogon y parrilla de lena.",
+        "BBQ, fogon y parrilla de leña.",
         "Caminos de senderismo.",
         "Areas sociales y recreativas.",
         "Parqueos en propiedad privada."
       ],
       "pricing": [
-        "Costo de entrada ninos (3 a 11 anos): RD$ 500.00 por persona.",
-        "Ninos menores de 2 anos: Gratis.",
+        "Costo de entrada niños (3 a 11 años): RD$ 500.00 por persona.",
+        "Niños menores de 2 años: Gratis.",
         "Check in: 9:00 am",
         "Check out: 5:00 pm",
         "Equipos de camping de alquiler con retiro en Santo Domingo disponibles, solicitar catalogo en caso de necesitar."
@@ -1462,7 +1462,7 @@
       "location": "Pinar del Valle",
       "priceNote": "Desde RD$1,500 por noche",
       "tags": [
-        "Montana",
+        "Montaña",
         "Cabana ecologica",
         "Restaurante",
         "Pinos",
@@ -1472,7 +1472,7 @@
         "Camping y cabana ecologica",
         "Cuenta con comida/restaurante",
         "No requiere vehiculo 4x4",
-        "Entorno de montana",
+        "Entorno de montaña",
         "Informacion actualizada disponible",
         "Galeria de fotos disponible",
         "Dog-friendly: Se permiten perros.",
@@ -1517,7 +1517,7 @@
         "7 personas: RD$ 1,200 por persona.",
         "8 a 12 personas: RD$ 1,000 por persona.",
         "13 a 30 personas: RD$ 900 por persona.",
-        "Los ninos menores de 12 anos no pagan (1 nino gratis por adulto, presentando un documento que verifique la edad).",
+        "Los niños menores de 12 años no pagan (1 niño gratis por adulto, presentando un documento que verifique la edad).",
         "Paquete Completo para Acampar (Precios por Noche):",
         "Capacidad maxima en carpas: 12 personas."
       ],
@@ -1534,7 +1534,7 @@
         "Contacta al Staff de Campeach informandole la fecha de tu reserva (minimo 3 dias antes de la entrada), cantidad de personas y plan seleccionado.",
         "Se requiere el pago del 100% para formalizar la reserva del espacio.",
         "Al momento de recibir la factura de los servicios contratados, aceptara la misma como comprobante de constancia de la reserva y responsabilidades dentro de espacios reservado plasmadas en este catalogo.",
-        "El titular del alquiler debe de ser mayor de 18 anos, tener documento de identificacion, y sera el responsable de cualquier eventualidad que surja durante su estadia."
+        "El titular del alquiler debe de ser mayor de 18 años, tener documento de identificacion, y sera el responsable de cualquier eventualidad que surja durante su estadia."
       ],
       "activities": [
         "Camping",
@@ -1556,7 +1556,7 @@
       "id": "punta-cana",
       "name": "Punta Cana",
       "location": "Punta Cana, La Altagracia",
-      "priceNote": "Costo de entrada ninos (2 a 9 anos): RD$ 700.00.",
+      "priceNote": "Costo de entrada niños (2 a 9 años): RD$ 700.00.",
       "tags": [
         "Playa",
         "Este",
@@ -1572,7 +1572,7 @@
         "Apreciacion de nacimientos de tortugas y cangrejos.",
         "No hay acceso en transporte publico.",
         "No hay delivery.",
-        "Suficiente senal de Claro y Altice."
+        "Suficiente señal de Claro y Altice."
       ],
       "intro": "Punta Cana combina Pets Friendly: Se permiten mascotas. Playa frente al area de camping. Restaurante, bar y coffee shop dentro del campamento. Apreciacion de nacimientos de tortugas y cangrejos. Desayuno continental. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
@@ -1582,7 +1582,7 @@
         "Apreciacion de nacimientos de tortugas y cangrejos.",
         "No hay acceso en transporte publico.",
         "No hay delivery.",
-        "Suficiente senal de Claro y Altice.",
+        "Suficiente señal de Claro y Altice.",
         "Capacidad maxima dentro del campamento: 50 personas.",
         "Distancia desde Santo Domingo: 3 horas y 30 minutos."
       ],
@@ -1601,9 +1601,9 @@
         "Campamento completamente ecologico."
       ],
       "pricing": [
-        "Estos costos no incluyen las casas de campanas ni demas equipos.",
-        "Costo de entrada ninos (2 a 9 anos): RD$ 700.00.",
-        "Ninos menores de 2 anos: Gratis.",
+        "Estos costos no incluyen las casas de campañas ni demas equipos.",
+        "Costo de entrada niños (2 a 9 años): RD$ 700.00.",
+        "Niños menores de 2 años: Gratis.",
         "Precios de Planes por Dia:",
         "Las carpas se encuentran instaladas en el campamento, no incluyen colchones ni sabanas.",
         "Para 2 personas: RD$ 3,800.00"
@@ -1613,13 +1613,13 @@
         "Contamos con restaurante, bar y coffee shop dentro del campamento.",
         "No hay restaurantes cercanos al campamento.",
         "No esta permitido llevar ningun tipo de comida o bebida.",
-        "Descorche de bebidas: RD$ 500 por botella, sin importar el contenido o tamano."
+        "Descorche de bebidas: RD$ 500 por botella, sin importar el contenido o tamaño."
       ],
       "activities": [
         "Playa",
         "Relax",
         "Fotos",
-        "Montana Redonda: A 1 hora de distancia.",
+        "Montaña Redonda: A 1 hora de distancia.",
         "Monkeyland: A 40 minutos de distancia.",
         "Rio desembocadura de Maimon: A 20 minutos de distancia.",
         "Ideal para rutas de senderismo, caminatas y relajacion."
@@ -1634,7 +1634,7 @@
         "No tocar las plantaciones y los animales sin autorizacion, esto podria ocasionar sanciones legales y pagos de multas.",
         "No tirar colillas de cigarrillos, tapas, servilletas, etc., en la playa.",
         "Reglas adicionales:",
-        "No se permiten neveritas de ningun tamano."
+        "No se permiten neveritas de ningun tamaño."
       ],
       "pdfUrl": "https://drive.google.com/file/d/1wYDmyTSB6NglmNkZqcWc336huZw5qxPb/preview"
     },
@@ -1690,9 +1690,9 @@
         "Nota: La basura se va contigo a casa, favor de no dejarla en la propiedad."
       ],
       "pricing": [
-        "Estos costos no incluyen las casas de campanas ni demas equipos.",
-        "Precio por adultos: RD$ 700.00 por noche, llevando la casa de campana.",
-        "Precio por nino (5 a 15 anos): RD$ 350.00 por noche.",
+        "Estos costos no incluyen las casas de campañas ni demas equipos.",
+        "Precio por adultos: RD$ 700.00 por noche, llevando la casa de campaña.",
+        "Precio por niño (5 a 15 años): RD$ 350.00 por noche.",
         "Horario de entrada: Entre 10:00 am a 7:00 pm",
         "Horario de salida: 2:00 pm",
         "Equipos de camping de alquiler con retiro en Santo Domingo disponibles, solicitar catalogo en caso de necesitar.",
@@ -1793,11 +1793,11 @@
         "Check out: 3:00 PM",
         "Planes llevando tu equipo de camping:",
         "Adultos: RD$ 1,600.00 por persona, incluye plan de alimentos.",
-        "Ninos (4 a 10 anos): RD$ 1,300.00 por persona, incluye plan de alimentos.",
+        "Niños (4 a 10 años): RD$ 1,300.00 por persona, incluye plan de alimentos.",
         "Planes sin alimentos (llevando tu equipo de camping):",
         "Adultos: RD$ 700.00 por persona.",
-        "Ninos (4 a 10 anos): RD$ 500.00 por persona.",
-        "Casas de Campanas (por Persona por Noche):",
+        "Niños (4 a 10 años): RD$ 500.00 por persona.",
+        "Casas de Campañas (por Persona por Noche):",
         "Debes llevar tus sabanas y toalla.",
         "Planes sin alimentos:",
         "Adultos: RD$ 1,000.00."
@@ -1834,10 +1834,10 @@
         "Musica moderada, la musica solo para ti. No se permite musica de 10:00 pm a 8:00 am.",
         "Recoger tus desperdicios (basura), somos un campamento eco-friendly.",
         "Mascotas: Si decides traer una, debes informarlo. No se permite dejar las mascotas solas en las cabanas ni que circulen libremente sin su dueno a su lado. Deben llevar collar y no se permite su acceso al area de comedor ni a la piscina. Recoge sus desechos.",
-        "Fogata: Disponibilidad para hacer fogata. El cliente debe asumir la responsabilidad de alimentar el fuego y apagarlo antes de dormir. Se ofrece una cantidad suficiente de lena, paquetes adicionales tienen un costo extra.",
+        "Fogata: Disponibilidad para hacer fogata. El cliente debe asumir la responsabilidad de alimentar el fuego y apagarlo antes de dormir. Se ofrece una cantidad suficiente de leña, paquetes adicionales tienen un costo extra.",
         "Vigilancia: Seguridad permanente y personal de apoyo para los huespedes. No somos responsables del cuidado de menores. Cada persona debe ser responsable de sus objetos personales. No somos responsables de objetos perdidos.",
-        "Hospedaje: No se permite bajo ninguna circunstancia sacar colchones, almohadas o sabanas de las cabanas al exterior o a las tiendas de campana.",
-        "Responsabilidad por danos o perdidas: La administracion NO se hace responsable de objetos dejados en las cabanas o tiendas de campana, tales como prendas, computadoras, camaras fotograficas o de video, celulares, dinero en efectivo, etc.",
+        "Hospedaje: No se permite bajo ninguna circunstancia sacar colchones, almohadas o sabanas de las cabanas al exterior o a las tiendas de campaña.",
+        "Responsabilidad por danos o perdidas: La administracion NO se hace responsable de objetos dejados en las cabanas o tiendas de campaña, tales como prendas, computadoras, camaras fotograficas o de video, celulares, dinero en efectivo, etc.",
         "No se permiten armas blancas o de fuego.",
         "Mantener las areas limpias que has utilizado."
       ],
@@ -1867,15 +1867,15 @@
         "Galeria de fotos disponible",
         "No hay acceso en transporte publico.",
         "Piscina dentro de la propiedad.",
-        "Area de juegos para ninos.",
+        "Area de juegos para niños.",
         "Kayak y botes de pedales con costo adicional.",
         "Jet ski y lanchas rapidas con costo adicional."
       ],
-      "intro": "Santiago combina No hay acceso en transporte publico. Piscina dentro de la propiedad. Area de juegos para ninos. Kayak y botes de pedales con costo adicional. Piscina con vista panoramica. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
+      "intro": "Santiago combina No hay acceso en transporte publico. Piscina dentro de la propiedad. Area de juegos para niños. Kayak y botes de pedales con costo adicional. Piscina con vista panoramica. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
         "No hay acceso en transporte publico.",
         "Piscina dentro de la propiedad.",
-        "Area de juegos para ninos.",
+        "Area de juegos para niños.",
         "Kayak y botes de pedales con costo adicional.",
         "Jet ski y lanchas rapidas con costo adicional.",
         "Pets Friendly: Se permiten mascotas.",
@@ -1900,11 +1900,11 @@
         "Check in: 2:00 pm",
         "Check out: 12:00 pm",
         "Precios llevando tus equipos de camping:",
-        "Adultos: RD$ 900.00 si llevas tu casa de campana.",
-        "Ninos (5 a 15 anos): RD$ 600.00.",
+        "Adultos: RD$ 900.00 si llevas tu casa de campaña.",
+        "Niños (5 a 15 años): RD$ 600.00.",
         "Precios llevando tus equipos con desayuno continental incluido:",
         "Adultos: RD$ 1,300.00.",
-        "Ninos (5 a 15 anos): RD$ 900.00.",
+        "Niños (5 a 15 años): RD$ 900.00.",
         "Desayuno continental incluye:",
         "Cafe o te.",
         "Frutas y tostadas.",
@@ -2003,7 +2003,7 @@
       ],
       "pricing": [
         "Adultos: RD$ 2,560.00.",
-        "Ninos (3 a 12 anos): RD$ 1,280.00.",
+        "Niños (3 a 12 años): RD$ 1,280.00.",
         "Descolche por botella: RD$ 600.00 mas impuestos (incluye vasos, agua y hielo)."
       ],
       "lodging": [
@@ -2067,7 +2067,7 @@
         "Rio con jacuzzi natural al lado del area del camping.- Piscina en medio del area de acampar con agua natural del rio",
         "Ideal para Overlands."
       ],
-      "intro": "Villa Altagracia (Eco Aldea) combina Pets Friendly: Se permiten mascotas. Salto de los Indios y cascada a 20 minutos por el sendero. Rio con jacuzzi natural al lado del area del camping.- Piscina en medio del area de acampar con agua natural del rio Ideal para Overlands. Bano compartido y duchas ecologicas. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
+      "intro": "Villa Altagracia (Eco Aldea) combina Pets Friendly: Se permiten mascotas. Salto de los Indios y cascada a 20 minutos por el sendero. Rio con jacuzzi natural al lado del area del camping.- Piscina en medio del area de acampar con agua natural del rio Ideal para Overlands. Baño compartido y duchas ecologicas. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
       "important": [
         "Pets Friendly: Se permiten mascotas.",
         "Salto de los Indios y cascada a 20 minutos por el sendero.",
@@ -2076,17 +2076,17 @@
         "No hay acceso en transporte publico.",
         "Electricidad con paneles solares, solo para celulares.",
         "No hay delivery.",
-        "Poca senal de celulares.",
+        "Poca señal de celulares.",
         "Capacidad maxima dentro del campamento: 150 personas.",
         "Distancia desde Santo Domingo: 50 minutos."
       ],
       "includes": [
-        "Bano compartido y duchas ecologicas.",
+        "Baño compartido y duchas ecologicas.",
         "Hamacas y columpios.",
-        "Areas de comedor, horno y fogon de lena.",
+        "Areas de comedor, horno y fogon de leña.",
         "Areas de picnic y BBQ.",
         "WIFI.",
-        "Piscina para ninos.",
+        "Piscina para niños.",
         "Area de fogata.",
         "Areas para camping cerca del rio.",
         "Corriente electrica para celulares.",
@@ -2097,7 +2097,7 @@
         "Check in: 9:00 am",
         "Check out: 5:00 pm",
         "Precio por adulto: RD$ 750.00 por noche.",
-        "Precio por nino (3-12 anos): RD$ 450.00 por noche.",
+        "Precio por niño (3-12 años): RD$ 450.00 por noche.",
         "Equipos de camping de alquiler con retiro en Santo Domingo disponibles, solicitar catalogo en caso de necesitar."
       ],
       "lodging": [
@@ -2106,7 +2106,7 @@
         "Precio: RD$ 2,300.00 por noche."
       ],
       "food": [
-        "Parrillas de BBQ, fogon y horno de lena: Disponibles para que prepares tus alimentos. Debes llevar todo lo que necesites para cocinar. Contamos con lena, si deseas carbon, debes llevarlo.",
+        "Parrillas de BBQ, fogon y horno de leña: Disponibles para que prepares tus alimentos. Debes llevar todo lo que necesites para cocinar. Contamos con leña, si deseas carbon, debes llevarlo.",
         "No hay restaurantes cercanos al campamento.",
         "No contamos con ventas de comidas ni bebidas, debes llevar todo lo que vayas a consumir."
       ],
@@ -2126,7 +2126,7 @@
         "No requiere vehiculo 4x4",
         "Confirmar disponibilidad y condiciones antes de reservar",
         "No hay delivery",
-        "Poca senal celular",
+        "Poca señal celular",
         "No electrodomesticos",
         "Llevar alimentos y bebidas",
         "Ser cordial y amable con los demas.",
@@ -2144,13 +2144,13 @@
       "location": "Constanza",
       "priceNote": "Consultar tarifa actualizada",
       "tags": [
-        "Montana",
+        "Montaña",
         "Frio",
         "Cabana"
       ],
       "highlights": [
         "Galeria de fotos disponible",
-        "Destino de montana",
+        "Destino de montaña",
         "Ideal para clima fresco"
       ],
       "intro": "",

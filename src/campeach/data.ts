@@ -436,11 +436,34 @@ function uniqueValues(items: string[]) {
   return Array.from(new Set(items.filter(Boolean)));
 }
 
+const spanishCorrections: Array<[RegExp, string]> = [
+  [/\bMonsenor\b/g, 'Monseñor'], [/\bmonsenor\b/g, 'monseñor'],
+  [/\bCanabon\b/g, 'Cañabón'], [/\bMontanas\b/g, 'Montañas'], [/\bmontanas\b/g, 'montañas'],
+  [/\bMontana\b/g, 'Montaña'], [/\bmontana\b/g, 'montaña'],
+  [/\bNinos\b/g, 'Niños'], [/\bninos\b/g, 'niños'], [/\bNino\b/g, 'Niño'], [/\bnino\b/g, 'niño'],
+  [/\bAnos\b/g, 'Años'], [/\banos\b/g, 'años'], [/\bCampanas\b/g, 'Campañas'], [/\bcampanas\b/g, 'campañas'],
+  [/\bCampana\b/g, 'Campaña'], [/\bcampana\b/g, 'campaña'], [/\bLena\b/g, 'Leña'], [/\blena\b/g, 'leña'],
+  [/\bPequena\b/g, 'Pequeña'], [/\bpequena\b/g, 'pequeña'], [/\bTamano\b/g, 'Tamaño'], [/\btamano\b/g, 'tamaño'],
+  [/\bCanon\b/g, 'Cañón'], [/\bSenal\b/g, 'Señal'], [/\bsenal\b/g, 'señal'], [/\bBano\b/g, 'Baño'], [/\bbano\b/g, 'baño'],
+];
+
+const correctSpanish = (text: string) =>
+  spanishCorrections.reduce((value, [pattern, replacement]) => value.replace(pattern, replacement), text);
+
+const localizeSpanish = <T,>(value: T): T => {
+  if (typeof value === 'string') return correctSpanish(value) as T;
+  if (Array.isArray(value)) return value.map(localizeSpanish) as T;
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, localizeSpanish(item)])) as T;
+  }
+  return value;
+};
+
 export const camps: Camp[] = campRecords.map((camp) => {
   const richInfo = campRichInfo[camp.id];
   const sheet = campSheetUpdates[camp.id];
 
-  return {
+  return localizeSpanish({
     ...camp,
     name: sheet?.name ?? camp.name,
     priceFrom: sheet?.priceFrom ?? camp.priceFrom ?? richInfo?.priceFrom,
@@ -467,7 +490,7 @@ export const camps: Camp[] = campRecords.map((camp) => {
     images: localImages(camp.id),
     pdfUrl: campPdfIds[camp.id] ? drivePreview(campPdfIds[camp.id]) : undefined,
     richInfo,
-  };
+  });
 });
 
 const equipmentRecords: Omit<Equipment, 'image'>[] = [

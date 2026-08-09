@@ -3,6 +3,7 @@ import asyncio
 import json
 import os
 import random
+import re
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -154,7 +155,38 @@ def ass_time(seconds):
 
 
 def safe_text(value):
-    return str(value).upper().replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U").replace("Ñ", "N")
+    return str(value).upper()
+
+
+ONES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte", "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"]
+TENS = {30: "treinta", 40: "cuarenta", 50: "cincuenta", 60: "sesenta", 70: "setenta", 80: "ochenta", 90: "noventa"}
+HUNDREDS = {100: "cien", 200: "doscientos", 300: "trescientos", 400: "cuatrocientos", 500: "quinientos", 600: "seiscientos", 700: "setecientos", 800: "ochocientos", 900: "novecientos"}
+
+
+def number_in_spanish(value):
+    if value < 30:
+        return ONES[value]
+    if value < 100:
+        tens, remainder = divmod(value, 10)
+        return TENS[tens * 10] + (f" y {ONES[remainder]}" if remainder else "")
+    if value < 1000:
+        hundreds, remainder = divmod(value, 100)
+        prefix = "ciento" if hundreds == 1 and remainder else HUNDREDS[hundreds * 100]
+        return prefix + (f" {number_in_spanish(remainder)}" if remainder else "")
+    if value < 1_000_000:
+        thousands, remainder = divmod(value, 1000)
+        prefix = "mil" if thousands == 1 else f"{number_in_spanish(thousands)} mil"
+        return prefix + (f" {number_in_spanish(remainder)}" if remainder else "")
+    return str(value)
+
+
+def voice_friendly_text(value):
+    def currency(match):
+        amount = int(match.group(1).replace(",", "").split(".")[0])
+        unit = "peso dominicano" if amount == 1 else "pesos dominicanos"
+        return f"{number_in_spanish(amount)} {unit}"
+
+    return re.sub(r"RD\$\s*([0-9][0-9,.]*)", currency, str(value)).replace("p/p/noche", "por persona por noche").replace("p/noche", "por noche").replace("p/p", "por persona")
 
 
 def build_ass(camp, path):
@@ -189,7 +221,7 @@ async def create_voice(camp, path):
     highlight = camp.get("highlights", ["naturaleza y aventura"])[0]
     text = (
         f"¿Buscas una escapada diferente? Conoce {camp['name']}, en {camp['location']}. "
-        f"{highlight}. {camp['priceNote']}. Confirma siempre disponibilidad y tarifa final antes de reservar. "
+        f"{highlight}. {voice_friendly_text(camp['priceNote'])}. Confirma siempre disponibilidad y tarifa final antes de reservar. "
         "Comenta INFO y recibe el PDF con todos los detalles."
     )
     await edge_tts.Communicate(text, "es-DO-RamonaNeural", rate="+8%").save(str(path))
