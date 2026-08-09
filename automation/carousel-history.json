@@ -38,5 +38,25 @@
       "public/carousels/2026-08-08-villa-altagracia-05.jpg",
       "public/carousels/2026-08-08-villa-altagracia-06.jpg"
     ]
+  },
+  {
+    "date": "2026-08-09",
+    "campId": "monsenor",
+    "files": [
+      "1yeNC6ln0PeZzv1UYEqXPQoM8QpTTiGM1",
+      "1aDdPvu7xg95csURpzTRRUx9wnt8Z4bCE",
+      "1WNY4AKR0Ed55ITrcT6agE6x7WFeWIOCB",
+      "1RcX1Nta91_cbt6x2mQ3QYC5CxbXROUFY",
+      "1JySd1DLyA4XefBEiLVipxzlkVjrrpivG",
+      "1h6Bkhc0GnIHqc63CsRN8nWy__I4ToZqB"
+    ],
+    "outputs": [
+      "public/carousels/2026-08-09-monsenor-01.jpg",
+      "public/carousels/2026-08-09-monsenor-02.jpg",
+      "public/carousels/2026-08-09-monsenor-03.jpg",
+      "public/carousels/2026-08-09-monsenor-04.jpg",
+      "public/carousels/2026-08-09-monsenor-05.jpg",
+      "public/carousels/2026-08-09-monsenor-06.jpg"
+    ]
   }
 ]
