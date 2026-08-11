@@ -45,15 +45,19 @@ def save_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def choose_camp(requested, history):
+def camp_candidates(requested, history):
     if requested:
         if requested not in PRIORITY:
             raise ValueError(f"Campamento no permitido: {requested}")
-        return requested
+        return [requested]
     last = history[-1]["campId"] if history else None
     start = datetime.now(timezone.utc).toordinal() % len(PRIORITY)
     ordered = PRIORITY[start:] + PRIORITY[:start]
-    return next(camp for camp in ordered if camp != last)
+    return [camp for camp in ordered if camp != last] + ([last] if last in PRIORITY else [])
+
+
+def choose_camp(requested, history):
+    return camp_candidates(requested, history)[0]
 
 
 def drive_session():
@@ -127,13 +131,17 @@ def download_videos(session, selected):
                 for chunk in response.iter_content(1024 * 1024):
                     if chunk:
                         output.write(chunk)
-        if is_vertical_source(path):
-            paths.append(path)
-            used.append(item)
-            if len(paths) == 4:
-                break
-        else:
+        try:
+            vertical = is_vertical_source(path)
+        except (subprocess.CalledProcessError, KeyError, json.JSONDecodeError):
+            vertical = False
+        if not vertical:
             path.unlink(missing_ok=True)
+            continue
+        paths.append(path)
+        used.append(item)
+        if len(paths) == 4:
+            break
     if len(paths) < 4:
         raise RuntimeError("No hay cuatro videos verticales utilizables")
     return paths, used
@@ -318,11 +326,23 @@ def main():
     REELS_DIR.mkdir(parents=True, exist_ok=True)
     history = load_json(HISTORY_PATH)
     catalog = load_json(CATALOG_PATH)
-    camp_id = choose_camp(args.camp, history)
-    camp = next(item for item in catalog["camps"] if item["id"] == camp_id)
     session = drive_session()
-    candidates = select_videos(list_videos(session, FOLDERS[camp_id]), history, camp_id)
-    paths, selected = download_videos(session, candidates)
+    attempt_errors = []
+    for camp_id in camp_candidates(args.camp, history):
+        try:
+            candidates = select_videos(list_videos(session, FOLDERS[camp_id]), history, camp_id)
+            paths, selected = download_videos(session, candidates)
+            break
+        except RuntimeError as error:
+            attempt_errors.append(f"{camp_id}: {error}")
+            print(f"Se omite {camp_id}: {error}")
+            for temporary in WORK_DIR.glob("source-*"):
+                temporary.unlink(missing_ok=True)
+            if args.camp:
+                raise
+    else:
+        raise RuntimeError("Ningún campamento tiene cuatro videos verticales utilizables: " + "; ".join(attempt_errors))
+    camp = next(item for item in catalog["camps"] if item["id"] == camp_id)
     date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     filename = f"{date}-{camp_id}.mp4"
     output = REELS_DIR / filename
@@ -338,7 +358,7 @@ def main():
         "output": str(output.relative_to(ROOT)).replace("\\", "/"),
         "caption": caption(camp),
         "pdfUrl": camp["pdfUrl"],
-        "idempotencyKey": f"reel:{date}:{camp_id}",
+        "idempotencyKey": f"reel:{date}",
     }
     save_json(WORK_DIR / "result.json", result)
     print(json.dumps(result, ensure_ascii=True))
