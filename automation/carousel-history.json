@@ -78,5 +78,25 @@
       "public/carousels/2026-08-10-jarabacoa-05.jpg",
       "public/carousels/2026-08-10-jarabacoa-06.jpg"
     ]
+  },
+  {
+    "date": "2026-08-11",
+    "campId": "hato-mayor",
+    "files": [
+      "1BmR-g5I2nDK3VP-WNfxBW4la71_WjePf",
+      "1nEUrJNq0CUlm5BI9H4LcwFi9Bun0Rvvl",
+      "1iE3fZXWLQZbgV9eGOLjSbUd8mGHBHwqK",
+      "1WgllzMMKuYZmT_3Y-pSpZUQMMmvK63-5",
+      "1OT4qmtnAnaJuH26JtPe7ujMApseaUljF",
+      "1eTgPG9Nve-4jWIrUTrTl5pAZja1qIViR"
+    ],
+    "outputs": [
+      "public/carousels/2026-08-11-hato-mayor-01.jpg",
+      "public/carousels/2026-08-11-hato-mayor-02.jpg",
+      "public/carousels/2026-08-11-hato-mayor-03.jpg",
+      "public/carousels/2026-08-11-hato-mayor-04.jpg",
+      "public/carousels/2026-08-11-hato-mayor-05.jpg",
+      "public/carousels/2026-08-11-hato-mayor-06.jpg"
+    ]
   }
 ]
