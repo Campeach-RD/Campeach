@@ -146,17 +146,29 @@ const recoverRecentComments = async (env: Env) => {
   const media = await instagramGet<{ data?: Array<{ id: string }> }>(`${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id&limit=12`, env);
   let replied = 0;
   let inspected = 0;
+  let failed = 0;
+  const recentThreshold = Date.now() - 6 * 24 * 60 * 60 * 1000;
   for (const item of media.data ?? []) {
     const comments = await instagramGet<{
       data?: Array<{ id?: string; text?: string; from?: { id?: string }; timestamp?: string }>;
     }>(`${item.id}/comments?fields=id,text,from,timestamp&limit=50`, env);
     for (const comment of comments.data ?? []) {
       inspected += 1;
-      if (await replyToInformationComment({ ...comment, media: { id: item.id } }, env)) replied += 1;
+      if (comment.timestamp && new Date(comment.timestamp).getTime() < recentThreshold) continue;
+      try {
+        if (await replyToInformationComment({ ...comment, media: { id: item.id } }, env)) replied += 1;
+      } catch (error) {
+        failed += 1;
+        console.error(JSON.stringify({
+          event: 'comment_recovery_reply_error',
+          commentId: comment.id,
+          error: error instanceof Error ? error.message : 'unknown',
+        }));
+      }
     }
   }
-  console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, replied }));
-  return { inspected, replied };
+  console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, replied, failed }));
+  return { inspected, replied, failed };
 };
 
 const processWebhook = async (payload: MetaPayload, env: Env) => {
