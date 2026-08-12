@@ -107,6 +107,18 @@ const sendInstagramPrivateReply = async (commentId: string, text: string, env: E
   }
 };
 
+const sendInstagramCommentReply = async (commentId: string, env: Env) => {
+  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${commentId}/replies`, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ message: '¡Hola! 👋 Te enviamos la información por mensaje privado.' }),
+  });
+  if (!response.ok) {
+    const detail = (await response.text()).slice(0, 500);
+    throw new Error(`instagram_comment_reply_${response.status}_${detail}`);
+  }
+};
+
 const instagramGet = async <T>(path: string, env: Env) => {
   const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${path}`, {
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
@@ -124,8 +136,21 @@ const replyToInformationComment = async (
 ) => {
   const commentId = comment.id;
   if (!commentId || !comment.text || comment.from?.id === env.INSTAGRAM_ACCOUNT_ID || !requestsInformation(comment.text)) return false;
+  let responded = false;
+  const publicKey = `comment-public:${commentId}`;
+  if (!(await env.DEDUP.get(publicKey))) {
+    await env.DEDUP.put(publicKey, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
+    try {
+      await sendInstagramCommentReply(commentId, env);
+      await env.DEDUP.put(publicKey, 'replied', { expirationTtl: 60 * 60 * 24 * 30 });
+      responded = true;
+    } catch (error) {
+      await env.DEDUP.delete(publicKey);
+      console.error(JSON.stringify({ event: 'comment_public_reply_error', commentId, error: error instanceof Error ? error.message : 'unknown' }));
+    }
+  }
   const key = `comment:${commentId}`;
-  if (await env.DEDUP.get(key)) return false;
+  if (await env.DEDUP.get(key)) return responded;
   await env.DEDUP.put(key, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
   try {
     const context = comment.media?.id
@@ -157,7 +182,7 @@ const recoverRecentComments = async (env: Env) => {
       inspected += 1;
       if (comment.timestamp && new Date(comment.timestamp).getTime() < recentThreshold) continue;
       if (!comment.text || !requestsInformation(comment.text)) continue;
-      if (attempted >= 8) break;
+      if (attempted >= 4) break;
       attempted += 1;
       try {
         if (await replyToInformationComment({ ...comment, media: { id: item.id } }, env)) replied += 1;
@@ -170,7 +195,7 @@ const recoverRecentComments = async (env: Env) => {
         }));
       }
     }
-    if (attempted >= 8) break;
+    if (attempted >= 4) break;
   }
   console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, attempted, replied, failed }));
   return { inspected, attempted, replied, failed };
