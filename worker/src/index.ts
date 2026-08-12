@@ -2,6 +2,7 @@ import { classificationCatalog, createReply, type Selection } from './reply';
 import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
 import { publishDailyCarousel, publishReel, serveDriveImage, verifyMediaSignature } from './instagram-publisher';
 import { createCommentReply, findCampFromCaption, publishableCamps } from './publishing';
+import { getWhatsAppMessages, listWhatsAppConversations, storeWhatsAppWebhook } from './whatsapp';
 
 const MAX_WEBHOOK_BYTES = 1_000_000;
 const DEDUP_TTL_SECONDS = 60 * 60 * 24 * 2;
@@ -362,6 +363,41 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === '/health' && request.method === 'GET') return json({ ok: true, service: 'campeach-instagram' });
+
+    if (url.pathname === '/whatsapp/webhook' && request.method === 'GET') {
+      const valid = url.searchParams.get('hub.mode') === 'subscribe' &&
+        safeSecretEqual(url.searchParams.get('hub.verify_token'), env.WHATSAPP_WEBHOOK_VERIFY_TOKEN);
+      return valid ? new Response(url.searchParams.get('hub.challenge') ?? '') : new Response('Forbidden', { status: 403 });
+    }
+    if (url.pathname === '/whatsapp/webhook' && request.method === 'POST') {
+      const declaredLength = Number(request.headers.get('content-length') ?? '0');
+      if (declaredLength > MAX_WEBHOOK_BYTES) return new Response('Payload too large', { status: 413 });
+      const rawBody = await request.text();
+      if (new TextEncoder().encode(rawBody).byteLength > MAX_WEBHOOK_BYTES) return new Response('Payload too large', { status: 413 });
+      if (!(await verifyMetaSignature(rawBody, request.headers.get('x-hub-signature-256'), env.META_APP_SECRET))) {
+        return new Response('Invalid signature', { status: 401 });
+      }
+      try {
+        const payload = JSON.parse(rawBody);
+        ctx.waitUntil(storeWhatsAppWebhook(payload, env));
+        return json({ received: true });
+      } catch {
+        return new Response('Invalid JSON', { status: 400 });
+      }
+    }
+
+    if (url.pathname === '/whatsapp/admin/conversations' && request.method === 'GET') {
+      if (!safeSecretEqual(request.headers.get('authorization'), `Bearer ${env.ADMIN_API_TOKEN}`)) return new Response('Unauthorized', { status: 401 });
+      const limit = Math.min(Math.max(Number(url.searchParams.get('limit') ?? 50), 1), 100);
+      return json(await listWhatsAppConversations(env, limit));
+    }
+    if (url.pathname === '/whatsapp/admin/messages' && request.method === 'GET') {
+      if (!safeSecretEqual(request.headers.get('authorization'), `Bearer ${env.ADMIN_API_TOKEN}`)) return new Response('Unauthorized', { status: 401 });
+      const waId = url.searchParams.get('wa_id') ?? '';
+      if (!/^\d{6,20}$/.test(waId)) return json({ error: 'invalid_wa_id' }, 400);
+      const limit = Math.min(Math.max(Number(url.searchParams.get('limit') ?? 100), 1), 200);
+      return json(await getWhatsAppMessages(env, waId, limit));
+    }
 
     if (url.pathname === '/instagram/admin/publish-reel' && request.method === 'POST') {
       const authorization = request.headers.get('authorization');

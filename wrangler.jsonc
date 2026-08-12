@@ -16,6 +16,14 @@
       "binding": "DEDUP"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "WHATSAPP_DB",
+      "database_name": "campeach-whatsapp",
+      "database_id": "7f5589bc-56bb-459a-9d3d-156e90c1849b",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
