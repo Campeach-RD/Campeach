@@ -58,7 +58,32 @@ export const choosePhotos = <T>(photos: T[], count: number, randomValues: number
 
 export const createCaption = (camp: PublishableCamp) => {
   const highlights = camp.highlights.slice(0, 4).map((item) => `• ${item}`).join('\n');
-  return `🏕️ ${camp.name}\n📍 ${camp.location}\n💰 ${camp.priceNote}\n\n${highlights}\n\nComenta INFO y te enviamos todos los detalles por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana`;
+  return `🏕️ ${camp.name}\n📍 ${camp.location}\n💰 ${camp.priceNote}\n\n${highlights}\n\nComenta INFO y te enviamos todos los detalles por DM. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #RepublicaDominicana`;
+};
+
+const normalizeCaption = (value: string) =>
+  value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+const CAMP_ALIASES: Record<string, string[]> = {
+  'el-valle': ['playa el valle', 'campamento el valle'],
+  ocoa: ['san jose de ocoa', 'campamento ocoa'],
+  bonao: ['campamento bonao'],
+  santiago: ['campamento santiago'],
+  'villa-altagracia': ['villa altagracia', 'villa altagracia'],
+  monsenor: ['campamento monsenor', 'monseñor'],
+  jarabacoa: ['campamento jarabacoa'],
+  'hato-mayor': ['hato mayor', 'campamento hato mayor'],
+};
+
+export const findCampFromCaption = (caption = '') => {
+  const normalized = ` ${normalizeCaption(caption)} `;
+  const candidates = publishableCamps.flatMap((camp) =>
+    [camp.name, camp.id.replaceAll('-', ' '), ...(CAMP_ALIASES[camp.id] ?? [])]
+      .map(normalizeCaption)
+      .filter((alias) => alias.length >= 4)
+      .map((alias) => ({ camp, alias })),
+  ).sort((left, right) => right.alias.length - left.alias.length);
+  return candidates.find(({ alias }) => normalized.includes(` ${alias} `))?.camp;
 };
 
 export const createCommentReply = (camp: PublishableCamp) =>

@@ -285,7 +285,8 @@ def caption(camp):
     highlights = "\n".join(f"• {item}" for item in camp.get("highlights", [])[:3])
     return (
         f"🏕️ {camp['name']}\n📍 {camp['location']}\n💰 {camp['priceNote']}\n\n{highlights}\n\n"
-        "Comenta INFO y te enviamos por DM todos los detalles y el PDF del campamento.\n\n"
+        "Comenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. "
+        "También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n"
         f"#CampeachRD #CampingRD #{camp['id'].replace('-', '')} #RepublicaDominicana"
     )
 

@@ -1,10 +1,12 @@
 import { classificationCatalog, createReply, type Selection } from './reply';
 import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
 import { publishDailyCarousel, publishReel, serveDriveImage, verifyMediaSignature } from './instagram-publisher';
-import { createCommentReply, publishableCamps } from './publishing';
+import { createCommentReply, findCampFromCaption, publishableCamps } from './publishing';
 
 const MAX_WEBHOOK_BYTES = 1_000_000;
 const DEDUP_TTL_SECONDS = 60 * 60 * 24 * 2;
+const COMMENT_RECOVERY_STATE_KEY = 'comment-recovery:cursor';
+const COMMENT_PROCESSING_TTL_MS = 10 * 60 * 1000;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
@@ -107,11 +109,15 @@ const sendInstagramPrivateReply = async (commentId: string, text: string, env: E
   }
 };
 
-const sendInstagramCommentReply = async (commentId: string, env: Env) => {
+const sendInstagramCommentReply = async (
+  commentId: string,
+  env: Env,
+  message = '¡Hola! 👋 Te enviamos la información por mensaje privado.',
+) => {
   const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${commentId}/replies`, {
     method: 'POST',
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ message: '¡Hola! 👋 Te enviamos la información por mensaje privado.' }),
+    body: JSON.stringify({ message }),
   });
   if (!response.ok) {
     const detail = (await response.text()).slice(0, 500);
@@ -130,16 +136,36 @@ const instagramGet = async <T>(path: string, env: Env) => {
   return response.json<T>();
 };
 
+const acquireCommentReply = async (key: string, env: Env) => {
+  const raw = await env.DEDUP.get(key);
+  if (raw === 'replied') return false;
+  if (raw?.startsWith('{')) {
+    try {
+      const state = JSON.parse(raw) as { status?: string; startedAt?: number };
+      if (state.status === 'replied') return false;
+      if (state.status === 'processing' && state.startedAt && Date.now() - state.startedAt < COMMENT_PROCESSING_TTL_MS) return false;
+      if (state.status === 'failed' && state.startedAt && Date.now() - state.startedAt < 60 * 1000) return false;
+    } catch {
+      // A malformed or legacy state must not permanently block a customer reply.
+    }
+  }
+  await env.DEDUP.put(key, JSON.stringify({ status: 'processing', startedAt: Date.now() }), { expirationTtl: 15 * 60 });
+  return true;
+};
+
 const replyToInformationComment = async (
-  comment: { id?: string; text?: string; from?: { id?: string }; media?: { id?: string } },
+  comment: { id?: string; text?: string; from?: { id?: string }; media?: { id?: string }; campId?: string },
   env: Env,
 ) => {
   const commentId = comment.id;
-  if (!commentId || !comment.text || comment.from?.id === env.INSTAGRAM_ACCOUNT_ID || !requestsInformation(comment.text)) return false;
+  if (!commentId || !comment.text || comment.from?.id === env.INSTAGRAM_ACCOUNT_ID || !requestsInformation(comment.text)) {
+    return { attempted: false, responded: false };
+  }
+  let attempted = false;
   let responded = false;
   const publicKey = `comment-public:${commentId}`;
-  if (!(await env.DEDUP.get(publicKey))) {
-    await env.DEDUP.put(publicKey, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
+  if (await acquireCommentReply(publicKey, env)) {
+    attempted = true;
     try {
       await sendInstagramCommentReply(commentId, env);
       await env.DEDUP.put(publicKey, 'replied', { expirationTtl: 60 * 60 * 24 * 30 });
@@ -150,55 +176,136 @@ const replyToInformationComment = async (
     }
   }
   const key = `comment:${commentId}`;
-  if (await env.DEDUP.get(key)) return responded;
-  await env.DEDUP.put(key, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
+  if (!(await acquireCommentReply(key, env))) return { attempted, responded };
+  attempted = true;
+  let camp: (typeof publishableCamps)[number] | undefined;
   try {
     const context = comment.media?.id
       ? await env.DEDUP.get(`post:${comment.media.id}`, 'json') as { campId?: string } | null
       : null;
-    const camp = context?.campId ? publishableCamps.find((item) => item.id === context.campId) : undefined;
-    await sendInstagramPrivateReply(commentId, camp ? createCommentReply(camp) : COMMENT_PRIVATE_REPLY, env);
+    let campId = comment.campId ?? context?.campId;
+    if (!campId && comment.media?.id) {
+      try {
+        const media = await instagramGet<{ caption?: string }>(`${comment.media.id}?fields=caption`, env);
+        campId = findCampFromCaption(media.caption)?.id;
+      } catch (error) {
+        console.error(JSON.stringify({ event: 'comment_media_context_error', commentId, error: error instanceof Error ? error.message : 'unknown' }));
+      }
+    }
+    camp = campId ? publishableCamps.find((item) => item.id === campId) : undefined;
+    const privateText = camp ? createCommentReply(camp) : COMMENT_PRIVATE_REPLY;
+    try {
+      await sendInstagramPrivateReply(commentId, privateText, env);
+    } catch (privateReplyError) {
+      if (!comment.from?.id) throw privateReplyError;
+      try {
+        await sendInstagramMessage(comment.from.id, privateText, env);
+      } catch (directMessageError) {
+        throw new Error(`${privateReplyError instanceof Error ? privateReplyError.message : 'private_reply_failed'}; fallback_${directMessageError instanceof Error ? directMessageError.message : 'direct_message_failed'}`);
+      }
+    }
     await env.DEDUP.put(key, 'replied', { expirationTtl: 60 * 60 * 24 * 30 });
     console.log(JSON.stringify({ event: 'comment_private_reply_sent', commentId, source: comment.media?.id ? 'media_scan' : 'webhook' }));
-    return true;
+    return { attempted, responded: true };
   } catch (error) {
-    await env.DEDUP.delete(key);
+    const fallbackKey = `comment-fallback:${commentId}`;
+    if (camp && await acquireCommentReply(fallbackKey, env)) {
+      try {
+        await sendInstagramCommentReply(commentId, env, `La información corresponde a ${camp.name}. Meta no nos permitió enviarte el DM; abre el enlace de nuestra biografía y selecciona este campamento para ver todos los detalles.`);
+        await env.DEDUP.put(fallbackKey, 'replied', { expirationTtl: 60 * 60 * 24 * 30 });
+      } catch (fallbackError) {
+        await env.DEDUP.delete(fallbackKey);
+        console.error(JSON.stringify({ event: 'comment_fallback_reply_error', commentId, error: fallbackError instanceof Error ? fallbackError.message : 'unknown' }));
+      }
+    }
+    await env.DEDUP.put(key, JSON.stringify({ status: 'failed', startedAt: Date.now() }), { expirationTtl: 6 * 60 * 60 });
     throw error;
   }
 };
 
+type RecoveryState = {
+  mediaAfter?: string;
+  mediaId?: string;
+  caption?: string;
+  nextMediaAfter?: string;
+  commentAfter?: string;
+};
+
 const recoverRecentComments = async (env: Env) => {
-  const media = await instagramGet<{ data?: Array<{ id: string }> }>(`${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id&limit=6`, env);
+  let state = await env.DEDUP.get(COMMENT_RECOVERY_STATE_KEY, 'json') as RecoveryState | null ?? {};
+  if (!state.mediaId) {
+    const mediaPath = `${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id,caption,timestamp&limit=1${state.mediaAfter ? `&after=${encodeURIComponent(state.mediaAfter)}` : ''}`;
+    const media = await instagramGet<{
+      data?: Array<{ id: string; caption?: string }>;
+      paging?: { cursors?: { after?: string }; next?: string };
+    }>(mediaPath, env);
+    const item = media.data?.[0];
+    if (!item) {
+      await env.DEDUP.delete(COMMENT_RECOVERY_STATE_KEY);
+      return { inspected: 0, attempted: 0, replied: 0, failed: 0, cycleComplete: true };
+    }
+    state = {
+      mediaAfter: state.mediaAfter,
+      mediaId: item.id,
+      caption: item.caption ?? '',
+      nextMediaAfter: media.paging?.next ? media.paging.cursors?.after : undefined,
+    };
+    await env.DEDUP.put(COMMENT_RECOVERY_STATE_KEY, JSON.stringify(state));
+  }
+
   let replied = 0;
   let inspected = 0;
   let failed = 0;
   let attempted = 0;
-  const recentThreshold = Date.now() - 6 * 24 * 60 * 60 * 1000;
-  for (const item of media.data ?? []) {
-    const comments = await instagramGet<{
-      data?: Array<{ id?: string; text?: string; from?: { id?: string }; timestamp?: string }>;
-    }>(`${item.id}/comments?fields=id,text,from,timestamp&limit=25`, env);
-    for (const comment of comments.data ?? []) {
-      inspected += 1;
-      if (comment.timestamp && new Date(comment.timestamp).getTime() < recentThreshold) continue;
-      if (!comment.text || !requestsInformation(comment.text)) continue;
-      if (attempted >= 4) break;
-      attempted += 1;
-      try {
-        if (await replyToInformationComment({ ...comment, media: { id: item.id } }, env)) replied += 1;
-      } catch (error) {
-        failed += 1;
-        console.error(JSON.stringify({
-          event: 'comment_recovery_reply_error',
-          commentId: comment.id,
-          error: error instanceof Error ? error.message : 'unknown',
-        }));
-      }
+  const errors: string[] = [];
+  const recentThreshold = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const commentsPath = `${state.mediaId}/comments?fields=id,text,from,timestamp&limit=12${state.commentAfter ? `&after=${encodeURIComponent(state.commentAfter)}` : ''}`;
+  const comments = await instagramGet<{
+    data?: Array<{ id?: string; text?: string; from?: { id?: string }; timestamp?: string }>;
+    paging?: { cursors?: { after?: string }; next?: string };
+  }>(commentsPath, env);
+  const camp = findCampFromCaption(state.caption);
+  let pageComplete = true;
+  const page = comments.data ?? [];
+  for (let index = 0; index < page.length; index += 1) {
+    const comment = page[index];
+    inspected += 1;
+    if (comment.timestamp && new Date(comment.timestamp).getTime() < recentThreshold) continue;
+    if (!comment.text || !requestsInformation(comment.text)) continue;
+    if (attempted >= 4) {
+      pageComplete = false;
+      break;
     }
-    if (attempted >= 4) break;
+    try {
+      const result = await replyToInformationComment({ ...comment, media: { id: state.mediaId }, campId: camp?.id }, env);
+      if (result.attempted) attempted += 1;
+      if (result.responded) replied += 1;
+    } catch (error) {
+      attempted += 1;
+      failed += 1;
+      if (errors.length < 4) errors.push(error instanceof Error ? error.message.slice(0, 500) : 'unknown');
+      console.error(JSON.stringify({
+        event: 'comment_recovery_reply_error',
+        commentId: comment.id,
+        error: error instanceof Error ? error.message : 'unknown',
+      }));
+    }
   }
-  console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, attempted, replied, failed }));
-  return { inspected, attempted, replied, failed };
+
+  let cycleComplete = false;
+  if (pageComplete) {
+    if (comments.paging?.next && comments.paging.cursors?.after) {
+      state.commentAfter = comments.paging.cursors.after;
+      await env.DEDUP.put(COMMENT_RECOVERY_STATE_KEY, JSON.stringify(state));
+    } else if (state.nextMediaAfter) {
+      await env.DEDUP.put(COMMENT_RECOVERY_STATE_KEY, JSON.stringify({ mediaAfter: state.nextMediaAfter } satisfies RecoveryState));
+    } else {
+      await env.DEDUP.delete(COMMENT_RECOVERY_STATE_KEY);
+      cycleComplete = true;
+    }
+  }
+  console.log(JSON.stringify({ event: 'comment_recovery_completed', mediaId: state.mediaId, campId: camp?.id, inspected, attempted, replied, failed, cycleComplete }));
+  return { inspected, attempted, replied, failed, errors, mediaId: state.mediaId, campId: camp?.id, cycleComplete };
 };
 
 const processWebhook = async (payload: MetaPayload, env: Env) => {
@@ -240,7 +347,7 @@ const processWebhook = async (payload: MetaPayload, env: Env) => {
       }
 
       try {
-        if (await replyToInformationComment(comment, env)) processed += 1;
+        if ((await replyToInformationComment(comment, env)).responded) processed += 1;
       } catch (error) {
         console.error(
           JSON.stringify({ event: 'comment_processing_error', error: error instanceof Error ? error.message : 'unknown' }),
