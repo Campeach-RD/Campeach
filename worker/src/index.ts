@@ -101,7 +101,10 @@ const sendInstagramPrivateReply = async (commentId: string, text: string, env: E
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
     body: JSON.stringify({ recipient: { comment_id: commentId }, message: { text } }),
   });
-  if (!response.ok) throw new Error(`instagram_private_reply_${response.status}`);
+  if (!response.ok) {
+    const detail = (await response.text()).slice(0, 500);
+    throw new Error(`instagram_private_reply_${response.status}_${detail}`);
+  }
 };
 
 const instagramGet = async <T>(path: string, env: Env) => {
