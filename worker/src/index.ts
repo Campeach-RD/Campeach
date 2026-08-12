@@ -143,18 +143,22 @@ const replyToInformationComment = async (
 };
 
 const recoverRecentComments = async (env: Env) => {
-  const media = await instagramGet<{ data?: Array<{ id: string }> }>(`${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id&limit=12`, env);
+  const media = await instagramGet<{ data?: Array<{ id: string }> }>(`${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id&limit=6`, env);
   let replied = 0;
   let inspected = 0;
   let failed = 0;
+  let attempted = 0;
   const recentThreshold = Date.now() - 6 * 24 * 60 * 60 * 1000;
   for (const item of media.data ?? []) {
     const comments = await instagramGet<{
       data?: Array<{ id?: string; text?: string; from?: { id?: string }; timestamp?: string }>;
-    }>(`${item.id}/comments?fields=id,text,from,timestamp&limit=50`, env);
+    }>(`${item.id}/comments?fields=id,text,from,timestamp&limit=25`, env);
     for (const comment of comments.data ?? []) {
       inspected += 1;
       if (comment.timestamp && new Date(comment.timestamp).getTime() < recentThreshold) continue;
+      if (!comment.text || !requestsInformation(comment.text)) continue;
+      if (attempted >= 8) break;
+      attempted += 1;
       try {
         if (await replyToInformationComment({ ...comment, media: { id: item.id } }, env)) replied += 1;
       } catch (error) {
@@ -166,9 +170,10 @@ const recoverRecentComments = async (env: Env) => {
         }));
       }
     }
+    if (attempted >= 8) break;
   }
-  console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, replied, failed }));
-  return { inspected, replied, failed };
+  console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, attempted, replied, failed }));
+  return { inspected, attempted, replied, failed };
 };
 
 const processWebhook = async (payload: MetaPayload, env: Env) => {
