@@ -104,6 +104,58 @@ const sendInstagramPrivateReply = async (commentId: string, text: string, env: E
   if (!response.ok) throw new Error(`instagram_private_reply_${response.status}`);
 };
 
+const instagramGet = async <T>(path: string, env: Env) => {
+  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${path}`, {
+    headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
+  });
+  if (!response.ok) {
+    const detail = (await response.text()).slice(0, 300);
+    throw new Error(`instagram_get_${response.status}_${detail}`);
+  }
+  return response.json<T>();
+};
+
+const replyToInformationComment = async (
+  comment: { id?: string; text?: string; from?: { id?: string }; media?: { id?: string } },
+  env: Env,
+) => {
+  const commentId = comment.id;
+  if (!commentId || !comment.text || comment.from?.id === env.INSTAGRAM_ACCOUNT_ID || !requestsInformation(comment.text)) return false;
+  const key = `comment:${commentId}`;
+  if (await env.DEDUP.get(key)) return false;
+  await env.DEDUP.put(key, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
+  try {
+    const context = comment.media?.id
+      ? await env.DEDUP.get(`post:${comment.media.id}`, 'json') as { campId?: string } | null
+      : null;
+    const camp = context?.campId ? publishableCamps.find((item) => item.id === context.campId) : undefined;
+    await sendInstagramPrivateReply(commentId, camp ? createCommentReply(camp) : COMMENT_PRIVATE_REPLY, env);
+    await env.DEDUP.put(key, 'replied', { expirationTtl: 60 * 60 * 24 * 30 });
+    console.log(JSON.stringify({ event: 'comment_private_reply_sent', commentId, source: comment.media?.id ? 'media_scan' : 'webhook' }));
+    return true;
+  } catch (error) {
+    await env.DEDUP.delete(key);
+    throw error;
+  }
+};
+
+const recoverRecentComments = async (env: Env) => {
+  const media = await instagramGet<{ data?: Array<{ id: string }> }>(`${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id&limit=12`, env);
+  let replied = 0;
+  let inspected = 0;
+  for (const item of media.data ?? []) {
+    const comments = await instagramGet<{
+      data?: Array<{ id?: string; text?: string; from?: { id?: string }; timestamp?: string }>;
+    }>(`${item.id}/comments?fields=id,text,from,timestamp&limit=50`, env);
+    for (const comment of comments.data ?? []) {
+      inspected += 1;
+      if (await replyToInformationComment({ ...comment, media: { id: item.id } }, env)) replied += 1;
+    }
+  }
+  console.log(JSON.stringify({ event: 'comment_recovery_completed', inspected, replied }));
+  return { inspected, replied };
+};
+
 const processWebhook = async (payload: MetaPayload, env: Env) => {
   let processed = 0;
   for (const entry of payload.entry ?? []) {
@@ -142,20 +194,9 @@ const processWebhook = async (payload: MetaPayload, env: Env) => {
         continue;
       }
 
-      const key = `comment:${commentId}`;
-      if (await env.DEDUP.get(key)) continue;
-      await env.DEDUP.put(key, 'processing', { expirationTtl: DEDUP_TTL_SECONDS });
-
       try {
-        const mediaId = comment.media?.id;
-        const context = mediaId
-          ? await env.DEDUP.get(`post:${mediaId}`, 'json') as { campId?: string } | null
-          : null;
-        const camp = context?.campId ? publishableCamps.find((item) => item.id === context.campId) : undefined;
-        await sendInstagramPrivateReply(commentId, camp ? createCommentReply(camp) : COMMENT_PRIVATE_REPLY, env);
-        processed += 1;
+        if (await replyToInformationComment(comment, env)) processed += 1;
       } catch (error) {
-        await env.DEDUP.delete(key);
         console.error(
           JSON.stringify({ event: 'comment_processing_error', error: error instanceof Error ? error.message : 'unknown' }),
         );
@@ -217,6 +258,17 @@ export default {
       }
     }
 
+    if (url.pathname === '/instagram/admin/recover-comments' && request.method === 'POST') {
+      const authorization = request.headers.get('authorization');
+      if (!safeSecretEqual(authorization, `Bearer ${env.ADMIN_API_TOKEN}`)) return new Response('Unauthorized', { status: 401 });
+      try {
+        return json(await recoverRecentComments(env));
+      } catch (error) {
+        console.error(JSON.stringify({ event: 'comment_recovery_error', error: error instanceof Error ? error.message : 'unknown' }));
+        return json({ error: 'comment_recovery_failed', detail: error instanceof Error ? error.message.slice(0, 500) : 'unknown' }, 502);
+      }
+    }
+
 
 
 
@@ -251,6 +303,11 @@ export default {
     } catch {
       return new Response('Invalid JSON', { status: 400 });
     }
+  },
+  async scheduled(_controller, env, ctx): Promise<void> {
+    ctx.waitUntil(recoverRecentComments(env).catch((error) => {
+      console.error(JSON.stringify({ event: 'scheduled_comment_recovery_error', error: error instanceof Error ? error.message : 'unknown' }));
+    }));
   },
 } satisfies ExportedHandler<Env>;
 
