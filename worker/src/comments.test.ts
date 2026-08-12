@@ -2,12 +2,19 @@ import { describe, expect, it } from 'vitest';
 import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
 
 describe('Instagram comment automation', () => {
-  it.each(['Info', '¿Cuál es el precio?', 'Me interesa este campamento', 'Quiero reservar', 'Link por favor'])(
+  it.each([
+    'Info', 'inf', 'INFORMACIÓN', 'Información por favor', '+ info',
+    '¿Cuál es el precio?', 'precios', '¿Cuánto cuesta?', 'Tarifa', 'Cotización',
+    'Me interesa este campamento', 'Me gustaría saber más', 'Quiero reservar', '¿Tienen cupo?',
+    'Disponibilidad', 'Fechas disponibles', 'Link por favor', 'Enlace', 'PDF',
+    'Ubicación', '¿Cómo llego?', 'Detalles', 'Datos', 'WhatsApp', 'DM',
+    'Equipos de camping', 'Alquiler de carpas',
+  ])(
     'detects an information request: %s',
     (comment) => expect(requestsInformation(comment)).toBe(true),
   );
 
-  it.each(['Qué hermoso 😍', 'Excelente foto', 'Muchas gracias'])(
+  it.each(['Qué hermoso 😍', 'Excelente foto', 'Muchas gracias', 'Bendiciones', 'Quiero mucho este lugar'])(
     'ignores a comment without information intent: %s',
     (comment) => expect(requestsInformation(comment)).toBe(false),
   );
