@@ -106,5 +106,29 @@
     "idempotencyKey": "reel:2026-08-12",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-12-ocoa.mp4?rev=d325932",
     "instagramMediaId": "18082733459284684"
+  },
+  {
+    "date": "2026-08-13T15:45:33.600055+00:00",
+    "campId": "santiago",
+    "campName": "Santiago",
+    "files": [
+      "126se2F5jXL45xRiNV28GZPfmXtNHbkeq",
+      "18Zyb39c8lsMJGfdj_bcSURJtkQRy-rLn",
+      "1paXKDIKNSWu9QaUAGltn2rsCCgAuH2bz",
+      "1ZxUTfVC7yysjl7MsZClJq8RLPBjmXiKI"
+    ],
+    "fileNames": [
+      "2021-06-20 14.43.41.mp4",
+      "2021-06-20 14.47.00.mp4",
+      "2021-06-20 15.35.18.mp4",
+      "2021-06-20 13.35.09.mp4"
+    ],
+    "duration": 18.166667,
+    "output": "public/reels/2026-08-13-santiago.mp4",
+    "caption": "🏕️ Santiago\n📍 Santiago\n💰 Desde RD$900 por noche\n\n• Camping, glamping y habitaciones\n• Cuenta con comida/restaurante\n• Balneario con presa y piscina\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #santiago #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/18Ky7j5vm7RC1ngksrIkqOh_yqXM-2j6V/preview",
+    "idempotencyKey": "reel:2026-08-13",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-13-santiago.mp4?rev=bb92e95",
+    "instagramMediaId": "18017913914717810"
   }
 ]
