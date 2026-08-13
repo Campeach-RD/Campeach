@@ -2,8 +2,8 @@ name: Carrusel diario de Campeach
 
 on:
   schedule:
-    # Se inicia 5 minutos antes para compensar preparación y colas de GitHub; Meta publica cerca de las 4:00 AST.
-    - cron: "55 19 * * *"
+    # GitHub puede demorar el inicio. Arrancamos antes y esperamos hasta las 4:00 p. m. AST para publicar.
+    - cron: "30 19 * * *"
   workflow_dispatch:
     inputs:
       camp:
@@ -23,7 +23,7 @@ concurrency:
 jobs:
   prepare-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -76,6 +76,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
+          import datetime as dt
           import json, os, time
           from pathlib import Path
           import requests
@@ -91,12 +92,41 @@ jobs:
                   time.sleep(10)
               else:
                   raise RuntimeError(f"La foto no quedó pública: {url}")
-          response = requests.post(
-              os.environ["WORKER_URL"] + "/instagram/admin/publish-carousel",
-              headers={"Authorization": f"Bearer {os.environ['ADMIN_TOKEN']}"},
-              json={"campId": result["campId"], "imageUrls": urls},
-              timeout=360,
-          )
-          response.raise_for_status()
-          print(json.dumps(response.json(), ensure_ascii=False))
+
+          # No publicar antes de las 4:00 p. m. AST (20:00 UTC), aunque GitHub inicie temprano.
+          now = dt.datetime.now(dt.timezone.utc)
+          target = now.replace(hour=20, minute=0, second=0, microsecond=0)
+          if now < target:
+              delay = (target - now).total_seconds()
+              print(f"Esperando {int(delay)} segundos hasta las 4:00 p. m. AST")
+              time.sleep(delay)
+
+          endpoint = os.environ["WORKER_URL"] + "/instagram/admin/publish-carousel"
+          payload = {"campId": result["campId"], "imageUrls": urls}
+          last_error = None
+          for attempt in range(1, 7):
+              try:
+                  response = requests.post(
+                      endpoint,
+                      headers={"Authorization": f"Bearer {os.environ['ADMIN_TOKEN']}"},
+                      json=payload,
+                      timeout=360,
+                  )
+                  if response.ok:
+                      published = response.json()
+                      if not published.get("mediaId"):
+                          raise RuntimeError(f"Meta no devolvió mediaId: {published}")
+                      print(json.dumps(published, ensure_ascii=False))
+                      break
+                  detail = response.text[:1000]
+                  last_error = RuntimeError(f"HTTP {response.status_code}: {detail}")
+                  if response.status_code < 500 and response.status_code != 429:
+                      raise last_error
+              except requests.RequestException as error:
+                  last_error = error
+              if attempt == 6:
+                  raise last_error or RuntimeError("No se pudo publicar el carrusel")
+              wait = min(15 * (2 ** (attempt - 1)), 120)
+              print(f"Intento {attempt} falló; reintentando en {wait} segundos: {last_error}")
+              time.sleep(wait)
           PY
