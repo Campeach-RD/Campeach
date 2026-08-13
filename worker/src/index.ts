@@ -374,7 +374,7 @@ export default {
       if (declaredLength > MAX_WEBHOOK_BYTES) return new Response('Payload too large', { status: 413 });
       const rawBody = await request.text();
       if (new TextEncoder().encode(rawBody).byteLength > MAX_WEBHOOK_BYTES) return new Response('Payload too large', { status: 413 });
-      if (!(await verifyMetaSignature(rawBody, request.headers.get('x-hub-signature-256'), env.META_APP_SECRET))) {
+      if (!(await verifyMetaSignature(rawBody, request.headers.get('x-hub-signature-256'), env.WHATSAPP_APP_SECRET))) {
         return new Response('Invalid signature', { status: 401 });
       }
       try {
