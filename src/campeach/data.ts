@@ -497,7 +497,6 @@ export const camps: Camp[] = campRecords.map((camp) => {
 });
 
 const equipmentRecords: Omit<Equipment, 'image' | 'id' | 'images' | 'highlights'>[] = [
-  { name: 'Carpa No. 2', price: 500, detail: 'Capacidad para 2 personas.', category: 'Carpas' },
   { name: 'Carpa No. 3', price: 800, detail: 'Capacidad para 1 a 3 personas; ideal para parejas.', category: 'Carpas' },
   { name: 'Carpa No. 4', price: 1000, detail: 'Capacidad para 1 a 4 personas; altura interior comoda.', category: 'Carpas' },
   { name: 'Carpa No. 6', price: 1600, detail: 'Capacidad para 1 a 6 personas; caben 4 en 2 colchones Queen.', category: 'Carpas' },
@@ -508,12 +507,8 @@ const equipmentRecords: Omit<Equipment, 'image' | 'id' | 'images' | 'highlights'
   { name: 'Colchon de Baul', price: 500, detail: 'Colchon inflable para baul de vehiculo, capacidad para 1 a 2 personas.', category: 'Dormir' },
   { name: 'Silla Plegable', price: 300, detail: 'Silla individual facil de transportar.', category: 'Muebles' },
   { name: 'Hamaca', price: 300, detail: 'Hamaca para descansar entre arboles.', category: 'Muebles' },
-  { name: 'Mesa de Picnic', price: 500, detail: 'Para 4 personas, plegable.', category: 'Muebles' },
-  { name: 'Mochila', price: 300, detail: 'Mochila de 80 litros.', category: 'Accesorios' },
   { name: 'Nevera Portatil', price: 2000, detail: 'Nevera de 55 litros para mantener alimentos y bebidas frescas.', category: 'Accesorios' },
-  { name: 'Trekking Pole', price: 300, detail: 'Baston para rutas y senderismo.', category: 'Accesorios' },
   { name: 'Cargador Portatil', price: 400, detail: 'Energia extra con linterna LED integrada.', category: 'Accesorios' },
-  { name: 'Proyector', price: 1000, detail: 'No incluye cables de celulares; deposito adicional RD$3,000.', category: 'Accesorios' },
   { name: 'Lampara Solar', price: 200, detail: 'Iluminacion para noches al aire libre.', category: 'Accesorios' },
   { name: 'Abanico Portatil', price: 300, detail: 'Recargable, con multiples velocidades.', category: 'Accesorios' },
 ];
@@ -521,7 +516,6 @@ const equipmentRecords: Omit<Equipment, 'image' | 'id' | 'images' | 'highlights'
 const equipmentSlug = (name: string) => name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const shopAsset = (path: string) => publicAsset(`/shop-products/${path}`);
 const equipmentMedia: Record<string, string[]> = {
-  'carpa-no-2': [publicAsset('/rental-products/carpa-3.jpg'), ...Array.from({ length: 7 }, (_, index) => shopAsset(`tent-3/frame-${String(index + 1).padStart(2, '0')}.jpeg`))],
   'carpa-no-3': [publicAsset('/rental-products/carpa-3.jpg'), ...Array.from({ length: 7 }, (_, index) => shopAsset(`tent-3/frame-${String(index + 1).padStart(2, '0')}.jpeg`))],
   'carpa-no-4': [publicAsset('/rental-products/carpa-4.jpg'), ...Array.from({ length: 8 }, (_, index) => shopAsset(`tent-4/frame-${String(index + 1).padStart(2, '0')}.jpeg`))],
   'carpa-no-6': [publicAsset('/rental-products/carpa-6.jpg'), ...Array.from({ length: 8 }, (_, index) => shopAsset(`tent-6/frame-${String(index + 1).padStart(2, '0')}.jpeg`))],
