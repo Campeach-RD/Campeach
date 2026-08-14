@@ -22,6 +22,16 @@ const PRODUCTS = {
   "ozark-4": { name: "Ozark Trail Clip & Camp para 4 personas", price: 7490 },
   "ozark-6": { name: "Ozark Trail Clip & Camp para 6 personas", price: 12490 },
   "ozark-8": { name: "Ozark Trail Clip & Camp para 8 personas", price: 17990 },
+  "ozark-sleeping-pad": { name: "Sleeping pad Ozark Trail Essential", price: 3490 },
+  "lifestraw-personal": { name: "Filtro de agua LifeStraw Personal", price: 2490 },
+  "lepro-headlamp-2": { name: "Linternas frontales Lepro recargables (2)", price: 2990 },
+  "ozark-towel": { name: "Toalla de secado rápido Ozark Trail", price: 1790 },
+  "ozark-waterproof-pouch": { name: "Pouches impermeables Ozark Trail (2)", price: 1990 },
+  "emergency-blankets-12": { name: "Mantas térmicas de emergencia (12)", price: 2490 },
+  "ozark-tarp-9x12": { name: "Lona heavy-duty Ozark Trail 9 x 12", price: 3990 },
+  "ozark-air-pump": { name: "Bomba de aire portátil Ozark Trail", price: 2490 },
+  "ozark-sleeping-bag-50": { name: "Sleeping bag Ozark Trail 50 F", price: 3490 },
+  "coghlans-stakes-4": { name: "Estacas Coghlan's heavy-duty de 10 pulgadas (4)", price: 1990 },
 } as const;
 
 type ProductId = keyof typeof PRODUCTS;
