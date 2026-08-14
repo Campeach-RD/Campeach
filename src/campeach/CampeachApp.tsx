@@ -103,7 +103,7 @@ const whatsappFor = (camp?: Camp, _intent: WhatsappIntent = 'availability', equi
 type ShopProduct = {
   id: string; name: string; category: string; brand: string; price: number; compareAt: number;
   weight: string; footprint: string; description: string; image: string; rating: number;
-  ratingCount: number; walmartPrice: string; walmartUrl: string;
+  ratingCount: number;
   availability: 'available' | 'out-of-stock'; highlights: string[]; reviewSummary: string; featured?: boolean;
 };
 
@@ -117,8 +117,8 @@ const shopProducts: ShopProduct[] = [
     weight: '5.64 lb',
     footprint: "7' × 7' × 44\"",
     description: 'Compacta y ligera, con espacio para tres personas o un colchón queen y equipaje.',
-    image: 'https://i5.walmartimages.com/seo/OT-3P-DOME-TENT_6ab1283a-1ed7-4867-83c1-c252d873095e.5b59dc3dfba1a9917f1ccc90fb1aa809.jpeg',
-    rating: 4.3, ratingCount: 3470, walmartPrice: 'US$30.93', walmartUrl: 'https://www.walmart.com/ip/6311816943', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/tent-3.jpg`,
+    rating: 4.3, ratingCount: 3470, availability: 'available',
     highlights: ['Sobretecho removible y resistente al agua', 'Techo y paredes de malla', 'Puerta amplia en forma de D', 'Bolsillos y acceso para cable eléctrico'],
     reviewSummary: 'Los compradores destacan el montaje sencillo, la ventilación y el espacio que ofrece para su peso.',
   },
@@ -131,8 +131,8 @@ const shopProducts: ShopProduct[] = [
     weight: '7.87 lb',
     footprint: "8' × 8.5' × 50\"",
     description: 'Espacio para un colchón queen, ventilación amplia y sobretecho removible.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-4-Person-Clip-Camp-Dome-Tent-8-x-8-5-x-50-7-87-lbs_7610003e-44cc-44bb-8233-f045ff5e08f1.bf2296d5412c648b46e407a584196a54.jpeg',
-    rating: 4.3, ratingCount: 1246, walmartPrice: 'US$41.26', walmartUrl: 'https://www.walmart.com/ip/257465101', availability: 'out-of-stock',
+    image: `${import.meta.env.BASE_URL}shop-products/tent-4.jpg`,
+    rating: 4.3, ratingCount: 1246, availability: 'out-of-stock',
     highlights: ['Capacidad para cuatro personas', 'Sobretecho con costuras selladas', 'Techo y paredes de malla', 'Compartimento de acceso doble'],
     reviewSummary: 'La amplitud, la circulación de aire y la organización interior son sus puntos mejor valorados.',
   },
@@ -145,8 +145,8 @@ const shopProducts: ShopProduct[] = [
     weight: '14 lb',
     footprint: "12' × 8.5' × 72\"",
     description: 'La favorita de Campeach: cómoda, ventilada y con capacidad para dos colchones queen.',
-    image: 'https://i5.walmartimages.com/seo/OT-6P-DOME-TENT_49cdd491-f5b5-4983-ac05-69ddc8c5e098.b3d69dd9a8f4eb84b8a5f3d7a7a3662b.jpeg',
-    rating: 4.3, ratingCount: 3341, walmartPrice: 'US$82.00', walmartUrl: 'https://www.walmart.com/ip/6249506446', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/tent-6.jpg`,
+    rating: 4.3, ratingCount: 3341, availability: 'available',
     highlights: ['Altura central de 72 pulgadas', 'Espacio para dos colchones queen', 'Alero y tapete de entrada', 'Bolsillos y acceso para cable eléctrico'],
     reviewSummary: 'Las reseñas resaltan el espacio, precio y montaje; para viento fuerte conviene reforzar las estacas.',
     featured: true,
@@ -160,69 +160,69 @@ const shopProducts: ShopProduct[] = [
     weight: '23.81 lb',
     footprint: "16' × 8' × 78\"",
     description: 'Formato familiar con altura para estar de pie y espacio para tres colchones queen.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-8-Person-Clip-Camp-Family-Tent-16-x-8-x-78-23-81-lbs_610c544e-addf-48dd-94e5-8bdd69a571a1.c10f4531efa861d1409f696e05718c9a.jpeg',
-    rating: 4.1, ratingCount: 794, walmartPrice: 'US$112.00', walmartUrl: 'https://www.walmart.com/ip/179587755', availability: 'out-of-stock',
+    image: `${import.meta.env.BASE_URL}shop-products/tent-8.jpg`,
+    rating: 4.1, ratingCount: 794, availability: 'out-of-stock',
     highlights: ['Altura central de 78 pulgadas', 'Espacio para tres colchones queen', 'Techo y paredes de malla', 'Alero, tapete y acceso eléctrico'],
     reviewSummary: 'Se valora especialmente el espacio y la altura; hay opiniones más mixtas sobre estacas, viento y filtraciones.',
   },
   {
     id: 'ozark-sleeping-pad', name: 'Sleeping pad Ozark Trail Essential', category: 'Descanso', brand: 'Ozark Trail', price: 3490, compareAt: 3990,
     weight: '1.5 lb', footprint: '78\" × 28\" × 2.5\"', description: 'Colchoneta inflable amplia y compacta para dormir con mayor aislamiento y comodidad.',
-    image: 'https://i5.walmartimages.com/seo/OT-TPU-SLEEPING-PAD_d67c659c-b8d9-4669-81cd-8df92d1658bd.24b1393dd59e9b9ce8bae1275a4adb2c.jpeg', rating: 4.5, ratingCount: 692, walmartPrice: 'US$23.88', walmartUrl: 'https://www.walmart.com/ip/17441771912', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/sleeping-pad.jpg`, rating: 4.5, ratingCount: 692, availability: 'available',
     highlights: ['Tamaño individual grande', 'Solo 1.5 libras', 'Superficie impermeable', 'Se enrolla de forma compacta'], reviewSummary: 'Los comentarios destacan comodidad, tamaño, poco ruido y facilidad para guardar.',
   },
   {
     id: 'lifestraw-personal', name: 'Filtro de agua LifeStraw Personal', category: 'Agua y seguridad', brand: 'LifeStraw', price: 2490, compareAt: 2790,
     weight: '1.62 oz', footprint: 'Filtro personal', description: 'Filtro compacto para excursiones, campamentos y preparación ante emergencias.',
-    image: 'https://i5.walmartimages.com/seo/6-pack-Lifestraw-Personal-Water-Filter-for-Travel-Hiking-Camping-and-Survival-Blue_4d0f6aba-8185-471b-b355-f09f010f5ccf.102863cc6086f7f9335e980427955710.jpeg', rating: 4.4, ratingCount: 647, walmartPrice: 'US$88.82 por 6', walmartUrl: 'https://www.walmart.com/ip/18631506491', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/lifestraw.jpg`, rating: 4.4, ratingCount: 647, availability: 'available',
     highlights: ['Sin electricidad ni baterías', 'Ligero para mochila', 'Filtra bacterias y parásitos', 'Venta Campeach por unidad'], reviewSummary: 'Se valora su portabilidad, operación sencilla y utilidad para camping y emergencias.',
   },
   {
     id: 'lepro-headlamp-2', name: 'Linternas frontales Lepro recargables (2)', category: 'Iluminación', brand: 'Lepro', price: 2990, compareAt: 3490,
     weight: 'Paquete ligero', footprint: 'Banda ajustable', description: 'Par de linternas manos libres con luz blanca y roja para montar el campamento de noche.',
-    image: 'https://i5.walmartimages.com/seo/Lepro-Blue-2-Pack-Headlamps-Rechargeable-2000Lux-Super-Bright-LED-Head-Lamp-6-Modes-Camping-Hiking-Gear-Essentials-IPX4-Waterproof-Flashlights-Adjust_a6500cbf-afa1-4a2a-88aa-9bd6beb0ab30.ad67d37b14062046d956a6261679244c.jpeg', rating: 4.5, ratingCount: 371, walmartPrice: 'US$18.88', walmartUrl: 'https://www.walmart.com/ip/16648319382', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/headlamps.jpg`, rating: 4.5, ratingCount: 371, availability: 'available',
     highlights: ['Dos unidades recargables', 'Hasta 2000 lux', 'Seis modos', 'IPX4 y cable USB'], reviewSummary: 'Se repiten elogios sobre brillo, comodidad y recarga; algunas reseñas advierten variaciones en autonomía.',
   },
   {
     id: 'ozark-towel', name: 'Toalla de secado rápido Ozark Trail', category: 'Comodidad', brand: 'Ozark Trail', price: 1790, compareAt: 2190,
     weight: 'Ligera', footprint: '25\" × 54\"', description: 'Toalla de microfibra de tamaño completo que ocupa poco espacio y seca rápidamente.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-Quick-Dry-Camping-Towel-25in-x-54in-Gray_abd0eef4-f1e1-4237-8324-b7b1c217ce76.bed27a3327cea5f3745320261669e287.jpeg', rating: 4.8, ratingCount: 43, walmartPrice: 'US$8.47', walmartUrl: 'https://business.walmart.com/ip/Ozark-Trail-Quick-Dry-Camping-Towel-25in-x-54in-Gray/258999948', availability: 'out-of-stock',
+    image: `${import.meta.env.BASE_URL}shop-products/towel.jpg`, rating: 4.8, ratingCount: 43, availability: 'out-of-stock',
     highlights: ['Microfibra ligera', 'Bolsa de malla', 'Lazo para colgar', 'Tamaño de baño'], reviewSummary: 'Las mejores valoraciones resaltan el secado rápido, el tamaño y su empaque compacto.',
   },
   {
     id: 'ozark-waterproof-pouch', name: 'Pouches impermeables Ozark Trail (2)', category: 'Organización', brand: 'Ozark Trail', price: 1990, compareAt: 2390,
     weight: 'Paquete ligero', footprint: '8.6\" × 6.3\"', description: 'Dos bolsas ligeras con correa ajustable para proteger teléfonos, llaves y documentos de salpicaduras.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-Splash-Resistant-Pouch-with-Adjustable-Strap-2-Pack_bb5bc47e-2cb2-4d41-a7fe-f77b3548b67b.2bcfa83dd875f44e680dc1273342ba54.jpeg', rating: 4.6, ratingCount: 83, walmartPrice: 'US$9.97', walmartUrl: 'https://www.walmart.com/ip/6931300660', availability: 'out-of-stock',
+    image: `${import.meta.env.BASE_URL}shop-products/pouches.jpg`, rating: 4.6, ratingCount: 83, availability: 'out-of-stock',
     highlights: ['Dos pouches', 'Triple cierre', 'Correa ajustable', 'Protección contra salpicaduras'], reviewSummary: 'Los usuarios destacan la capacidad, el cierre triple y su utilidad para kayak, playa y camping.',
   },
   {
     id: 'emergency-blankets-12', name: 'Mantas térmicas de emergencia (12)', category: 'Agua y seguridad', brand: 'General Medi', price: 2490, compareAt: 2990,
     weight: 'Paquete compacto', footprint: '12 unidades', description: 'Mantas Mylar compactas para kits de emergencia, excursiones y vehículos.',
-    image: 'https://i5.walmartimages.com/seo/Emergency-Blanket-12-Pack-for-Emergencies-High-Quality-Material_45e3981f-0678-4de4-9ad7-1ade4d9353a6.15e5894c55d813eff891d08d5ab6fe89.jpeg', rating: 4.6, ratingCount: 96, walmartPrice: 'US$9.99', walmartUrl: 'https://www.walmart.com/ip/285390033', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/blankets.jpg`, rating: 4.6, ratingCount: 96, availability: 'available',
     highlights: ['Doce mantas Mylar', 'Empaque compacto', 'Para kits y vehículos', 'Reduce la pérdida de calor'], reviewSummary: 'Las reseñas destacan el empaque pequeño, la facilidad de almacenamiento y el valor del paquete.',
   },
   {
     id: 'ozark-tarp-9x12', name: 'Lona heavy-duty Ozark Trail 9 × 12', category: 'Protección', brand: 'Ozark Trail', price: 3990, compareAt: 4490,
     weight: 'Peso por confirmar', footprint: "9' × 12'", description: 'Lona de polietileno de 10 mil para piso, sombra o protección adicional.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-Heavy-Duty-Tarp-9-x-12-Material-PE_30d0a933-01b8-4246-85d1-a50be00f35b0.f842bae7d38b280093648c7715f3b623.jpeg', rating: 4.6, ratingCount: 1555, walmartPrice: 'US$18.38', walmartUrl: 'https://www.walmart.com/ip/189015984', availability: 'available',
-    highlights: ['Polietileno de 10 mil', 'Esquinas reforzadas', 'Ojales de sujeción', 'Garantía Walmart de un año'], reviewSummary: 'Los compradores mencionan buena resistencia frente a lluvia, nieve y viento.',
+    image: `${import.meta.env.BASE_URL}shop-products/tarp.jpg`, rating: 4.6, ratingCount: 1555, availability: 'available',
+    highlights: ['Polietileno de 10 mil', 'Esquinas reforzadas', 'Ojales de sujeción', 'Garantía limitada de un año'], reviewSummary: 'Los compradores mencionan buena resistencia frente a lluvia, nieve y viento.',
   },
   {
     id: 'ozark-air-pump', name: 'Bomba de aire portátil Ozark Trail', category: 'Inflado', brand: 'Ozark Trail · Sidewinder', price: 2490, compareAt: 2890,
     weight: '0.68 lb', footprint: '6 V · 4 baterías D', description: 'Bomba portátil para inflar y desinflar colchones sin tomacorriente.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-Sidewinder-D-Cell-Electric-Air-Pump_ab12d1b1-8066-4bcb-86be-05463a29f499.a6f28429bbeb797afe30db5b8a2ae68b.jpeg', rating: 4.2, ratingCount: 2149, walmartPrice: 'US$11.12', walmartUrl: 'https://www.walmart.com/ip/676519557', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/pump.jpg`, rating: 4.2, ratingCount: 2149, availability: 'available',
     highlights: ['Infla y desinfla', 'Varias boquillas', 'Cuatro baterías D', 'Baterías no incluidas'], reviewSummary: 'Se valora su portabilidad; las críticas se concentran en velocidad, baterías y unidades defectuosas.',
   },
   {
     id: 'ozark-sleeping-bag-50', name: 'Sleeping bag Ozark Trail 50 °F', category: 'Descanso', brand: 'Ozark Trail', price: 3490, compareAt: 3990,
     weight: '2.9 lb', footprint: '33\" × 75\"', description: 'Saco rectangular para clima cálido, adecuado para noches tropicales.',
-    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-50-Degree-Warm-Weather-Rectangular-Sleeping-Bag-Red-33-x75_6f806fba-dd99-455f-8f6d-80c8ceed7c5f.e00124790dfc8b9894d77e0cc79f73cf.jpeg', rating: 4.4, ratingCount: 4735, walmartPrice: 'US$15.24', walmartUrl: 'https://www.walmart.com/ip/477760657', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/sleeping-bag.jpg`, rating: 4.4, ratingCount: 4735, availability: 'available',
     highlights: ['Temperatura de 50 °F', 'Tamaño adulto', 'Lavable a máquina', 'Bolsa incluida'], reviewSummary: 'Miles de valoraciones destacan comodidad, facilidad para guardar y utilidad en clima cálido.',
   },
   {
     id: 'coghlans-stakes-4', name: 'Estacas Coghlan’s heavy-duty de 10\" (4)', category: 'Accesorios', brand: 'Coghlan’s', price: 1990, compareAt: 2290,
     weight: 'Aprox. 0.95 lb', footprint: '10\" cada una', description: 'Cuatro estacas de acero para asegurar carpas y lonas en terrenos firmes.',
-    image: 'https://i5.walmartimages.com/seo/4-pack-Coghlan-s-10-Steel-Nail-Pegs-Tent-Stake-For-Hard-Ground_c88fa1d1-b7e2-4168-b4d3-c59c8468c3aa_1.fd5e33ca9d61a6e8866a273ad27c7b48.png', rating: 4.7, ratingCount: 365, walmartPrice: 'US$11.88', walmartUrl: 'https://www.walmart.com/ip/5306047949', availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/stakes.png`, rating: 4.7, ratingCount: 365, availability: 'available',
     highlights: ['Acero plateado', 'Cuatro estacas de 10 pulgadas', 'Para suelo duro', 'Para carpas y toldos'], reviewSummary: 'Se destacan firmeza y buen agarre; algunas reseñas mencionan fragilidad en la cabeza.',
   },
 ];
@@ -301,8 +301,8 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
         <div className="product-summary">
           <span className="eyebrow"><Tent size={16} /> {product.brand}</span>
           <h1>{product.name}</h1>
-          <div className="shop-rating"><Star size={16} fill="currentColor" /> {product.rating.toFixed(1)} <span>{product.ratingCount.toLocaleString('es-DO')} valoraciones en Walmart</span></div>
-          <p className={`product-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? 'Disponible en la consulta más reciente' : 'Agotado temporalmente en Walmart'}</p>
+          <div className="shop-rating"><Star size={16} fill="currentColor" /> {product.rating.toFixed(1)} <span>{product.ratingCount.toLocaleString('es-DO')} valoraciones del producto</span></div>
+          <p className={`product-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? 'Disponible en la consulta más reciente' : 'Agotado temporalmente'}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
           <p className="product-delivery"><ShieldCheck size={18} /> Delivery estándar incluido hasta RD$500</p>
@@ -319,7 +319,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
         </div>
       </section>
       <section className="product-information">
-        <div><h2>Lo que debes saber</h2><p>{product.reviewSummary}</p><p className="product-source-note">Precio de referencia en Walmart: <strong>{product.walmartPrice}</strong>. Las valoraciones pertenecen a la ficha del proveedor y pueden cambiar.</p><a className="product-source-link" href={product.walmartUrl} target="_blank" rel="noreferrer">Ver ficha original en Walmart <ArrowUpRight size={16} /></a></div>
+        <div><h2>Lo que debes saber</h2><p>{product.reviewSummary}</p><p className="product-source-note">Selección revisada por Campeach RD para uso recreativo y campamentos.</p></div>
         <ul>{product.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
       </section>
       <section id="pago" className="payment-section">
@@ -842,7 +842,7 @@ export default function CampeachApp() {
           <div>
             <span className="eyebrow"><ShoppingBag size={16} /> Tienda Campeach</span>
             <h2>Equipo de camping seleccionado y evaluado por Campeach.</h2>
-            <p>Comparamos especificaciones, valoraciones y comentarios de compradores en Walmart para ofrecer productos prácticos, con soporte local y precios transparentes.</p>
+            <p>Seleccionamos y evaluamos cada artículo para ofrecer productos prácticos, con soporte local y precios transparentes.</p>
           </div>
           <div className="shop-trust-card">
             <ShieldCheck size={28} />

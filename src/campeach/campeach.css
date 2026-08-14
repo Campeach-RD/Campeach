@@ -1004,7 +1004,6 @@
 .product-information p, .payment-section p { color: var(--camp-muted); line-height: 1.65; }
 .product-information li { margin-bottom: 13px; }
 .product-source-note { margin-top: 18px; padding: 14px; border-radius: 12px; background: #f4f8f6; }
-.product-source-link { display: inline-flex; align-items: center; gap: 6px; color: var(--camp-leaf); font-weight: 850; text-decoration: none; }
 .payment-section { align-items: center; background: #eef8f3; }
 .payment-pending { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 28px; border: 1px solid #cce1d7; border-radius: 16px; background: #fff; color: var(--camp-leaf); }
 .payment-pending span { color: var(--camp-muted); }
