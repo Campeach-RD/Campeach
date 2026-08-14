@@ -1004,6 +1004,20 @@
 .payment-pending { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 28px; border: 1px solid #cce1d7; border-radius: 16px; background: #fff; color: var(--camp-leaf); }
 .payment-pending span { color: var(--camp-muted); }
 .payment-pending a { width: 100%; margin-top: 10px; background: #20b65a; color: #fff; }
+.checkout-form { display: grid; gap: 14px; padding: 28px; border: 1px solid #cce1d7; border-radius: 16px; background: #fff; }
+.checkout-form-heading { display: flex; align-items: center; gap: 12px; color: var(--camp-leaf); }
+.checkout-form-heading strong, .checkout-form-heading span { display: block; }
+.checkout-form-heading span { margin-top: 3px; color: var(--camp-muted); font-size: .84rem; }
+.checkout-form label { display: grid; gap: 6px; color: var(--camp-ink); font-size: .82rem; font-weight: 800; }
+.checkout-form input, .checkout-form textarea { width: 100%; box-sizing: border-box; padding: 12px 13px; border: 1px solid var(--camp-line); border-radius: 9px; background: #fff; color: var(--camp-ink); font: inherit; }
+.checkout-form textarea { min-height: 72px; resize: vertical; }
+.checkout-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.checkout-form button { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; background: var(--camp-ink); color: #fff; font: inherit; font-weight: 900; cursor: pointer; }
+.checkout-form button:disabled { cursor: wait; opacity: .68; }
+.checkout-form small { color: var(--camp-muted); text-align: center; }
+.checkout-error { margin: 0; color: #a32222 !important; font-weight: 800; }
+.payment-result { position: sticky; z-index: 30; top: 0; padding: 13px 20px; background: #fff2d7; color: #5c4314; text-align: center; font-weight: 800; }
+.payment-result.payment-completed { background: #dff5e9; color: #155c38; }
 
 @keyframes campSlide {
   0%,
@@ -1113,6 +1127,7 @@
   .shop-grid { grid-template-columns: 1fr; }
   .shop-promo-bar { align-items: center; flex-direction: column; gap: 4px; text-align: center; }
   .product-key-specs { grid-template-columns: 1fr; }
+  .checkout-fields { grid-template-columns: 1fr; }
 
   .full-gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

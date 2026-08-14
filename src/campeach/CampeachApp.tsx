@@ -165,6 +165,37 @@ const shopWhatsappFor = (productName: string) => {
 type ShopProduct = (typeof shopProducts)[number];
 
 function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () => void }) {
+  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [checkoutError, setCheckoutError] = useState('');
+
+  const startCheckout = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCheckoutState('loading');
+    setCheckoutError('');
+    const form = new FormData(event.currentTarget);
+    try {
+      const response = await fetch('https://campeach-shop.nomanychat.workers.dev/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: Number(form.get('quantity')),
+          customerName: form.get('customerName'),
+          customerEmail: form.get('customerEmail'),
+          customerPhone: form.get('customerPhone'),
+          deliveryAddress: form.get('deliveryAddress'),
+          deliveryNotes: form.get('deliveryNotes'),
+        }),
+      });
+      const result = await response.json() as { checkoutUrl?: string; error?: string };
+      if (!response.ok || !result.checkoutUrl) throw new Error(result.error || 'No pudimos iniciar el pago.');
+      window.location.assign(result.checkoutUrl);
+    } catch (error) {
+      setCheckoutState('error');
+      setCheckoutError(error instanceof Error ? error.message : 'No pudimos iniciar el pago.');
+    }
+  };
+
   return (
     <main className="campeach-page product-page">
       <header className="campeach-header">
@@ -210,7 +241,20 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <h2>Checkout de Campeach</h2>
           <p>Tu pago será procesado en la plataforma segura de Pagadito. Campeach no solicitará ni almacenará los datos de tu tarjeta.</p>
         </div>
-        <div className="payment-pending"><ShieldCheck size={30} /><strong>Pago seguro con Pagadito</strong><span>Estamos completando la conexión de la cuenta comercial. Mientras se habilita, puedes confirmar el pedido por WhatsApp.</span><a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer">Confirmar pedido</a></div>
+        <form className="checkout-form" onSubmit={startCheckout}>
+          <div className="checkout-form-heading"><ShieldCheck size={28} /><div><strong>Pago seguro con Pagadito</strong><span>Delivery estándar incluido hasta RD$500.</span></div></div>
+          <label>Cantidad<input name="quantity" type="number" min="1" max="5" defaultValue="1" required /></label>
+          <label>Nombre completo<input name="customerName" autoComplete="name" minLength={3} required /></label>
+          <div className="checkout-fields">
+            <label>Correo electrónico<input name="customerEmail" type="email" autoComplete="email" required /></label>
+            <label>Teléfono<input name="customerPhone" type="tel" autoComplete="tel" minLength={8} required /></label>
+          </div>
+          <label>Dirección de entrega<textarea name="deliveryAddress" autoComplete="street-address" minLength={10} required /></label>
+          <label>Indicaciones adicionales<textarea name="deliveryNotes" placeholder="Sector, referencia o instrucciones para el delivery" /></label>
+          {checkoutState === 'error' ? <p className="checkout-error" role="alert">{checkoutError}</p> : null}
+          <button type="submit" disabled={checkoutState === 'loading'}><CreditCard size={19} /> {checkoutState === 'loading' ? 'Conectando con Pagadito...' : `Continuar y pagar ${formatPrice(product.price)}`}</button>
+          <small>Serás redirigido a Pagadito para introducir los datos de pago.</small>
+        </form>
       </section>
     </main>
   );
@@ -498,6 +542,7 @@ export default function CampeachApp() {
   const [query, setQuery] = useState('');
   const [selectedCamp, setSelectedCamp] = useState<Camp | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
+  const paymentResult = new URLSearchParams(window.location.search).get('payment');
 
   useEffect(() => {
     document.title = 'Campeach RD | Campamentos y equipos en RD';
@@ -571,6 +616,7 @@ export default function CampeachApp() {
 
   return (
     <main className="campeach-page">
+      {paymentResult ? <div className={`payment-result payment-${paymentResult}`} role="status">{paymentResult === 'completed' ? 'Pago confirmado. Recibimos tu orden y te contactaremos para coordinar la entrega.' : 'Tu pago no fue completado. No se ha confirmado ningún cobro; puedes intentarlo nuevamente o escribirnos por WhatsApp.'}</div> : null}
       <header className="campeach-header">
         <a className="campeach-logo" href={import.meta.env.BASE_URL} aria-label="Campeach RD">
           <img src={logoImage} alt="Campeach RD" />
