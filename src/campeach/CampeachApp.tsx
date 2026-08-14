@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useMemo, useState } from 'react';
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowUpRight,
   BedDouble,
@@ -104,6 +104,7 @@ type ShopProduct = {
   id: string; name: string; category: string; brand: string; price: number; compareAt: number;
   weight: string; footprint: string; description: string; image: string; rating: number;
   ratingCount: number;
+  images?: string[];
   availability: 'available' | 'out-of-stock'; highlights: string[]; reviewSummary: string; featured?: boolean;
 };
 
@@ -118,6 +119,7 @@ const shopProducts: ShopProduct[] = [
     footprint: "7' × 7' × 44\"",
     description: 'Compacta y ligera, con espacio para tres personas o un colchón queen y equipaje.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-3.jpg`,
+    images: Array.from({ length: 7 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-3/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
     rating: 4.3, ratingCount: 3470, availability: 'available',
     highlights: ['Sobretecho removible y resistente al agua', 'Techo y paredes de malla', 'Puerta amplia en forma de D', 'Bolsillos y acceso para cable eléctrico'],
     reviewSummary: 'Los compradores destacan el montaje sencillo, la ventilación y el espacio que ofrece para su peso.',
@@ -132,6 +134,7 @@ const shopProducts: ShopProduct[] = [
     footprint: "8' × 8.5' × 50\"",
     description: 'Espacio para un colchón queen, ventilación amplia y sobretecho removible.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-4.jpg`,
+    images: Array.from({ length: 8 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-4/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
     rating: 4.3, ratingCount: 1246, availability: 'out-of-stock',
     highlights: ['Capacidad para cuatro personas', 'Sobretecho con costuras selladas', 'Techo y paredes de malla', 'Compartimento de acceso doble'],
     reviewSummary: 'La amplitud, la circulación de aire y la organización interior son sus puntos mejor valorados.',
@@ -146,6 +149,7 @@ const shopProducts: ShopProduct[] = [
     footprint: "12' × 8.5' × 72\"",
     description: 'La favorita de Campeach: cómoda, ventilada y con capacidad para dos colchones queen.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-6.jpg`,
+    images: Array.from({ length: 8 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-6/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
     rating: 4.3, ratingCount: 3341, availability: 'available',
     highlights: ['Altura central de 72 pulgadas', 'Espacio para dos colchones queen', 'Alero y tapete de entrada', 'Bolsillos y acceso para cable eléctrico'],
     reviewSummary: 'Las reseñas resaltan el espacio, precio y montaje; para viento fuerte conviene reforzar las estacas.',
@@ -161,6 +165,7 @@ const shopProducts: ShopProduct[] = [
     footprint: "16' × 8' × 78\"",
     description: 'Formato familiar con altura para estar de pie y espacio para tres colchones queen.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-8.jpg`,
+    images: Array.from({ length: 13 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-8/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
     rating: 4.1, ratingCount: 794, availability: 'out-of-stock',
     highlights: ['Altura central de 78 pulgadas', 'Espacio para tres colchones queen', 'Techo y paredes de malla', 'Alero, tapete y acceso eléctrico'],
     reviewSummary: 'Se valora especialmente el espacio y la altura; hay opiniones más mixtas sobre estacas, viento y filtraciones.',
@@ -245,6 +250,60 @@ const shopWhatsappFor = (productName: string) => {
   return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 };
 
+function ProductGallery({ product }: { product: ShopProduct }) {
+  const images = product.images?.length ? product.images : [product.image];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const dragX = useRef<number | null>(null);
+
+  const rotate = (direction: number) => {
+    setActiveIndex((current) => (current + direction + images.length) % images.length);
+  };
+
+  return (
+    <div
+      className={`product-gallery${images.length > 1 ? ' product-gallery-interactive' : ''}`}
+      tabIndex={images.length > 1 ? 0 : undefined}
+      aria-label={images.length > 1 ? `Vista 360 grados de ${product.name}` : `Imagen de ${product.name}`}
+      onKeyDown={(event) => {
+        if (event.key === 'ArrowLeft') rotate(-1);
+        if (event.key === 'ArrowRight') rotate(1);
+      }}
+    >
+      {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
+      {images.length > 1 ? <span className="gallery-360-badge">↻ Vista 360°</span> : null}
+      <img
+        src={images[activeIndex]}
+        alt={`${product.name}, vista ${activeIndex + 1} de ${images.length}`}
+        draggable={false}
+        onPointerDown={(event) => { if (images.length > 1) dragX.current = event.clientX; }}
+        onPointerMove={(event) => {
+          if (dragX.current === null) return;
+          const distance = event.clientX - dragX.current;
+          if (Math.abs(distance) < 28) return;
+          rotate(distance > 0 ? -1 : 1);
+          dragX.current = event.clientX;
+        }}
+        onPointerUp={() => { dragX.current = null; }}
+        onPointerCancel={() => { dragX.current = null; }}
+      />
+      {images.length > 1 ? (
+        <div className="gallery-controls">
+          <button type="button" onClick={() => rotate(-1)} aria-label="Vista anterior">‹</button>
+          <div className="gallery-thumbnails" aria-label="Ángulos del producto">
+            {images.map((image, index) => (
+              <button className={index === activeIndex ? 'is-active' : ''} type="button" key={image} onFocus={() => setActiveIndex(index)} onClick={() => setActiveIndex(index)} aria-label={`Ver ángulo ${index + 1}`}>
+                <img src={image} alt="" loading="lazy" />
+              </button>
+            ))}
+          </div>
+          <button type="button" onClick={() => rotate(1)} aria-label="Vista siguiente">›</button>
+        </div>
+      ) : null}
+      <p>{images.length > 1 ? 'Arrastra la imagen o usa las flechas para explorar todos los ángulos.' : 'Imagen de referencia del producto. El color puede variar según inventario.'}</p>
+    </div>
+  );
+}
+
 function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () => void }) {
   const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [checkoutError, setCheckoutError] = useState('');
@@ -293,11 +352,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
       </header>
       <section className="product-breadcrumb"><button type="button" onClick={onBack}>Tienda</button><span>/</span><span>{product.category}</span><span>/</span><strong>{product.name}</strong></section>
       <section className="product-layout">
-        <div className="product-gallery">
-          {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
-          <img src={product.image} alt={product.name} />
-          <p>Fotografía oficial del producto. El color puede variar según inventario.</p>
-        </div>
+        <ProductGallery product={product} />
         <div className="product-summary">
           <span className="eyebrow"><Tent size={16} /> {product.brand}</span>
           <h1>{product.name}</h1>
