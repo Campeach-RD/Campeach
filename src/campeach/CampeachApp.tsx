@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock3,
+  CreditCard,
   FileText,
   Filter,
   Flame,
@@ -160,6 +161,60 @@ const shopWhatsappFor = (productName: string) => {
   ].join('\n');
   return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 };
+
+type ShopProduct = (typeof shopProducts)[number];
+
+function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () => void }) {
+  return (
+    <main className="campeach-page product-page">
+      <header className="campeach-header">
+        <button className="campeach-logo product-logo-button" type="button" onClick={onBack} aria-label="Volver a la tienda">
+          <img src={logoImage} alt="Campeach RD" />
+        </button>
+        <nav aria-label="Producto"><button type="button" onClick={onBack}>← Volver a la tienda</button></nav>
+        <a className="header-cta" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Ayuda</a>
+      </header>
+      <section className="product-breadcrumb"><button type="button" onClick={onBack}>Tienda</button><span>/</span><span>Casas de campaña</span><span>/</span><strong>{product.name}</strong></section>
+      <section className="product-layout">
+        <div className="product-gallery">
+          {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
+          <img src={product.image} alt={product.name} />
+          <p>Imagen de referencia del modelo. El color puede variar según inventario.</p>
+        </div>
+        <div className="product-summary">
+          <span className="eyebrow"><Tent size={16} /> Ozark Trail · Clip & Camp</span>
+          <h1>{product.name}</h1>
+          <div className="shop-rating"><Star size={16} fill="currentColor" /> 4.3 <span>Modelo recomendado por Campeach</span></div>
+          <p className="product-description">{product.description}</p>
+          <div className="product-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
+          <p className="product-delivery"><ShieldCheck size={18} /> Delivery estándar incluido hasta RD$500</p>
+          <div className="product-key-specs">
+            <div><span>Capacidad</span><strong>{product.name.match(/\d+/)?.[0]} personas</strong></div>
+            <div><span>Peso empacado</span><strong>{product.weight}</strong></div>
+            <div><span>Dimensiones</span><strong>{product.footprint}</strong></div>
+          </div>
+          <div className="product-buy-box">
+            <a className="online-pay-button" href="#pago"><CreditCard size={19} /> Pagar en línea</a>
+            <a className="whatsapp-buy-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><WhatsappIcon size={20} /> Comprar por WhatsApp</a>
+          </div>
+          <small>Confirmaremos existencia y plazo antes de procesar el pago.</small>
+        </div>
+      </section>
+      <section className="product-information">
+        <div><h2>Una casa de campaña pensada para disfrutar</h2><p>Montaje con clips, ventilación de malla, sobretecho removible, bolsillos interiores, entrada para cable eléctrico y bolsa de transporte.</p></div>
+        <ul><li>Fácil de montar y desmontar</li><li>Sobretecho con costuras selladas</li><li>Ventilación superior y lateral</li><li>Soporte local de Campeach RD</li></ul>
+      </section>
+      <section id="pago" className="payment-section">
+        <div>
+          <span className="eyebrow"><CreditCard size={16} /> Pago seguro</span>
+          <h2>Checkout de Campeach</h2>
+          <p>La página de pago de AZUL se activará al completar la afiliación comercial. No solicitaremos ni almacenaremos los datos de tu tarjeta en Campeach.</p>
+        </div>
+        <div className="payment-pending"><ShieldCheck size={30} /><strong>Integración AZUL preparada</strong><span>Mientras se habilita, puedes confirmar el pedido por WhatsApp.</span><a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer">Confirmar pedido</a></div>
+      </section>
+    </main>
+  );
+}
 
 function WhatsappIcon({ size = 21 }: { size?: number }) {
   return (
@@ -442,12 +497,20 @@ export default function CampeachApp() {
   const [selectedRegion, setSelectedRegion] = useState('Todos');
   const [query, setQuery] = useState('');
   const [selectedCamp, setSelectedCamp] = useState<Camp | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
 
   useEffect(() => {
     document.title = 'Campeach RD | Campamentos y equipos en RD';
     const params = new URLSearchParams(window.location.search);
     const campId = params.get('camp');
     const equipmentId = params.get('equipment');
+    const productId = params.get('product');
+
+    if (productId) {
+      const product = shopProducts.find((item) => item.id === productId);
+      if (product) setSelectedProduct(product);
+      return;
+    }
 
     if (campId) {
       const matchingCamp = camps.find((camp) => camp.id === campId);
@@ -485,6 +548,26 @@ export default function CampeachApp() {
   }, [query, selectedRegion]);
 
   const featuredCamp = filteredCamps[0] ?? camps[0];
+
+  const openProduct = (product: ShopProduct) => {
+    setSelectedProduct(product);
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('product', product.id);
+    url.hash = '';
+    window.history.pushState({}, '', url);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const closeProduct = () => {
+    setSelectedProduct(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('product');
+    url.hash = 'tienda';
+    window.history.pushState({}, '', url);
+  };
+
+  if (selectedProduct) return <ProductDetail product={selectedProduct} onBack={closeProduct} />;
 
   return (
     <main className="campeach-page">
@@ -635,16 +718,17 @@ export default function CampeachApp() {
         </div>
         <div className="shop-grid">
           {shopProducts.map((product) => (
-            <article className={`shop-card${product.featured ? ' featured' : ''}`} key={product.id}>
+            <article className={`shop-card${product.featured ? ' featured' : ''}`} key={product.id} onClick={() => openProduct(product)}>
               {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
               <div className="shop-image"><img src={product.image} alt={product.name} loading="lazy" /></div>
               <div className="shop-rating"><Star size={15} fill="currentColor" /> 4.3 <span>Selección recomendada</span></div>
-              <h3>{product.name}</h3>
+              <button className="shop-product-link" type="button" onClick={() => openProduct(product)}><h3>{product.name}</h3></button>
               <p>{product.description}</p>
               <div className="shop-specs"><span>{product.weight}</span><span>{product.footprint}</span><span>Sobretecho incluido</span></div>
               <div className="shop-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
               <small>Precio con delivery estándar incluido. Disponibilidad sujeta a confirmación.</small>
-              <a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><WhatsappIcon size={19} /> Comprar por WhatsApp</a>
+              <button className="shop-details-button" type="button" onClick={() => openProduct(product)}>Ver producto</button>
+              <a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}><WhatsappIcon size={19} /> Comprar por WhatsApp</a>
             </article>
           ))}
         </div>

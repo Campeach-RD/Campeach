@@ -949,7 +949,8 @@
 .shop-trust-card strong, .shop-trust-card span { display: block; }
 .shop-trust-card span { margin-top: 5px; color: var(--camp-muted); line-height: 1.45; }
 .shop-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-.shop-card { position: relative; display: flex; flex-direction: column; padding: 16px; border: 1px solid var(--camp-line); border-radius: 14px; background: #fff; box-shadow: 0 12px 34px rgba(23,35,33,.07); }
+.shop-card { position: relative; display: flex; flex-direction: column; padding: 16px; border: 1px solid var(--camp-line); border-radius: 14px; background: #fff; box-shadow: 0 12px 34px rgba(23,35,33,.07); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.shop-card:hover { transform: translateY(-4px); box-shadow: 0 20px 45px rgba(23,35,33,.13); }
 .shop-card.featured { border: 2px solid var(--camp-orange); }
 .shop-badge { position: absolute; z-index: 2; top: 12px; left: 12px; padding: 7px 10px; border-radius: 999px; background: var(--camp-orange); color: #fff; font-size: .72rem; font-weight: 900; }
 .shop-image { display: grid; min-height: 230px; place-items: center; overflow: hidden; border-radius: 10px; background: #f6f7f7; }
@@ -957,6 +958,7 @@
 .shop-rating { display: flex; align-items: center; gap: 5px; margin-top: 15px; color: #e77c00; font-weight: 850; font-size: .84rem; }
 .shop-rating span { color: var(--camp-muted); font-weight: 600; }
 .shop-card h3 { margin: 10px 0 8px; font-size: 1.12rem; line-height: 1.3; }
+.shop-product-link { padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .shop-card > p { margin: 0; color: var(--camp-muted); line-height: 1.5; font-size: .91rem; }
 .shop-specs { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
 .shop-specs span { padding: 6px 8px; border-radius: 6px; background: var(--camp-bg); font-size: .75rem; font-weight: 750; }
@@ -965,10 +967,43 @@
 .shop-price del { color: #89938f; }
 .shop-card small { min-height: 34px; margin: 6px 0 14px; color: var(--camp-muted); line-height: 1.35; }
 .shop-card > a { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; background: #20b65a; color: #fff; font-weight: 900; text-decoration: none; }
+.shop-details-button { min-height: 42px; margin-bottom: 9px; border: 1px solid var(--camp-ink); border-radius: 999px; background: #fff; color: var(--camp-ink); font-weight: 900; cursor: pointer; }
 .shop-conditions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 24px; overflow: hidden; border: 1px solid var(--camp-line); border-radius: 12px; background: var(--camp-line); }
 .shop-conditions div { padding: 20px; background: var(--camp-bg); }
 .shop-conditions strong, .shop-conditions span { display: block; }
 .shop-conditions span { margin-top: 5px; color: var(--camp-muted); font-size: .88rem; line-height: 1.45; }
+
+.product-logo-button, .campeach-header nav button, .product-breadcrumb button { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.product-breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; padding: 24px clamp(18px, 4vw, 56px); color: var(--camp-muted); font-size: .86rem; }
+.product-breadcrumb strong { color: var(--camp-ink); }
+.product-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr); gap: clamp(30px, 6vw, 80px); padding: 20px clamp(18px, 6vw, 90px) 70px; background: #fff; }
+.product-gallery { position: relative; display: grid; min-height: 560px; align-content: center; justify-items: center; border-radius: 18px; background: #f4f7f6; }
+.product-gallery img { width: min(92%, 720px); max-height: 560px; object-fit: contain; mix-blend-mode: multiply; }
+.product-gallery p { position: absolute; right: 18px; bottom: 10px; left: 18px; color: var(--camp-muted); text-align: center; font-size: .78rem; }
+.product-summary { align-self: center; }
+.product-summary h1 { margin: 13px 0; font-size: clamp(2rem, 4vw, 3.7rem); line-height: 1.02; }
+.product-description { color: var(--camp-muted); font-size: 1.05rem; line-height: 1.6; }
+.product-price { display: flex; align-items: baseline; gap: 12px; margin: 22px 0 8px; }
+.product-price strong { color: var(--camp-leaf); font-size: 2.4rem; }
+.product-price del { color: var(--camp-muted); font-size: 1.1rem; }
+.product-delivery { display: flex; align-items: center; gap: 8px; color: var(--camp-leaf); font-weight: 800; }
+.product-key-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 24px 0; }
+.product-key-specs div { padding: 13px; border: 1px solid var(--camp-line); border-radius: 10px; }
+.product-key-specs span, .product-key-specs strong { display: block; }
+.product-key-specs span { margin-bottom: 5px; color: var(--camp-muted); font-size: .73rem; }
+.product-buy-box { display: grid; gap: 10px; }
+.product-buy-box a, .payment-pending a { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; font-weight: 900; text-decoration: none; }
+.online-pay-button { background: var(--camp-ink); color: #fff; }
+.whatsapp-buy-button { background: #20b65a; color: #fff; }
+.product-summary > small { display: block; margin-top: 12px; color: var(--camp-muted); text-align: center; }
+.product-information, .payment-section { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: clamp(45px, 7vw, 90px) clamp(18px, 8vw, 130px); }
+.product-information h2, .payment-section h2 { margin: 10px 0; font-size: clamp(1.8rem, 3vw, 3rem); }
+.product-information p, .payment-section p { color: var(--camp-muted); line-height: 1.65; }
+.product-information li { margin-bottom: 13px; }
+.payment-section { align-items: center; background: #eef8f3; }
+.payment-pending { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 28px; border: 1px solid #cce1d7; border-radius: 16px; background: #fff; color: var(--camp-leaf); }
+.payment-pending span { color: var(--camp-muted); }
+.payment-pending a { width: 100%; margin-top: 10px; background: #20b65a; color: #fff; }
 
 @keyframes campSlide {
   0%,
@@ -1024,6 +1059,8 @@
     grid-template-columns: 1fr;
   }
   .shop-conditions { grid-template-columns: 1fr; }
+  .product-layout, .product-information, .payment-section { grid-template-columns: 1fr; }
+  .product-gallery { min-height: 390px; }
 
   .quick-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1075,6 +1112,7 @@
   }
   .shop-grid { grid-template-columns: 1fr; }
   .shop-promo-bar { align-items: center; flex-direction: column; gap: 4px; text-align: center; }
+  .product-key-specs { grid-template-columns: 1fr; }
 
   .full-gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
