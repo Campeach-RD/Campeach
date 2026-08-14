@@ -263,14 +263,14 @@ function ProductGallery({ product }: { product: ShopProduct }) {
     <div
       className={`product-gallery${images.length > 1 ? ' product-gallery-interactive' : ''}`}
       tabIndex={images.length > 1 ? 0 : undefined}
-      aria-label={images.length > 1 ? `Vista 360 grados de ${product.name}` : `Imagen de ${product.name}`}
+      aria-label={images.length > 1 ? `Galería de ${images.length} ángulos de ${product.name}` : `Imagen de ${product.name}`}
       onKeyDown={(event) => {
         if (event.key === 'ArrowLeft') rotate(-1);
         if (event.key === 'ArrowRight') rotate(1);
       }}
     >
       {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
-      {images.length > 1 ? <span className="gallery-360-badge">↻ Vista 360°</span> : null}
+      {images.length > 1 ? <span className="gallery-angle-badge">Galería de ángulos</span> : null}
       <img
         src={images[activeIndex]}
         alt={`${product.name}, vista ${activeIndex + 1} de ${images.length}`}
@@ -307,6 +307,12 @@ function ProductGallery({ product }: { product: ShopProduct }) {
 function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () => void }) {
   const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [checkoutError, setCheckoutError] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const subtotal = product.price * quantity;
+  const referenceSubtotal = product.compareAt * quantity;
+  const savings = Math.max(0, referenceSubtotal - subtotal);
+  const delivery = 0;
+  const total = subtotal + delivery;
 
   const startCheckout = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -324,7 +330,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           productId: product.id,
-          quantity: Number(form.get('quantity')),
+          quantity,
           customerName: form.get('customerName'),
           customerEmail: form.get('customerEmail'),
           customerPhone: form.get('customerPhone'),
@@ -385,7 +391,18 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
         </div>
         <form className="checkout-form" onSubmit={startCheckout}>
           <div className="checkout-form-heading"><ShieldCheck size={28} /><div><strong>Pago seguro con Pagadito</strong><span>Delivery estándar incluido hasta RD$500.</span></div></div>
-          <label>Cantidad<input name="quantity" type="number" min="1" max="5" defaultValue="1" required /></label>
+          <label>Cantidad<input name="quantity" type="number" min="1" max="5" value={quantity} onChange={(event) => {
+            const nextQuantity = Number(event.target.value);
+            setQuantity(Number.isFinite(nextQuantity) ? Math.min(5, Math.max(1, nextQuantity)) : 1);
+          }} required /></label>
+          <div className="checkout-breakdown" aria-live="polite" aria-label="Desglose del pedido">
+            <div><span>Precio unitario</span><strong>{formatPrice(product.price)}</strong></div>
+            <div><span>Cantidad</span><strong>{quantity}</strong></div>
+            <div><span>Subtotal de productos</span><strong>{formatPrice(subtotal)}</strong></div>
+            {savings > 0 ? <div className="checkout-savings"><span>Ahorro</span><strong>-{formatPrice(savings)}</strong></div> : null}
+            <div><span>Delivery estándar</span><strong>Incluido</strong></div>
+            <div className="checkout-total"><span>Total</span><strong>{formatPrice(total)}</strong></div>
+          </div>
           <label>Nombre completo<input name="customerName" autoComplete="name" minLength={3} required /></label>
           <div className="checkout-fields">
             <label>Correo electrónico<input name="customerEmail" type="email" autoComplete="email" required /></label>
@@ -394,7 +411,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <label>Dirección de entrega<textarea name="deliveryAddress" autoComplete="street-address" minLength={10} required /></label>
           <label>Indicaciones adicionales<textarea name="deliveryNotes" placeholder="Sector, referencia o instrucciones para el delivery" /></label>
           {checkoutState === 'error' ? <p className="checkout-error" role="alert">{checkoutError}</p> : null}
-          <button type="submit" disabled={checkoutState === 'loading' || product.availability !== 'available'}><CreditCard size={19} /> {product.availability !== 'available' ? 'Agotado temporalmente' : checkoutState === 'loading' ? 'Conectando con Pagadito...' : `Continuar y pagar ${formatPrice(product.price)}`}</button>
+          <button type="submit" disabled={checkoutState === 'loading' || product.availability !== 'available'}><CreditCard size={19} /> {product.availability !== 'available' ? 'Agotado temporalmente' : checkoutState === 'loading' ? 'Conectando con Pagadito...' : `Continuar y pagar ${formatPrice(total)}`}</button>
           <small>Serás redirigido a Pagadito para introducir los datos de pago.</small>
         </form>
       </section>
