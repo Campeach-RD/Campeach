@@ -20,6 +20,7 @@ import {
   Search,
   ShieldCheck,
   ShoppingBag,
+  Star,
   SlidersHorizontal,
   Sparkles,
   Tent,
@@ -92,6 +93,68 @@ const whatsappFor = (camp?: Camp, _intent: WhatsappIntent = 'availability', equi
     `Equipos de camping requeridos: ${requestedEquipment}`,
     '',
     '¿Podrían confirmarme disponibilidad, precio total y los pasos para realizar la reserva?',
+    '',
+    'Quedo atent@, gracias.',
+  ].join('\n');
+  return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
+};
+
+const shopProducts = [
+  {
+    id: 'ozark-3',
+    name: 'Ozark Trail Clip & Camp para 3 personas',
+    price: 5990,
+    compareAt: 6490,
+    weight: '5.64 lb',
+    footprint: "7' × 7'",
+    description: 'Compacta, ligera y fácil de montar. Ideal para parejas o escapadas cortas.',
+    image: 'https://i5.walmartimages.com/seo/OT-3P-DOME-TENT_6ab1283a-1ed7-4867-83c1-c252d873095e.5b59dc3dfba1a9917f1ccc90fb1aa809.jpeg',
+  },
+  {
+    id: 'ozark-4',
+    name: 'Ozark Trail Clip & Camp para 4 personas',
+    price: 7490,
+    compareAt: 7990,
+    weight: '7.87 lb',
+    footprint: "8' × 8.5'",
+    description: 'Espacio para un colchón queen, ventilación amplia y sobretecho removible.',
+    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-4-Person-Clip-Camp-Dome-Tent-8-x-8-5-x-50-7-87-lbs_7610003e-44cc-44bb-8233-f045ff5e08f1.bf2296d5412c648b46e407a584196a54.jpeg',
+  },
+  {
+    id: 'ozark-6',
+    name: 'Ozark Trail Clip & Camp para 6 personas',
+    price: 12490,
+    compareAt: 13490,
+    weight: '14 lb',
+    footprint: "12' × 8.5'",
+    description: 'La favorita de Campeach: cómoda, resistente y con capacidad para dos colchones queen.',
+    image: 'https://i5.walmartimages.com/seo/OT-6P-DOME-TENT_49cdd491-f5b5-4983-ac05-69ddc8c5e098.b3d69dd9a8f4eb84b8a5f3d7a7a3662b.jpeg',
+    featured: true,
+  },
+  {
+    id: 'ozark-8',
+    name: 'Ozark Trail Clip & Camp para 8 personas',
+    price: 17990,
+    compareAt: 18990,
+    weight: '23.81 lb',
+    footprint: "16' × 8'",
+    description: 'Formato familiar con altura para estar de pie y espacio para tres colchones queen.',
+    image: 'https://i5.walmartimages.com/seo/Ozark-Trail-8-Person-Clip-Camp-Family-Tent-16-x-8-x-78-23-81-lbs_610c544e-addf-48dd-94e5-8bdd69a571a1.c10f4531efa861d1409f696e05718c9a.jpeg',
+  },
+];
+
+const shopWhatsappFor = (productName: string) => {
+  const text = [
+    'Hola, Campeach RD. Espero se encuentren bien.',
+    '',
+    `Me interesa comprar: ${productName}.`,
+    '',
+    'Cantidad:',
+    'Nombre:',
+    'Sector y ciudad para la entrega:',
+    'Método de pago preferido:',
+    '',
+    '¿Podrían confirmarme disponibilidad, tiempo de entrega y total?',
     '',
     'Quedo atent@, gracias.',
   ].join('\n');
@@ -432,6 +495,7 @@ export default function CampeachApp() {
         <nav aria-label="Secciones">
           <a href="#campamentos">Campamentos</a>
           <a href="#equipos">Equipos</a>
+          <a href="#tienda">Tienda</a>
           <a href={brand.instagram} target="_blank" rel="noreferrer">
             Instagram
           </a>
@@ -549,6 +613,45 @@ export default function CampeachApp() {
               ))}
             </ol>
           </aside>
+        </div>
+      </section>
+
+      <section id="tienda" className="shop-section">
+        <div className="shop-promo-bar">
+          <span>Compra segura con Campeach RD</span>
+          <strong>Delivery estándar incluido</strong>
+          <span>Soporte local por WhatsApp</span>
+        </div>
+        <div className="shop-hero">
+          <div>
+            <span className="eyebrow"><ShoppingBag size={16} /> Tienda Campeach</span>
+            <h2>Casas de campaña fáciles de armar, escogidas por campistas.</h2>
+            <p>Seleccionamos la línea Ozark Trail Clip & Camp por su relación precio-calidad, montaje sencillo y buen aprovechamiento del espacio.</p>
+          </div>
+          <div className="shop-trust-card">
+            <ShieldCheck size={28} />
+            <div><strong>Compra acompañada</strong><span>Confirmamos inventario y fecha de entrega antes de recibir tu pago.</span></div>
+          </div>
+        </div>
+        <div className="shop-grid">
+          {shopProducts.map((product) => (
+            <article className={`shop-card${product.featured ? ' featured' : ''}`} key={product.id}>
+              {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
+              <div className="shop-image"><img src={product.image} alt={product.name} loading="lazy" /></div>
+              <div className="shop-rating"><Star size={15} fill="currentColor" /> 4.3 <span>Selección recomendada</span></div>
+              <h3>{product.name}</h3>
+              <p>{product.description}</p>
+              <div className="shop-specs"><span>{product.weight}</span><span>{product.footprint}</span><span>Sobretecho incluido</span></div>
+              <div className="shop-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
+              <small>Precio con delivery estándar incluido. Disponibilidad sujeta a confirmación.</small>
+              <a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><WhatsappIcon size={19} /> Comprar por WhatsApp</a>
+            </article>
+          ))}
+        </div>
+        <div className="shop-conditions">
+          <div><strong>Entrega incluida</strong><span>Cobertura estándar de hasta RD$500; zonas especiales se cotizan antes del pago.</span></div>
+          <div><strong>Precios protegidos</strong><span>Calculados con importación, publicidad y variación cambiaria para evitar cargos sorpresa.</span></div>
+          <div><strong>Pedido confirmado</strong><span>No cobramos hasta validar existencia y plazo estimado de entrega.</span></div>
         </div>
       </section>
 
