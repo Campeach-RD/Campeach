@@ -8,6 +8,14 @@
     "PAGADITO_MODE": "production",
     "STORE_ORIGIN": "https://campeach-rd.github.io"
   },
+  "d1_databases": [
+    {
+      "binding": "ORDERS_DB",
+      "database_name": "campeach-shop-orders",
+      "database_id": "b9d7a4c8-6c52-4646-9367-e502de3cf8b0",
+      "migrations_dir": "migrations"
+    }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
