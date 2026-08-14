@@ -208,9 +208,9 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
         <div>
           <span className="eyebrow"><CreditCard size={16} /> Pago seguro</span>
           <h2>Checkout de Campeach</h2>
-          <p>La página de pago de AZUL se activará al completar la afiliación comercial. No solicitaremos ni almacenaremos los datos de tu tarjeta en Campeach.</p>
+          <p>Tu pago será procesado en la plataforma segura de Pagadito. Campeach no solicitará ni almacenará los datos de tu tarjeta.</p>
         </div>
-        <div className="payment-pending"><ShieldCheck size={30} /><strong>Integración AZUL preparada</strong><span>Mientras se habilita, puedes confirmar el pedido por WhatsApp.</span><a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer">Confirmar pedido</a></div>
+        <div className="payment-pending"><ShieldCheck size={30} /><strong>Pago seguro con Pagadito</strong><span>Estamos completando la conexión de la cuenta comercial. Mientras se habilita, puedes confirmar el pedido por WhatsApp.</span><a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer">Confirmar pedido</a></div>
       </section>
     </main>
   );

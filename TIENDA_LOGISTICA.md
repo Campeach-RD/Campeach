@@ -47,3 +47,13 @@ El precio de 6 personas aparecía a US$69 en la captura, pero la ficha consultad
 - No prometer entrega inmediata si el artículo se compra por encargo.
 - Informar el plazo después de comprobar existencias.
 - Definir por escrito cambios por defectos, piezas faltantes y productos ya utilizados antes de cobrar.
+
+## Pasarela Pagadito
+
+- Usar Pagadito WSPG desde el Cloudflare Worker. El `UID` y el `WSK` se guardan exclusivamente como secretos y nunca se incluyen en React, GitHub ni el navegador.
+- Procesar los pedidos en pesos dominicanos (`DOP`).
+- Sandbox: `https://sandbox.pagadito.com/comercios/wspg/charges.php`.
+- Producción: `https://comercios.pagadito.com/wspg/charges.php`.
+- Flujo: crear la orden en Campeach, solicitar a Pagadito una URL segura, redirigir al cliente y verificar el resultado mediante `get_status` antes de marcar la orden como pagada.
+- Guardar por orden: producto, cantidad, cliente, entrega, total, estado, token de Pagadito y referencia de transacción.
+- Activar producción únicamente después de completar una compra y un retorno exitosos en sandbox.
