@@ -21,15 +21,17 @@ import {
   Search,
   ShieldCheck,
   ShoppingBag,
+  ShoppingCart,
   Star,
   SlidersHorizontal,
   Sparkles,
   Tent,
+  Trash2,
   Utensils,
   Waves,
   Users,
 } from 'lucide-react';
-import { brand, camps, equipment, equipmentCatalog, equipmentRules, logoImage, type Camp } from './data';
+import { brand, camps, equipment, equipmentCatalog, equipmentRules, logoImage, type Camp, type Equipment } from './data';
 
 const formatPrice = (value?: number) =>
   value ? `RD$${value.toLocaleString('es-DO')}` : 'Consultar';
@@ -106,6 +108,35 @@ type ShopProduct = {
   ratingCount: number;
   images?: string[];
   availability: 'available' | 'out-of-stock'; highlights: string[]; reviewSummary: string; featured?: boolean;
+};
+
+type RentalCartLine = { equipment: Equipment; quantity: number };
+
+const rentalWhatsappFor = (lines: RentalCartLine[], startDate: string, nights: number) => {
+  const safeNights = Math.max(1, nights || 1);
+  const itemLines = lines.map(({ equipment: item, quantity }) => {
+    const lineTotal = item.price * quantity * safeNights;
+    return `- ${quantity} × ${item.name}: ${formatPrice(item.price)} por noche × ${safeNights} noche${safeNights === 1 ? '' : 's'} = ${formatPrice(lineTotal)}`;
+  });
+  const total = lines.reduce((sum, { equipment: item, quantity }) => sum + item.price * quantity * safeNights, 0);
+  const text = [
+    'Hola, Campeach RD. Espero se encuentren bien.',
+    '',
+    'Me gustaría cotizar el alquiler de estos equipos de camping:',
+    ...itemLines,
+    '',
+    `Fecha de inicio: ${startDate || '(por confirmar)'}`,
+    `Cantidad de noches: ${safeNights}`,
+    `Total estimado del alquiler: ${formatPrice(total)}`,
+    '',
+    'Nombre:',
+    'Lugar o punto de entrega:',
+    '',
+    '¿Podrían confirmarme disponibilidad, depósito requerido, entrega y total final?',
+    '',
+    'Quedo atent@, gracias.',
+  ].join('\n');
+  return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 };
 
 const shopProducts: ShopProduct[] = [
@@ -250,7 +281,7 @@ const shopWhatsappFor = (productName: string) => {
   return `${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 };
 
-function ProductGallery({ product }: { product: ShopProduct }) {
+function ProductGallery({ product }: { product: { name: string; image: string; images?: string[]; featured?: boolean } }) {
   const images = product.images?.length ? product.images : [product.image];
   const [activeIndex, setActiveIndex] = useState(0);
   const dragX = useRef<number | null>(null);
@@ -414,6 +445,55 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <button type="submit" disabled={checkoutState === 'loading' || product.availability !== 'available'}><CreditCard size={19} /> {product.availability !== 'available' ? 'Agotado temporalmente' : checkoutState === 'loading' ? 'Conectando con Pagadito...' : `Continuar y pagar ${formatPrice(total)}`}</button>
           <small>Serás redirigido a Pagadito para introducir los datos de pago.</small>
         </form>
+      </section>
+    </main>
+  );
+}
+
+function RentalEquipmentDetail({ item, onBack, onAdd, startDate, setStartDate, nights, setNights, cartCount }: {
+  item: Equipment;
+  onBack: () => void;
+  onAdd: (item: Equipment, quantity: number) => void;
+  startDate: string;
+  setStartDate: (value: string) => void;
+  nights: number;
+  setNights: (value: number) => void;
+  cartCount: number;
+}) {
+  const [quantity, setQuantity] = useState(1);
+  const estimatedTotal = item.price * quantity * nights;
+  const quoteUrl = rentalWhatsappFor([{ equipment: item, quantity }], startDate, nights);
+
+  return (
+    <main className="campeach-page product-page rental-product-page">
+      <header className="campeach-header">
+        <button className="campeach-logo product-logo-button" type="button" onClick={onBack} aria-label="Volver a alquiler de equipos"><img src={logoImage} alt="Campeach RD" /></button>
+        <nav aria-label="Equipo de alquiler"><button type="button" onClick={onBack}>← Volver a equipos</button></nav>
+        <button className="header-cta rental-cart-button" type="button" onClick={onBack}><ShoppingCart size={18} /> Carrito ({cartCount})</button>
+      </header>
+      <section className="product-breadcrumb"><button type="button" onClick={onBack}>Alquiler</button><span>/</span><span>{item.category}</span><span>/</span><strong>{item.name}</strong></section>
+      <section className="product-layout">
+        <ProductGallery product={item} />
+        <div className="product-summary">
+          <span className="eyebrow"><Tent size={16} /> Equipo de alquiler Campeach</span>
+          <h1>{item.name}</h1>
+          <p className="product-description">{item.detail}</p>
+          <div className="product-price"><strong>{formatPrice(item.price)}</strong><span> por unidad / noche</span></div>
+          <div className="rental-configurator">
+            <label>Fecha de inicio<input type="date" value={startDate} min={new Date().toISOString().slice(0, 10)} onChange={(event) => setStartDate(event.target.value)} /></label>
+            <div className="checkout-fields">
+              <label>Noches<input type="number" min="1" max="30" value={nights} onChange={(event) => setNights(Math.min(30, Math.max(1, Number(event.target.value) || 1)))} /></label>
+              <label>Cantidad<input type="number" min="1" max="20" value={quantity} onChange={(event) => setQuantity(Math.min(20, Math.max(1, Number(event.target.value) || 1)))} /></label>
+            </div>
+            <div className="rental-estimate"><span>Total estimado</span><strong>{formatPrice(estimatedTotal)}</strong><small>{quantity} unidad{quantity === 1 ? '' : 'es'} × {nights} noche{nights === 1 ? '' : 's'}</small></div>
+            <button className="online-pay-button rental-add-button" type="button" onClick={() => onAdd(item, quantity)}><ShoppingCart size={19} /> Agregar al carrito</button>
+            <a className={`whatsapp-buy-button rental-whatsapp-button${startDate ? '' : ' is-disabled'}`} href={startDate ? quoteUrl : undefined} aria-disabled={!startDate} target="_blank" rel="noreferrer"><WhatsappIcon size={20} /> {startDate ? 'Cotizar este equipo por WhatsApp' : 'Selecciona la fecha para cotizar'}</a>
+          </div>
+        </div>
+      </section>
+      <section className="product-information">
+        <div><h2>Detalles del alquiler</h2><p>La tarifa se calcula por unidad y por noche. Confirmaremos existencia, depósito y logística antes de reservar.</p></div>
+        <ul>{item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
       </section>
     </main>
   );
@@ -701,6 +781,18 @@ export default function CampeachApp() {
   const [query, setQuery] = useState('');
   const [selectedCamp, setSelectedCamp] = useState<Camp | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
+  const [selectedRental, setSelectedRental] = useState<Equipment | null>(null);
+  const [rentalCart, setRentalCart] = useState<RentalCartLine[]>(() => {
+    try {
+      const stored = JSON.parse(window.localStorage.getItem('campeach-rental-cart') || '[]') as { id: string; quantity: number }[];
+      return stored.flatMap((line) => {
+        const item = equipment.find((candidate) => candidate.id === line.id);
+        return item ? [{ equipment: item, quantity: Math.min(20, Math.max(1, line.quantity || 1)) }] : [];
+      });
+    } catch { return []; }
+  });
+  const [rentalStartDate, setRentalStartDate] = useState(() => window.localStorage.getItem('campeach-rental-date') || '');
+  const [rentalNights, setRentalNights] = useState(() => Math.min(30, Math.max(1, Number(window.localStorage.getItem('campeach-rental-nights')) || 1)));
   const paymentResult = new URLSearchParams(window.location.search).get('payment');
 
   useEffect(() => {
@@ -708,6 +800,7 @@ export default function CampeachApp() {
     const params = new URLSearchParams(window.location.search);
     const campId = params.get('camp');
     const equipmentId = params.get('equipment');
+    const rentalId = params.get('rental');
     const productId = params.get('product');
 
     if (productId) {
@@ -716,7 +809,10 @@ export default function CampeachApp() {
       return;
     }
 
-    if (campId) {
+    if (rentalId) {
+      const rental = equipment.find((item) => item.id === rentalId);
+      if (rental) setSelectedRental(rental);
+    } else if (campId) {
       const matchingCamp = camps.find((camp) => camp.id === campId);
       if (matchingCamp) setSelectedCamp(matchingCamp);
     } else if (equipmentId) {
@@ -725,6 +821,12 @@ export default function CampeachApp() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem('campeach-rental-cart', JSON.stringify(rentalCart.map((line) => ({ id: line.equipment.id, quantity: line.quantity }))));
+    window.localStorage.setItem('campeach-rental-date', rentalStartDate);
+    window.localStorage.setItem('campeach-rental-nights', String(rentalNights));
+  }, [rentalCart, rentalStartDate, rentalNights]);
 
   const openCamp = (camp: Camp) => {
     setSelectedCamp(camp);
@@ -771,7 +873,39 @@ export default function CampeachApp() {
     window.history.pushState({}, '', url);
   };
 
+  const openRental = (item: Equipment) => {
+    setSelectedRental(item);
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('rental', item.id);
+    url.hash = '';
+    window.history.pushState({}, '', url);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const closeRental = () => {
+    setSelectedRental(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('rental');
+    url.hash = 'equipos';
+    window.history.pushState({}, '', url);
+    window.requestAnimationFrame(() => document.getElementById('carrito-alquiler')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  };
+
+  const addRental = (item: Equipment, quantity: number) => {
+    setRentalCart((current) => {
+      const existing = current.find((line) => line.equipment.id === item.id);
+      if (existing) return current.map((line) => line.equipment.id === item.id ? { ...line, quantity: Math.min(20, line.quantity + quantity) } : line);
+      return [...current, { equipment: item, quantity }];
+    });
+    closeRental();
+  };
+
+  const rentalCartCount = rentalCart.reduce((sum, line) => sum + line.quantity, 0);
+  const rentalCartTotal = rentalCart.reduce((sum, line) => sum + line.equipment.price * line.quantity * rentalNights, 0);
+
   if (selectedProduct) return <ProductDetail product={selectedProduct} onBack={closeProduct} />;
+  if (selectedRental) return <RentalEquipmentDetail item={selectedRental} onBack={closeRental} onAdd={addRental} startDate={rentalStartDate} setStartDate={setRentalStartDate} nights={rentalNights} setNights={setRentalNights} cartCount={rentalCartCount} />;
 
   return (
     <main className="campeach-page">
@@ -878,28 +1012,44 @@ export default function CampeachApp() {
         <div className="equipment-layout">
           <div className="equipment-grid">
             {equipment.map((item) => (
-              <article key={item.name} id={`equipo-${item.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="equipment-card">
-                <div className="equipment-photo">
+              <article key={item.name} id={`equipo-${item.id}`} className="equipment-card" onClick={() => openRental(item)}>
+                <button className="equipment-photo" type="button" onClick={() => openRental(item)} aria-label={`Ver ${item.name}`}>
                   <img src={item.image} alt={`${item.name} en catalogo Campeach`} loading="lazy" />
-                </div>
+                </button>
                 <span>{item.category}</span>
-                <h3>{item.name}</h3>
-                <strong>RD${item.price.toLocaleString('es-DO')}</strong>
+                <button className="equipment-title-button" type="button" onClick={() => openRental(item)}><h3>{item.name}</h3></button>
+                <strong>{formatPrice(item.price)} <small>por noche</small></strong>
                 <p>{item.detail}</p>
-                <a href={whatsappFor(undefined, 'equipment', item.name)} target="_blank" rel="noreferrer">
-                  Cotizar equipo
-                  <ArrowUpRight size={15} />
-                </a>
+                <button className="equipment-details-button" type="button" onClick={() => openRental(item)}>Ver equipo y agregar <ArrowUpRight size={15} /></button>
               </article>
             ))}
           </div>
-          <aside className="rental-rules">
-            <h3>Como funciona</h3>
-            <ol>
-              {equipmentRules.map((rule) => (
-                <li key={rule}>{rule}</li>
-              ))}
-            </ol>
+          <aside className="rental-rules rental-cart" id="carrito-alquiler">
+            <div className="rental-cart-title"><div><span>Tu selección</span><h3>Carrito de alquiler</h3></div><strong>{rentalCartCount}</strong></div>
+            {rentalCart.length ? (
+              <>
+                <div className="rental-cart-lines">
+                  {rentalCart.map((line) => (
+                    <div className="rental-cart-line" key={line.equipment.id}>
+                      <img src={line.equipment.image} alt="" />
+                      <div><strong>{line.equipment.name}</strong><span>{formatPrice(line.equipment.price)} / noche</span></div>
+                      <label>Cant.<input type="number" min="1" max="20" value={line.quantity} onChange={(event) => {
+                        const quantity = Math.min(20, Math.max(1, Number(event.target.value) || 1));
+                        setRentalCart((current) => current.map((entry) => entry.equipment.id === line.equipment.id ? { ...entry, quantity } : entry));
+                      }} /></label>
+                      <button type="button" onClick={() => setRentalCart((current) => current.filter((entry) => entry.equipment.id !== line.equipment.id))} aria-label={`Eliminar ${line.equipment.name}`}><Trash2 size={17} /></button>
+                    </div>
+                  ))}
+                </div>
+                <div className="rental-cart-dates">
+                  <label>Fecha de inicio<input type="date" min={new Date().toISOString().slice(0, 10)} value={rentalStartDate} onChange={(event) => setRentalStartDate(event.target.value)} /></label>
+                  <label>Noches<input type="number" min="1" max="30" value={rentalNights} onChange={(event) => setRentalNights(Math.min(30, Math.max(1, Number(event.target.value) || 1)))} /></label>
+                </div>
+                <div className="rental-cart-total"><span>Total estimado</span><strong>{formatPrice(rentalCartTotal)}</strong><small>Depósito y logística por confirmar.</small></div>
+                <a className={`rental-checkout-button${rentalStartDate ? '' : ' is-disabled'}`} href={rentalStartDate ? rentalWhatsappFor(rentalCart, rentalStartDate, rentalNights) : undefined} aria-disabled={!rentalStartDate} target="_blank" rel="noreferrer"><WhatsappIcon size={20} /> {rentalStartDate ? 'Solicitar alquiler por WhatsApp' : 'Selecciona la fecha para continuar'}</a>
+              </>
+            ) : <p className="rental-empty">Abre cualquier equipo, elige cantidad y agrégalo aquí. Puedes combinar varios artículos en una sola solicitud.</p>}
+            <details><summary>Cómo funciona</summary><ol>{equipmentRules.map((rule) => <li key={rule}>{rule}</li>)}</ol></details>
           </aside>
         </div>
       </section>

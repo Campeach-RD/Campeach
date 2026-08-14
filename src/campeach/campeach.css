@@ -497,11 +497,16 @@
 
 .equipment-card {
   padding: 16px;
+  cursor: pointer;
 }
 
 .equipment-photo {
+  display: block;
+  width: calc(100% + 4px);
   height: 148px;
   margin: -2px -2px 14px;
+  padding: 0;
+  border: 0;
   overflow: hidden;
   border-radius: 8px;
   background: #e9f1ed;
@@ -531,19 +536,26 @@
   color: var(--camp-orange);
   font-size: 1.25rem;
 }
+.equipment-card strong small { color: var(--camp-muted); font-size: .72rem; font-weight: 700; }
+.equipment-title-button { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
 
 .equipment-card p {
   color: var(--camp-muted);
   line-height: 1.45;
 }
 
-.equipment-card a {
+.equipment-details-button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--camp-teal);
+  font: inherit;
   font-weight: 900;
+  cursor: pointer;
 }
 
 .rental-rules {
@@ -567,6 +579,39 @@
   color: rgba(255, 255, 255, 0.82);
   line-height: 1.65;
 }
+.rental-cart { display: grid; gap: 16px; }
+.rental-cart-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rental-cart-title span { color: #72d6a4; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
+.rental-cart-title h3 { margin: 3px 0 0; }
+.rental-cart-title > strong { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #20b65a; }
+.rental-empty { margin: 0; color: rgba(255,255,255,.72); line-height: 1.55; }
+.rental-cart-lines { display: grid; gap: 10px; }
+.rental-cart-line { display: grid; grid-template-columns: 45px minmax(0, 1fr) 48px 28px; gap: 8px; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.13); }
+.rental-cart-line img { width: 45px; height: 45px; border-radius: 8px; background: #fff; object-fit: cover; }
+.rental-cart-line div strong, .rental-cart-line div span { display: block; }
+.rental-cart-line div strong { font-size: .82rem; }
+.rental-cart-line div span { margin-top: 3px; color: rgba(255,255,255,.68); font-size: .68rem; }
+.rental-cart-line label { color: rgba(255,255,255,.7); font-size: .62rem; }
+.rental-cart-line input, .rental-cart-dates input, .rental-configurator input { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; border: 1px solid var(--camp-line); border-radius: 8px; background: #fff; color: var(--camp-ink); font: inherit; }
+.rental-cart-line > button { padding: 4px; border: 0; background: transparent; color: #ffaaa0; cursor: pointer; }
+.rental-cart-dates { display: grid; grid-template-columns: 1fr 78px; gap: 8px; }
+.rental-cart-dates label { font-size: .72rem; font-weight: 800; }
+.rental-cart-total { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.16); }
+.rental-cart-total strong { color: #72d6a4; font-size: 1.35rem; }
+.rental-cart-total small { grid-column: 1 / -1; color: rgba(255,255,255,.62); }
+.rental-checkout-button { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; background: #20b65a; color: #fff; font-weight: 900; text-decoration: none; }
+.rental-checkout-button.is-disabled, .rental-whatsapp-button.is-disabled { cursor: not-allowed; opacity: .55; }
+.rental-rules details { border-top: 1px solid rgba(255,255,255,.15); padding-top: 12px; }
+.rental-rules summary { cursor: pointer; font-weight: 800; }
+.rental-rules details ol { margin-top: 10px; font-size: .82rem; }
+.rental-cart-button { border: 0; cursor: pointer; }
+.rental-configurator { display: grid; gap: 13px; margin-top: 24px; }
+.rental-configurator label { display: grid; gap: 5px; color: var(--camp-ink); font-size: .8rem; font-weight: 800; }
+.rental-estimate { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; padding: 15px; border-radius: 12px; background: #f1f8f5; }
+.rental-estimate strong { color: var(--camp-leaf); font-size: 1.35rem; }
+.rental-estimate small { grid-column: 1 / -1; color: var(--camp-muted); }
+.rental-add-button { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; font: inherit; font-weight: 900; cursor: pointer; }
+.rental-whatsapp-button { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; font-weight: 900; text-decoration: none; }
 
 .campeach-footer {
   display: flex;
