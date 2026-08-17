@@ -154,5 +154,29 @@
     "idempotencyKey": "reel:2026-08-14",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-14-villa-altagracia.mp4?rev=6f19b50",
     "instagramMediaId": "18068858432711412"
+  },
+  {
+    "date": "2026-08-17T21:50:22.814663+00:00",
+    "campId": "monsenor",
+    "campName": "Monseñor",
+    "files": [
+      "1TFUfzto-Fjq5ATB2LSxBSUZ0zVUgsnuD",
+      "1TsTrtx_wCoqruTWwURId_lTLn9KGSP0N",
+      "1TJ-neklYI-1G9WWEQL28SZacZMIC_nSA",
+      "1NcN1-ju9rLkHr-rcBfbHhodjPVgidy3D"
+    ],
+    "fileNames": [
+      "20250316_092520.mp4",
+      "20250316_092141.mp4",
+      "20250316_092554.mp4",
+      "20250316_091622.mp4"
+    ],
+    "duration": 20.466667,
+    "output": "public/reels/2026-08-17-monsenor.mp4",
+    "caption": "🏕️ Monseñor\n📍 Cañabón, Bonao\n💰 Desde RD$1,000 por noche\n\n• Camping en bosque\n• Balneario tipo presa\n• Cuenta con comida/restaurante\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #monseñor #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1chaVkGfTeZxd7UMigCdEQcPEWixvJNG-/preview",
+    "idempotencyKey": "reel:2026-08-17",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-17-monsenor.mp4?rev=283642d",
+    "instagramMediaId": "18149288293521280"
   }
 ]
