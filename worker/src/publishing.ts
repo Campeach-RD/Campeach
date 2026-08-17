@@ -25,8 +25,11 @@ export const CAMP_PHOTO_FOLDERS: Record<string, string> = {
 
 export type PublishableCamp = (typeof catalog.camps)[number] & { pdfUrl: string };
 
+export const normalizeCampId = (value: string | null | undefined) =>
+  (value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replaceAll('ñ', 'n').toLowerCase();
+
 export const publishableCamps = catalog.camps.filter(
-  (camp): camp is PublishableCamp => Boolean(CAMP_PHOTO_FOLDERS[camp.id] && camp.pdfUrl),
+  (camp): camp is PublishableCamp => Boolean(CAMP_PHOTO_FOLDERS[normalizeCampId(camp.id)] && camp.pdfUrl),
 );
 
 export const PRIORITY_CAMP_IDS = [
@@ -42,7 +45,10 @@ export const PRIORITY_CAMP_IDS = [
 
 export const chooseDailyCamp = (lastCampId: string | null, randomIndex = 0) => {
   const priority = new Set<string>(PRIORITY_CAMP_IDS);
-  const candidates = publishableCamps.filter((camp) => priority.has(camp.id) && camp.id !== lastCampId);
+  const candidates = publishableCamps.filter((camp) => {
+    const id = normalizeCampId(camp.id);
+    return priority.has(id) && id !== normalizeCampId(lastCampId);
+  });
   if (!candidates.length) throw new Error('no_publishable_camps');
   return candidates[Math.abs(randomIndex) % candidates.length];
 };
@@ -78,7 +84,7 @@ const CAMP_ALIASES: Record<string, string[]> = {
 export const findCampFromCaption = (caption = '') => {
   const normalized = ` ${normalizeCaption(caption)} `;
   const candidates = publishableCamps.flatMap((camp) =>
-    [camp.name, camp.id.replaceAll('-', ' '), ...(CAMP_ALIASES[camp.id] ?? [])]
+    [camp.name, camp.id.replaceAll('-', ' '), ...(CAMP_ALIASES[normalizeCampId(camp.id)] ?? [])]
       .map(normalizeCaption)
       .filter((alias) => alias.length >= 4)
       .map((alias) => ({ camp, alias })),

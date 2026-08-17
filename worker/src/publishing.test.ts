@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chooseDailyCamp, choosePhotos, createCaption, createCommentReply, PRIORITY_CAMP_IDS, publishableCamps } from './publishing';
+import { chooseDailyCamp, choosePhotos, createCaption, createCommentReply, normalizeCampId, PRIORITY_CAMP_IDS, publishableCamps } from './publishing';
 
 describe('daily Instagram publishing', () => {
   it('only includes camps with photos and a PDF', () => {
@@ -13,7 +13,12 @@ describe('daily Instagram publishing', () => {
   });
 
   it('rotates the daily carousel through the priority camps', () => {
-    expect(PRIORITY_CAMP_IDS).toContain(chooseDailyCamp(null, 0).id as (typeof PRIORITY_CAMP_IDS)[number]);
+    expect(PRIORITY_CAMP_IDS).toContain(normalizeCampId(chooseDailyCamp(null, 0).id) as (typeof PRIORITY_CAMP_IDS)[number]);
+  });
+
+  it('accepts Monseñor while preserving the legacy automation identifier', () => {
+    expect(normalizeCampId('monseñor')).toBe('monsenor');
+    expect(publishableCamps.some((camp) => camp.name === 'Monseñor')).toBe(true);
   });
 
   it('selects between four and ten unique photos', () => {

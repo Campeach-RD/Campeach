@@ -1,5 +1,5 @@
 import { fetchDriveImage, listDriveImages } from './google-drive';
-import { CAMP_PHOTO_FOLDERS, chooseDailyCamp, choosePhotos, createCaption, publishableCamps } from './publishing';
+import { CAMP_PHOTO_FOLDERS, chooseDailyCamp, choosePhotos, createCaption, normalizeCampId, publishableCamps } from './publishing';
 
 const graphRequest = async <T>(path: string, env: Env, method = 'GET', body?: Record<string, unknown>) => {
   const formBody = body ? new FormData() : undefined;
@@ -126,10 +126,10 @@ export const publishDailyCarousel = async (env: Env, requestedCampId?: string, p
 
   const lastCampId = await env.DEDUP.get('daily:last-camp');
   const camp = requestedCampId
-    ? publishableCamps.find((item) => item.id === requestedCampId)
+    ? publishableCamps.find((item) => normalizeCampId(item.id) === normalizeCampId(requestedCampId))
     : chooseDailyCamp(lastCampId, randomNumbers(1)[0]);
   if (!camp) throw new Error('invalid_camp_id');
-  const driveFiles = publicImageUrls ? [] : await listDriveImages(CAMP_PHOTO_FOLDERS[camp.id], env);
+  const driveFiles = publicImageUrls ? [] : await listDriveImages(CAMP_PHOTO_FOLDERS[normalizeCampId(camp.id)], env);
   const availableCount = publicImageUrls?.length ?? driveFiles.length;
   if (availableCount < 4) throw new Error(`insufficient_images_${camp.id}`);
   const count = publicImageUrls ? publicImageUrls.length : 4 + (randomNumbers(1)[0] % Math.min(7, driveFiles.length - 3));
