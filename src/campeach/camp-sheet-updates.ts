@@ -23,7 +23,7 @@ export const campSheetUpdates: Record<string, CampSheetUpdate> = {
     rules: ['No requiere vehiculo 4x4', 'Confirmar disponibilidad y condiciones antes de reservar'],
   },
   monsenor: {
-    name: 'Monsenor',
+    name: 'Monseñor',
     priceFrom: 1000,
     priceNote: 'Desde RD$1,000 por noche',
     capacity: 50,

@@ -105,7 +105,8 @@ jobs:
           root = Path.cwd()
           result = json.loads((root / "automation/work/result.json").read_text(encoding="utf-8"))
           catalog = json.loads((root / "worker/catalog.generated.json").read_text(encoding="utf-8"))
-          camp = next(item for item in catalog["camps"] if item["id"] == result["campId"])
+          normalize_id = lambda value: str(value).replace("ñ", "n").replace("Ñ", "N")
+          camp = next(item for item in catalog["camps"] if normalize_id(item["id"]) == normalize_id(result["campId"]))
           response = requests.post(
               os.environ["CAMPEACH_WORKER_URL"] + "/instagram/admin/publish-reel",
               headers={"Authorization": f"Bearer {os.environ['CAMPEACH_ADMIN_API_TOKEN']}"},

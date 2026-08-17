@@ -276,9 +276,9 @@ const campRecords: Camp[] = [
   },
   {
     id: 'monsenor',
-    name: 'Monsenor',
-    location: 'Canabon, Bonao',
-    region: 'Montana',
+    name: 'Monseñor',
+    location: 'Cañabón, Bonao',
+    region: 'Montaña',
     priceFrom: 1000,
     priceNote: 'Camping desde RD$1,000 p/p/noche',
     capacity: 30,

@@ -1521,7 +1521,7 @@ export const campRichInfo: Record<string, CampRichInfo> = {
     "source": "Cerebro de Campamentos y Equipos de Camping",
     "priceFrom": 1000,
     "priceNote": "RD$ 1,000 por persona por noche.",
-    "intro": "Monsenor combina Campamento rodeado de montanas, frente a la Presa Rincon. Pets Friendly: Se permiten mascotas. Ideal para desconectarse de la monotonia, contacto cercano con la naturaleza y lo ecologico. Perfecto para actividades grupales, retiros, excursiones y actividades en pareja. Cocina a lena. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
+    "intro": "Monseñor combina campamento rodeado de montañas, frente a la Presa Rincón. Pets Friendly: Se permiten mascotas. Ideal para desconectarse de la monotonía, tener contacto cercano con la naturaleza y lo ecológico. Perfecto para actividades grupales, retiros, excursiones y actividades en pareja. Cocina a leña. Reserva con Campeach RD para confirmar disponibilidad, tarifa final y condiciones del lugar.",
     "important": [
       "Campamento rodeado de montanas, frente a la Presa Rincon.",
       "Pets Friendly: Se permiten mascotas.",

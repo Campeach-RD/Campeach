@@ -40,6 +40,10 @@ def load_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def normalized_id(value):
+    return str(value).replace("ñ", "n").replace("Ñ", "N")
+
+
 def save_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -343,7 +347,7 @@ def main():
                 raise
     else:
         raise RuntimeError("Ningún campamento tiene cuatro videos verticales utilizables: " + "; ".join(attempt_errors))
-    camp = next(item for item in catalog["camps"] if item["id"] == camp_id)
+    camp = next(item for item in catalog["camps"] if normalized_id(item["id"]) == normalized_id(camp_id))
     date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     filename = f"{date}-{camp_id}.mp4"
     output = REELS_DIR / filename
