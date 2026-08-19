@@ -201,6 +201,48 @@ def voice_friendly_text(value):
     return re.sub(r"RD\$\s*([0-9][0-9,.]*)", currency, str(value)).replace("p/p/noche", "por persona por noche").replace("p/noche", "por noche").replace("p/p", "por persona")
 
 
+VOICE_PROFILES = [
+    ("ramona", "es-DO-RamonaNeural", "+8%"),
+    ("emilio", "es-DO-EmilioNeural", "+6%"),
+    ("karina", "es-PR-KarinaNeural", "+7%"),
+    ("victor", "es-PR-VictorNeural", "+5%"),
+    ("dalia", "es-MX-DaliaNeural", "+8%"),
+    ("jorge", "es-MX-JorgeNeural", "+6%"),
+]
+
+
+def narration_options(camp):
+    highlights = camp.get("highlights", [])
+    first = highlights[0] if highlights else "naturaleza y aventura"
+    second = highlights[1] if len(highlights) > 1 else "una experiencia para desconectarte"
+    price = re.sub(r"^desde\s+", "", voice_friendly_text(camp["priceNote"]), flags=re.IGNORECASE)
+    name = camp["name"]
+    location = camp["location"]
+    cta = "Comenta INFO y recibe el PDF con todos los detalles."
+    return [
+        ("pregunta", f"¿Te imaginas despertar rodeado de naturaleza? Hoy te llevamos a {name}, en {location}. {first}. {second}. {price}. {cta}"),
+        ("plan", f"Guarda este plan para tu próxima escapada: {name}, ubicado en {location}. Aquí encontrarás {first.lower()} y {second.lower()}. La tarifa es {price}. {cta}"),
+        ("descubrimiento", f"Este rincón de República Dominicana merece estar en tu lista. Se llama {name} y está en {location}. {first}. {second}. Puedes visitarlo desde {price}. {cta}"),
+        ("invitacion", f"Si necesitas cambiar la rutina por naturaleza, conoce {name}. Está en {location} y ofrece {first.lower()}. Además, {second.lower()}. El precio es {price}. {cta}"),
+        ("guia", f"Te contamos lo esencial sobre {name}: se encuentra en {location}, cuenta con {first.lower()} y {second.lower()}. La estadía comienza en {price}. Confirma disponibilidad antes de reservar. {cta}"),
+        ("sensorial", f"Respira, desconéctate y disfruta la aventura en {name}, {location}. Este destino combina {first.lower()} con {second.lower()}. Puedes vivir la experiencia desde {price}. {cta}"),
+        ("recomendacion", f"¿Buscas dónde acampar en República Dominicana? Una opción para considerar es {name}, en {location}. Lo mejor: {first.lower()} y {second.lower()}. La tarifa parte de {price}. {cta}"),
+        ("escapada", f"Tu próxima escapada puede ser en {name}. Está en {location}, con {first.lower()} y {second.lower()}. Organiza tu visita desde {price} y confirma la tarifa final antes de reservar. {cta}"),
+    ]
+
+
+def choose_narration(camp, history):
+    options = narration_options(camp)
+    recently_used = {item.get("voiceoverStyle") for item in history[-7:]}
+    available = [option for option in options if option[0] not in recently_used] or options
+    seed = int(datetime.now(timezone.utc).strftime("%Y%m%d")) + sum(ord(char) for char in camp["id"])
+    style, text = available[seed % len(available)]
+    recent_voices = {item.get("voiceProfile") for item in history[-2:]}
+    voices = [profile for profile in VOICE_PROFILES if profile[0] not in recent_voices] or VOICE_PROFILES
+    voice_name, voice_id, rate = voices[(seed // len(options)) % len(voices)]
+    return {"style": style, "text": text, "voiceProfile": voice_name, "voiceId": voice_id, "rate": rate}
+
+
 def build_ass(camp, path):
     highlights = [safe_text(item) for item in camp.get("highlights", [])[:2]]
     while len(highlights) < 2:
@@ -229,22 +271,17 @@ def build_ass(camp, path):
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-async def create_voice(camp, path):
-    highlight = camp.get("highlights", ["naturaleza y aventura"])[0]
-    text = (
-        f"¿Buscas una escapada diferente? Conoce {camp['name']}, en {camp['location']}. "
-        f"{highlight}. {voice_friendly_text(camp['priceNote'])}. Confirma siempre disponibilidad y tarifa final antes de reservar. "
-        "Comenta INFO y recibe el PDF con todos los detalles."
-    )
-    await edge_tts.Communicate(text, "es-DO-RamonaNeural", rate="+8%").save(str(path))
+async def create_voice(narration, path):
+    await edge_tts.Communicate(narration["text"], narration["voiceId"], rate=narration["rate"]).save(str(path))
 
 
-def render(paths, camp, output):
+def render(paths, camp, output, history):
     ass = WORK_DIR / "overlay.ass"
     voice = WORK_DIR / "voice.mp3"
     audio = WORK_DIR / "audio.m4a"
+    narration = choose_narration(camp, history)
     build_ass(camp, ass)
-    asyncio.run(create_voice(camp, voice))
+    asyncio.run(create_voice(narration, voice))
     run(
         "ffmpeg", "-y", "-loglevel", "error",
         "-f", "lavfi", "-t", "24", "-i", "anoisesrc=color=pink:amplitude=0.15",
@@ -270,6 +307,7 @@ def render(paths, camp, output):
         "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-maxrate", "8M", "-bufsize", "16M", "-profile:v", "high", "-level", "4.1",
         "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "-shortest", output,
     )
+    return narration
 
 
 def validate(path):
@@ -351,7 +389,7 @@ def main():
     date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     filename = f"{date}-{camp_id}.mp4"
     output = REELS_DIR / filename
-    render(paths, camp, output)
+    narration = render(paths, camp, output, history)
     seconds = validate(output)
     result = {
         "date": datetime.now(timezone.utc).isoformat(),
@@ -360,6 +398,9 @@ def main():
         "files": [item["id"] for item in selected],
         "fileNames": [item["name"] for item in selected],
         "duration": seconds,
+        "voiceoverStyle": narration["style"],
+        "voiceProfile": narration["voiceProfile"],
+        "voiceoverText": narration["text"],
         "output": str(output.relative_to(ROOT)).replace("\\", "/"),
         "caption": caption(camp),
         "pdfUrl": camp["pdfUrl"],
