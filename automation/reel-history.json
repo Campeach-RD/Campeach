@@ -283,5 +283,32 @@
     "idempotencyKey": "reel:2026-08-22",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-22-monsenor.mp4?rev=c1c4d8f",
     "instagramMediaId": "18615064477055676"
+  },
+  {
+    "date": "2026-08-23T15:04:16.817014+00:00",
+    "campId": "santiago",
+    "campName": "Santiago",
+    "files": [
+      "1JLpwb7Sqr4qqTw4ZFzxQuJAsqpXe-3kd",
+      "1iY849JfA3JhHr06uojawxpqTqFSYPLkC",
+      "18l2gB-AyUc9ZN0OklaD-td_pGpd7k3Xh",
+      "1ffLVplHra5JNrdCRYj0O9N_V7snz84lW"
+    ],
+    "fileNames": [
+      "2021-06-20 15.34.22.mp4",
+      "2021-06-20 15.36.36.mp4",
+      "2021-06-20 13.35.24.mp4",
+      "2021-06-20 13.37.43.mp4"
+    ],
+    "duration": 15.166667,
+    "voiceoverStyle": "invitacion",
+    "voiceProfile": "emilio",
+    "voiceoverText": "Si necesitas cambiar la rutina por naturaleza, conoce Santiago. Está en Santiago y ofrece camping, glamping y habitaciones. Además, cuenta con comida/restaurante. El precio es novecientos pesos dominicanos por noche. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-08-23-santiago.mp4",
+    "caption": "🏕️ Santiago\n📍 Santiago\n💰 Desde RD$900 por noche\n\n• Camping, glamping y habitaciones\n• Cuenta con comida/restaurante\n• Balneario con presa y piscina\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #santiago #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/18Ky7j5vm7RC1ngksrIkqOh_yqXM-2j6V/preview",
+    "idempotencyKey": "reel:2026-08-23",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-23-santiago.mp4?rev=b844eee",
+    "instagramMediaId": "17977888776105797"
   }
 ]
