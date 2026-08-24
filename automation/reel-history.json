@@ -310,5 +310,32 @@
     "idempotencyKey": "reel:2026-08-23",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-23-santiago.mp4?rev=b844eee",
     "instagramMediaId": "17977888776105797"
+  },
+  {
+    "date": "2026-08-24T15:26:19.586692+00:00",
+    "campId": "villa-altagracia",
+    "campName": "Villa Altagracia",
+    "files": [
+      "17uOXMnGO_ITOVls0CRXLxCeKzqGZMNPO",
+      "1uwO7x3dSbSyMJMUPi77qeuqra1-hG7AP",
+      "1VeO52okSfq7z6N0MK80mZIyU-LPFuyLn",
+      "1PJ4oAdMSzS3apmd-aeB_yCgX-2DTXk5y"
+    ],
+    "fileNames": [
+      "IMG_1796.MOV",
+      "IMG_1745.MOV",
+      "IMG_1533.MOV",
+      "IMG_1883.MOV"
+    ],
+    "duration": 24.021,
+    "voiceoverStyle": "sensorial",
+    "voiceProfile": "ramona",
+    "voiceoverText": "Respira, desconéctate y disfruta la aventura en Villa Altagracia, Los Arroyones, Villa Altagracia. Este destino combina camping y cabana ecologica con balneario con rio, cascada y piscina. Puedes vivir la experiencia desde setecientos cincuenta pesos dominicanos por noche. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-08-24-villa-altagracia.mp4",
+    "caption": "🏕️ Villa Altagracia\n📍 Los Arroyones, Villa Altagracia\n💰 Desde RD$750 por noche\n\n• Camping y cabana ecologica\n• Balneario con rio, cascada y piscina\n• No requiere vehiculo 4x4\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #villaaltagracia #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/19DeWI8XrFFfgr_AP7XK5iQVoFi2gilOn/preview",
+    "idempotencyKey": "reel:2026-08-24",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-24-villa-altagracia.mp4?rev=2cb91c8",
+    "instagramMediaId": "17903819697520923"
   }
 ]
