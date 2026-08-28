@@ -398,5 +398,25 @@
       "public/carousels/2026-08-26-jarabacoa-05.jpg",
       "public/carousels/2026-08-26-jarabacoa-06.jpg"
     ]
+  },
+  {
+    "date": "2026-08-28",
+    "campId": "el-valle",
+    "files": [
+      "1QKY4Gi1ta7wVj-PKfO09VNQMih0LUpQW",
+      "1MIjUJ7KmRh0hCkQOJdkkeN5IYFH2NH4V",
+      "1IKljHLxytEimubYeeYy_EEzCaBmGltKS",
+      "1fgMqZnknkti7VVqvv-Aue4-i7b9qea1E",
+      "1evP7f4Lcm63cq-IA_VKOSvppIg_ziMNy",
+      "1CgFWEmxcPhgxwh37nrQ2rCKQn7Jggj-g"
+    ],
+    "outputs": [
+      "public/carousels/2026-08-28-el-valle-01.jpg",
+      "public/carousels/2026-08-28-el-valle-02.jpg",
+      "public/carousels/2026-08-28-el-valle-03.jpg",
+      "public/carousels/2026-08-28-el-valle-04.jpg",
+      "public/carousels/2026-08-28-el-valle-05.jpg",
+      "public/carousels/2026-08-28-el-valle-06.jpg"
+    ]
   }
 ]
