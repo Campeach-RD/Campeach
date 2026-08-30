@@ -445,5 +445,32 @@
     "idempotencyKey": "reel:2026-08-29",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-29-villa-altagracia.mp4?rev=c316119",
     "instagramMediaId": "18439353739134103"
+  },
+  {
+    "date": "2026-08-30T18:16:29.877321+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1FExvhNvaVsbiNXHft5Kg58B3BizZYTxn",
+      "1E_wioReLxNpXgdSGmMXuxOdLSlizWfc4",
+      "1EJ7X6TuFvAmoOOxTKP7FTpB1oMdZYC9z",
+      "1FNw6O5ifRW7o2DuFXJKZkn3w8NrK0ra2"
+    ],
+    "fileNames": [
+      "20241228_090044.mp4",
+      "20241228_121843.mp4",
+      "20241228_121753.mp4",
+      "20241228_104310.mp4"
+    ],
+    "duration": 22.166667,
+    "voiceoverStyle": "guia",
+    "voiceProfile": "victor",
+    "voiceoverText": "Te contamos lo esencial sobre El Valle, Samana: se encuentra en El Valle, Samana, cuenta con camping de playa y cuenta con comida/restaurante. La estadía comienza en setecientos pesos dominicanos por noche; camping no incluye equipos. Confirma disponibilidad antes de reservar. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-08-30-el-valle.mp4",
+    "caption": "🏕️ El Valle, Samana\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n• Balneario de playa\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #elvalle #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-08-30",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-08-30-el-valle.mp4?rev=0394bbc",
+    "instagramMediaId": "17905973442537254"
   }
 ]
