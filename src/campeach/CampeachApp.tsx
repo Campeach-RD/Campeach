@@ -107,7 +107,7 @@ type ShopProduct = {
   weight: string; footprint: string; description: string; image: string; rating: number;
   ratingCount: number;
   images?: string[];
-  availability: 'available' | 'out-of-stock'; highlights: string[]; reviewSummary: string; featured?: boolean;
+  availability: 'available' | 'out-of-stock'; stock?: number; highlights: string[]; reviewSummary: string; featured?: boolean;
 };
 
 type RentalCartLine = { equipment: Equipment; quantity: number };
@@ -151,7 +151,7 @@ const shopProducts: ShopProduct[] = [
     description: 'Compacta y ligera, con espacio para tres personas o un colchón queen y equipaje.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-3.jpg`,
     images: Array.from({ length: 7 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-3/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
-    rating: 4.3, ratingCount: 3470, availability: 'available',
+    rating: 4.3, ratingCount: 3470, availability: 'out-of-stock',
     highlights: ['Sobretecho removible y resistente al agua', 'Techo y paredes de malla', 'Puerta amplia en forma de D', 'Bolsillos y acceso para cable eléctrico'],
     reviewSummary: 'Los compradores destacan el montaje sencillo, la ventilación y el espacio que ofrece para su peso.',
   },
@@ -166,7 +166,7 @@ const shopProducts: ShopProduct[] = [
     description: 'Espacio para un colchón queen, ventilación amplia y sobretecho removible.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-4.jpg`,
     images: Array.from({ length: 8 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-4/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
-    rating: 4.3, ratingCount: 1246, availability: 'out-of-stock',
+    rating: 4.3, ratingCount: 1246, availability: 'available', stock: 4,
     highlights: ['Capacidad para cuatro personas', 'Sobretecho con costuras selladas', 'Techo y paredes de malla', 'Compartimento de acceso doble'],
     reviewSummary: 'La amplitud, la circulación de aire y la organización interior son sus puntos mejor valorados.',
   },
@@ -181,7 +181,7 @@ const shopProducts: ShopProduct[] = [
     description: 'La favorita de Campeach: cómoda, ventilada y con capacidad para dos colchones queen.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-6.jpg`,
     images: Array.from({ length: 8 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-6/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
-    rating: 4.3, ratingCount: 3341, availability: 'available',
+    rating: 4.3, ratingCount: 3341, availability: 'out-of-stock',
     highlights: ['Altura central de 72 pulgadas', 'Espacio para dos colchones queen', 'Alero y tapete de entrada', 'Bolsillos y acceso para cable eléctrico'],
     reviewSummary: 'Las reseñas resaltan el espacio, precio y montaje; para viento fuerte conviene reforzar las estacas.',
     featured: true,
@@ -204,19 +204,28 @@ const shopProducts: ShopProduct[] = [
   {
     id: 'ozark-sleeping-pad', name: 'Sleeping pad Ozark Trail Essential', category: 'Descanso', brand: 'Ozark Trail', price: 3490, compareAt: 3990,
     weight: '1.5 lb', footprint: '78\" × 28\" × 2.5\"', description: 'Colchoneta inflable amplia y compacta para dormir con mayor aislamiento y comodidad.',
-    image: `${import.meta.env.BASE_URL}shop-products/sleeping-pad.jpg`, rating: 4.5, ratingCount: 692, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/sleeping-pad.jpg`, rating: 4.5, ratingCount: 692, availability: 'out-of-stock',
     highlights: ['Tamaño individual grande', 'Solo 1.5 libras', 'Superficie impermeable', 'Se enrolla de forma compacta'], reviewSummary: 'Los comentarios destacan comodidad, tamaño, poco ruido y facilidad para guardar.',
+  },
+  {
+    id: 'ozark-self-inflating-pad', name: 'Sleeping pad autoinflable Ozark Trail', category: 'Descanso', brand: 'Ozark Trail', price: 5490, compareAt: 5990,
+    weight: '4 lb', footprint: '78" × 25" × 2"', description: 'Colchoneta autoinflable de espuma con almohada integrada, aislamiento térmico y firmeza ajustable para descansar cómodamente.',
+    image: `${import.meta.env.BASE_URL}shop-products/self-inflating-pad/view-01.jpeg`,
+    images: Array.from({ length: 6 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/self-inflating-pad/view-${String(index + 1).padStart(2, '0')}.jpeg`),
+    rating: 4.2, ratingCount: 119, availability: 'available', stock: 2,
+    highlights: ['Se autoinfla al abrir la válvula', 'Valor R 5 para mayor aislamiento', 'Almohada integrada y grosor de 2 pulgadas', 'Material ToughLite™ TPU sin PVC y poliéster 75D', 'Válvula de inflado, desinflado y ajuste de presión'],
+    reviewSummary: 'Las valoraciones destacan su comodidad, aislamiento y facilidad de uso. Para el primer inflado puede necesitar unos minutos de expansión y unas pocas bocanadas para ajustar la firmeza.',
   },
   {
     id: 'lifestraw-personal', name: 'Filtro de agua LifeStraw Personal', category: 'Agua y seguridad', brand: 'LifeStraw', price: 2490, compareAt: 2790,
     weight: '1.62 oz', footprint: 'Filtro personal', description: 'Filtro compacto para excursiones, campamentos y preparación ante emergencias.',
-    image: `${import.meta.env.BASE_URL}shop-products/lifestraw.jpg`, rating: 4.4, ratingCount: 647, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/lifestraw.jpg`, rating: 4.4, ratingCount: 647, availability: 'out-of-stock',
     highlights: ['Sin electricidad ni baterías', 'Ligero para mochila', 'Filtra bacterias y parásitos', 'Venta Campeach por unidad'], reviewSummary: 'Se valora su portabilidad, operación sencilla y utilidad para camping y emergencias.',
   },
   {
     id: 'lepro-headlamp-2', name: 'Linternas frontales Lepro recargables (2)', category: 'Iluminación', brand: 'Lepro', price: 2990, compareAt: 3490,
     weight: 'Paquete ligero', footprint: 'Banda ajustable', description: 'Par de linternas manos libres con luz blanca y roja para montar el campamento de noche.',
-    image: `${import.meta.env.BASE_URL}shop-products/headlamps.jpg`, rating: 4.5, ratingCount: 371, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/headlamps.jpg`, rating: 4.5, ratingCount: 371, availability: 'out-of-stock',
     highlights: ['Dos unidades recargables', 'Hasta 2000 lux', 'Seis modos', 'IPX4 y cable USB'], reviewSummary: 'Se repiten elogios sobre brillo, comodidad y recarga; algunas reseñas advierten variaciones en autonomía.',
   },
   {
@@ -234,31 +243,31 @@ const shopProducts: ShopProduct[] = [
   {
     id: 'emergency-blankets-12', name: 'Mantas térmicas de emergencia (12)', category: 'Agua y seguridad', brand: 'General Medi', price: 2490, compareAt: 2990,
     weight: 'Paquete compacto', footprint: '12 unidades', description: 'Mantas Mylar compactas para kits de emergencia, excursiones y vehículos.',
-    image: `${import.meta.env.BASE_URL}shop-products/blankets.jpg`, rating: 4.6, ratingCount: 96, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/blankets.jpg`, rating: 4.6, ratingCount: 96, availability: 'out-of-stock',
     highlights: ['Doce mantas Mylar', 'Empaque compacto', 'Para kits y vehículos', 'Reduce la pérdida de calor'], reviewSummary: 'Las reseñas destacan el empaque pequeño, la facilidad de almacenamiento y el valor del paquete.',
   },
   {
     id: 'ozark-tarp-9x12', name: 'Lona heavy-duty Ozark Trail 9 × 12', category: 'Protección', brand: 'Ozark Trail', price: 3990, compareAt: 4490,
     weight: 'Peso por confirmar', footprint: "9' × 12'", description: 'Lona de polietileno de 10 mil para piso, sombra o protección adicional.',
-    image: `${import.meta.env.BASE_URL}shop-products/tarp.jpg`, rating: 4.6, ratingCount: 1555, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/tarp.jpg`, rating: 4.6, ratingCount: 1555, availability: 'out-of-stock',
     highlights: ['Polietileno de 10 mil', 'Esquinas reforzadas', 'Ojales de sujeción', 'Garantía limitada de un año'], reviewSummary: 'Los compradores mencionan buena resistencia frente a lluvia, nieve y viento.',
   },
   {
     id: 'ozark-air-pump', name: 'Bomba de aire portátil Ozark Trail', category: 'Inflado', brand: 'Ozark Trail · Sidewinder', price: 2490, compareAt: 2890,
     weight: '0.68 lb', footprint: '6 V · 4 baterías D', description: 'Bomba portátil para inflar y desinflar colchones sin tomacorriente.',
-    image: `${import.meta.env.BASE_URL}shop-products/pump.jpg`, rating: 4.2, ratingCount: 2149, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/pump.jpg`, rating: 4.2, ratingCount: 2149, availability: 'out-of-stock',
     highlights: ['Infla y desinfla', 'Varias boquillas', 'Cuatro baterías D', 'Baterías no incluidas'], reviewSummary: 'Se valora su portabilidad; las críticas se concentran en velocidad, baterías y unidades defectuosas.',
   },
   {
     id: 'ozark-sleeping-bag-50', name: 'Sleeping bag Ozark Trail 50 °F', category: 'Descanso', brand: 'Ozark Trail', price: 3490, compareAt: 3990,
     weight: '2.9 lb', footprint: '33\" × 75\"', description: 'Saco rectangular para clima cálido, adecuado para noches tropicales.',
-    image: `${import.meta.env.BASE_URL}shop-products/sleeping-bag.jpg`, rating: 4.4, ratingCount: 4735, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/sleeping-bag.jpg`, rating: 4.4, ratingCount: 4735, availability: 'out-of-stock',
     highlights: ['Temperatura de 50 °F', 'Tamaño adulto', 'Lavable a máquina', 'Bolsa incluida'], reviewSummary: 'Miles de valoraciones destacan comodidad, facilidad para guardar y utilidad en clima cálido.',
   },
   {
     id: 'coghlans-stakes-4', name: 'Estacas Coghlan’s heavy-duty de 10\" (4)', category: 'Accesorios', brand: 'Coghlan’s', price: 1990, compareAt: 2290,
     weight: 'Aprox. 0.95 lb', footprint: '10\" cada una', description: 'Cuatro estacas de acero para asegurar carpas y lonas en terrenos firmes.',
-    image: `${import.meta.env.BASE_URL}shop-products/stakes.png`, rating: 4.7, ratingCount: 365, availability: 'available',
+    image: `${import.meta.env.BASE_URL}shop-products/stakes.png`, rating: 4.7, ratingCount: 365, availability: 'out-of-stock',
     highlights: ['Acero plateado', 'Cuatro estacas de 10 pulgadas', 'Para suelo duro', 'Para carpas y toldos'], reviewSummary: 'Se destacan firmeza y buen agarre; algunas reseñas mencionan fragilidad en la cabeza.',
   },
 ];
@@ -339,6 +348,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
   const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [checkoutError, setCheckoutError] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const maximumQuantity = Math.max(1, product.stock ?? 1);
   const subtotal = product.price * quantity;
   const referenceSubtotal = product.compareAt * quantity;
   const savings = Math.max(0, referenceSubtotal - subtotal);
@@ -350,6 +360,11 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
     if (product.availability !== 'available') {
       setCheckoutState('error');
       setCheckoutError('Este producto está agotado temporalmente. Escríbenos por WhatsApp para avisarte cuando regrese.');
+      return;
+    }
+    if (quantity > maximumQuantity) {
+      setCheckoutState('error');
+      setCheckoutError(`Solo quedan ${maximumQuantity} unidades disponibles.`);
       return;
     }
     setCheckoutState('loading');
@@ -394,7 +409,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <span className="eyebrow"><Tent size={16} /> {product.brand}</span>
           <h1>{product.name}</h1>
           <div className="shop-rating"><Star size={16} fill="currentColor" /> {product.rating.toFixed(1)} <span>{product.ratingCount.toLocaleString('es-DO')} valoraciones del producto</span></div>
-          <p className={`product-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? 'Disponible en la consulta más reciente' : 'Agotado temporalmente'}</p>
+          <p className={`product-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? `${product.stock ?? 1} unidades disponibles` : 'Agotado temporalmente'}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
           <p className="product-delivery"><ShieldCheck size={18} /> Delivery estándar incluido hasta RD$500</p>
@@ -422,9 +437,9 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
         </div>
         <form className="checkout-form" onSubmit={startCheckout}>
           <div className="checkout-form-heading"><ShieldCheck size={28} /><div><strong>Pago seguro con Pagadito</strong><span>Delivery estándar incluido hasta RD$500.</span></div></div>
-          <label>Cantidad<input name="quantity" type="number" min="1" max="5" value={quantity} onChange={(event) => {
+          <label>Cantidad<input name="quantity" type="number" min="1" max={maximumQuantity} value={quantity} onChange={(event) => {
             const nextQuantity = Number(event.target.value);
-            setQuantity(Number.isFinite(nextQuantity) ? Math.min(5, Math.max(1, nextQuantity)) : 1);
+            setQuantity(Number.isFinite(nextQuantity) ? Math.min(maximumQuantity, Math.max(1, nextQuantity)) : 1);
           }} required /></label>
           <div className="checkout-breakdown" aria-live="polite" aria-label="Desglose del pedido">
             <div><span>Precio unitario</span><strong>{formatPrice(product.price)}</strong></div>
@@ -1077,7 +1092,7 @@ export default function CampeachApp() {
               {product.featured ? <span className="shop-badge">Favorita de Campeach</span> : null}
               <div className="shop-image"><img src={product.image} alt={product.name} loading="lazy" /></div>
               <div className="shop-rating"><Star size={15} fill="currentColor" /> {product.rating.toFixed(1)} <span>{product.ratingCount.toLocaleString('es-DO')} valoraciones</span></div>
-              <span className={`shop-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? 'Disponible' : 'Agotado temporalmente'}</span>
+              <span className={`shop-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? `${product.stock ?? 1} disponibles` : 'Agotado temporalmente'}</span>
               <button className="shop-product-link" type="button" onClick={() => openProduct(product)}><h3>{product.name}</h3></button>
               <p>{product.description}</p>
               <div className="shop-specs"><span>{product.category}</span><span>{product.weight}</span><span>{product.footprint}</span></div>

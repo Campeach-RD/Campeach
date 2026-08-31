@@ -18,20 +18,21 @@ type PagaditoEnv = Omit<Env, "PAGADITO_MODE"> & {
 type PagaditoResponse = { code: string; message: string; value?: string | Record<string, string> };
 
 const PRODUCTS = {
-  "ozark-3": { name: "Ozark Trail Clip & Camp para 3 personas", price: 5990 },
-  "ozark-4": { name: "Ozark Trail Clip & Camp para 4 personas", price: 7490 },
-  "ozark-6": { name: "Ozark Trail Clip & Camp para 6 personas", price: 12490 },
-  "ozark-8": { name: "Ozark Trail Clip & Camp para 8 personas", price: 17990 },
-  "ozark-sleeping-pad": { name: "Sleeping pad Ozark Trail Essential", price: 3490 },
-  "lifestraw-personal": { name: "Filtro de agua LifeStraw Personal", price: 2490 },
-  "lepro-headlamp-2": { name: "Linternas frontales Lepro recargables (2)", price: 2990 },
-  "ozark-towel": { name: "Toalla de secado rápido Ozark Trail", price: 1790 },
-  "ozark-waterproof-pouch": { name: "Pouches impermeables Ozark Trail (2)", price: 1990 },
-  "emergency-blankets-12": { name: "Mantas térmicas de emergencia (12)", price: 2490 },
-  "ozark-tarp-9x12": { name: "Lona heavy-duty Ozark Trail 9 x 12", price: 3990 },
-  "ozark-air-pump": { name: "Bomba de aire portátil Ozark Trail", price: 2490 },
-  "ozark-sleeping-bag-50": { name: "Sleeping bag Ozark Trail 50 F", price: 3490 },
-  "coghlans-stakes-4": { name: "Estacas Coghlan's heavy-duty de 10 pulgadas (4)", price: 1990 },
+  "ozark-3": { name: "Ozark Trail Clip & Camp para 3 personas", price: 5990, stock: 0 },
+  "ozark-4": { name: "Ozark Trail Clip & Camp para 4 personas", price: 7490, stock: 4 },
+  "ozark-6": { name: "Ozark Trail Clip & Camp para 6 personas", price: 12490, stock: 0 },
+  "ozark-8": { name: "Ozark Trail Clip & Camp para 8 personas", price: 17990, stock: 0 },
+  "ozark-sleeping-pad": { name: "Sleeping pad Ozark Trail Essential", price: 3490, stock: 0 },
+  "ozark-self-inflating-pad": { name: "Sleeping pad autoinflable Ozark Trail", price: 5490, stock: 2 },
+  "lifestraw-personal": { name: "Filtro de agua LifeStraw Personal", price: 2490, stock: 0 },
+  "lepro-headlamp-2": { name: "Linternas frontales Lepro recargables (2)", price: 2990, stock: 0 },
+  "ozark-towel": { name: "Toalla de secado rápido Ozark Trail", price: 1790, stock: 0 },
+  "ozark-waterproof-pouch": { name: "Pouches impermeables Ozark Trail (2)", price: 1990, stock: 0 },
+  "emergency-blankets-12": { name: "Mantas térmicas de emergencia (12)", price: 2490, stock: 0 },
+  "ozark-tarp-9x12": { name: "Lona heavy-duty Ozark Trail 9 x 12", price: 3990, stock: 0 },
+  "ozark-air-pump": { name: "Bomba de aire portátil Ozark Trail", price: 2490, stock: 0 },
+  "ozark-sleeping-bag-50": { name: "Sleeping bag Ozark Trail 50 F", price: 3490, stock: 0 },
+  "coghlans-stakes-4": { name: "Estacas Coghlan's heavy-duty de 10 pulgadas (4)", price: 1990, stock: 0 },
 } as const;
 
 type ProductId = keyof typeof PRODUCTS;
@@ -106,7 +107,7 @@ async function createCheckout(request: Request, env: PagaditoEnv): Promise<Respo
   const deliveryAddress = cleanText(body?.deliveryAddress, 300);
   const deliveryNotes = cleanText(body?.deliveryNotes, 300);
 
-  if (!product || !Number.isInteger(quantity) || quantity < 1 || quantity > 5
+  if (!product || product.stock < 1 || !Number.isInteger(quantity) || quantity < 1 || quantity > product.stock
       || customerName.length < 3 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)
       || customerPhone.length < 8 || deliveryAddress.length < 10) {
     return json({ error: "Revisa los datos del pedido." }, 400);
