@@ -458,5 +458,25 @@
       "public/carousels/2026-08-30-bonao-05.jpg",
       "public/carousels/2026-08-30-bonao-06.jpg"
     ]
+  },
+  {
+    "date": "2026-08-31",
+    "campId": "santiago",
+    "files": [
+      "1nUT0bPCATnqr5zrxZ4gpAvUMxfY1EDlb",
+      "12B45p9mm3mLz3icUO--hJkebWRrCuydz",
+      "1qqZv1yZyPjKvukaXCCG1kLJs4-UyB12Q",
+      "1roMN5FXS_rlImvx7Zd9B3jEkPO3Cxltb",
+      "1AjcQh8s-faJVCxFNFrKVfFTapMjhZ_Io",
+      "1uRa7d_ILJ5nj8xlg5k90maI_wGdslewJ"
+    ],
+    "outputs": [
+      "public/carousels/2026-08-31-santiago-01.jpg",
+      "public/carousels/2026-08-31-santiago-02.jpg",
+      "public/carousels/2026-08-31-santiago-03.jpg",
+      "public/carousels/2026-08-31-santiago-04.jpg",
+      "public/carousels/2026-08-31-santiago-05.jpg",
+      "public/carousels/2026-08-31-santiago-06.jpg"
+    ]
   }
 ]
