@@ -13,7 +13,11 @@ type PagaditoEnv = Omit<Env, "PAGADITO_MODE"> & {
   PAGADITO_MODE: string;
   PAGADITO_UID: string;
   PAGADITO_WSK: string;
+  SHOP_ADMIN_TOKEN: string;
 };
+
+const RESERVATION_MINUTES = 60;
+const TRACK_EVENTS = new Set(["PRODUCT_VIEW", "BEGIN_CHECKOUT", "CHECKOUT_REDIRECT", "PAYMENT_RETURN"]);
 
 type PagaditoResponse = { code: string; message: string; value?: string | Record<string, string> };
 
@@ -39,6 +43,83 @@ type ProductId = keyof typeof PRODUCTS;
 
 function cleanText(value: unknown, maxLength: number): string {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
+}
+
+async function releaseExpiredReservations(env: PagaditoEnv): Promise<void> {
+  const now = new Date().toISOString();
+  const expired = await env.ORDERS_DB.prepare(
+    `SELECT id, product_id, quantity FROM orders
+     WHERE reservation_expires_at <= ? AND reservation_released_at IS NULL AND stock_committed_at IS NULL`,
+  ).bind(now).all<{ id: string; product_id: string; quantity: number }>();
+  for (const order of expired.results) {
+    await env.ORDERS_DB.batch([
+      env.ORDERS_DB.prepare(
+        "UPDATE inventory SET stock_reserved = MAX(0, stock_reserved - ?), updated_at = ? WHERE product_id = ?",
+      ).bind(order.quantity, now, order.product_id),
+      env.ORDERS_DB.prepare(
+        "UPDATE orders SET status = 'EXPIRED', reservation_released_at = ?, updated_at = ? WHERE id = ? AND reservation_released_at IS NULL AND stock_committed_at IS NULL",
+      ).bind(now, now, order.id),
+    ]);
+  }
+}
+
+async function releaseReservation(env: PagaditoEnv, orderId: string, productId: string, quantity: number, status: string): Promise<void> {
+  const now = new Date().toISOString();
+  await env.ORDERS_DB.batch([
+    env.ORDERS_DB.prepare("UPDATE inventory SET stock_reserved = MAX(0, stock_reserved - ?), updated_at = ? WHERE product_id = ?")
+      .bind(quantity, now, productId),
+    env.ORDERS_DB.prepare("UPDATE orders SET status = ?, reservation_released_at = ?, updated_at = ? WHERE id = ? AND reservation_released_at IS NULL AND stock_committed_at IS NULL")
+      .bind(status, now, now, orderId),
+  ]);
+}
+
+async function inventoryResponse(env: PagaditoEnv): Promise<Response> {
+  await releaseExpiredReservations(env);
+  const rows = await env.ORDERS_DB.prepare(
+    "SELECT product_id, MAX(0, stock_total - stock_reserved - stock_sold) AS available FROM inventory ORDER BY product_id",
+  ).all<{ product_id: string; available: number }>();
+  return json({ inventory: Object.fromEntries(rows.results.map((row) => [row.product_id, row.available])) });
+}
+
+async function trackFunnel(request: Request, env: PagaditoEnv): Promise<Response> {
+  const body = await request.json().catch(() => null) as Record<string, unknown> | null;
+  const eventName = cleanText(body?.eventName, 32).toUpperCase();
+  const visitorId = cleanText(body?.visitorId, 80);
+  const sessionId = cleanText(body?.sessionId, 80);
+  if (!TRACK_EVENTS.has(eventName) || !visitorId || !sessionId) return json({ error: "Invalid event" }, 400);
+  const metadata = body?.metadata && typeof body.metadata === "object" ? JSON.stringify(body.metadata).slice(0, 1000) : "{}";
+  await env.ORDERS_DB.prepare(
+    `INSERT INTO funnel_events (id, visitor_id, session_id, event_name, product_id, source, medium, campaign, content, referrer_host, path, metadata_json, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).bind(crypto.randomUUID(), visitorId, sessionId, eventName, cleanText(body?.productId, 40), cleanText(body?.source, 80),
+    cleanText(body?.medium, 80), cleanText(body?.campaign, 120), cleanText(body?.content, 120), cleanText(body?.referrerHost, 120),
+    cleanText(body?.path, 200), metadata, new Date().toISOString()).run();
+  return json({ ok: true }, 202);
+}
+
+function timingSafeEqual(left: string, right: string): boolean {
+  const encoder = new TextEncoder();
+  const a = encoder.encode(left);
+  const b = encoder.encode(right);
+  if (a.length !== b.length) return false;
+  let difference = 0;
+  for (let index = 0; index < a.length; index += 1) difference |= a[index] ^ b[index];
+  return difference === 0;
+}
+
+async function adminFunnel(request: Request, url: URL, env: PagaditoEnv): Promise<Response> {
+  const supplied = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  if (!env.SHOP_ADMIN_TOKEN || !timingSafeEqual(supplied, env.SHOP_ADMIN_TOKEN)) return json({ error: "Unauthorized" }, 401);
+  const days = Math.min(90, Math.max(1, Number(url.searchParams.get("days")) || 7));
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const [stages, products, campaigns, orders, inventory] = await Promise.all([
+    env.ORDERS_DB.prepare("SELECT event_name, COUNT(*) events, COUNT(DISTINCT visitor_id) visitors FROM funnel_events WHERE created_at >= ? GROUP BY event_name").bind(since).all(),
+    env.ORDERS_DB.prepare("SELECT product_id, event_name, COUNT(*) events, COUNT(DISTINCT visitor_id) visitors FROM funnel_events WHERE created_at >= ? GROUP BY product_id, event_name").bind(since).all(),
+    env.ORDERS_DB.prepare("SELECT campaign, content, event_name, COUNT(*) events, COUNT(DISTINCT visitor_id) visitors FROM funnel_events WHERE created_at >= ? GROUP BY campaign, content, event_name").bind(since).all(),
+    env.ORDERS_DB.prepare("SELECT product_id, status, COUNT(*) orders, SUM(quantity) units FROM orders WHERE created_at >= ? GROUP BY product_id, status").bind(since).all(),
+    env.ORDERS_DB.prepare("SELECT product_id, stock_total, stock_reserved, stock_sold, MAX(0, stock_total-stock_reserved-stock_sold) available FROM inventory ORDER BY product_id").all(),
+  ]);
+  return json({ days, since, stages: stages.results, products: products.results, campaigns: campaigns.results, orders: orders.results, inventory: inventory.results });
 }
 
 function escapeXml(value: string): string {
@@ -106,6 +187,8 @@ async function createCheckout(request: Request, env: PagaditoEnv): Promise<Respo
   const customerPhone = cleanText(body?.customerPhone, 40);
   const deliveryAddress = cleanText(body?.deliveryAddress, 300);
   const deliveryNotes = cleanText(body?.deliveryNotes, 300);
+  const visitorId = cleanText(body?.visitorId, 80);
+  const sessionId = cleanText(body?.sessionId, 80);
 
   if (!product || product.stock < 1 || !Number.isInteger(quantity) || quantity < 1 || quantity > product.stock
       || customerName.length < 3 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)
@@ -117,15 +200,25 @@ async function createCheckout(request: Request, env: PagaditoEnv): Promise<Respo
   const ern = `CP-${Date.now()}-${id.slice(0, 8)}`;
   const total = product.price * quantity;
   const now = new Date().toISOString();
+  await releaseExpiredReservations(env);
+  const reserved = await env.ORDERS_DB.prepare(
+    `UPDATE inventory SET stock_reserved = stock_reserved + ?, updated_at = ?
+     WHERE product_id = ? AND stock_total - stock_reserved - stock_sold >= ?`,
+  ).bind(quantity, now, productId, quantity).run();
+  if (reserved.meta.changes !== 1) return json({ error: "Ya no quedan suficientes unidades disponibles." }, 409);
+  const reservationExpiresAt = new Date(Date.now() + RESERVATION_MINUTES * 60000).toISOString();
   await env.ORDERS_DB.prepare(
     `INSERT INTO orders (id, ern, product_id, product_name, unit_price_dop, quantity, total_dop,
-      customer_name, customer_email, customer_phone, delivery_address, delivery_notes, status, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CREATED', ?, ?)`,
+      customer_name, customer_email, customer_phone, delivery_address, delivery_notes, status, created_at, updated_at,
+      reservation_expires_at, visitor_id, session_id, utm_source, utm_medium, utm_campaign, utm_content)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CREATED', ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).bind(id, ern, productId, product.name, product.price, quantity, total, customerName,
-    customerEmail, customerPhone, deliveryAddress, deliveryNotes, now, now).run();
+    customerEmail, customerPhone, deliveryAddress, deliveryNotes, now, now, reservationExpiresAt, visitorId, sessionId,
+    cleanText(body?.source, 80), cleanText(body?.medium, 80), cleanText(body?.campaign, 120), cleanText(body?.content, 120)).run();
 
   const connection = await pagaditoConnect(env);
   if (connection.code !== "PG1001" || typeof connection.value !== "string") {
+    await releaseReservation(env, id, productId, quantity, "PAYMENT_ERROR");
     console.error(JSON.stringify({ event: "pagadito_connect_rejected", orderId: id, code: connection.code }));
     return json({ error: "No pudimos iniciar el pago. Inténtalo nuevamente." }, 502);
   }
@@ -145,8 +238,7 @@ async function createCheckout(request: Request, env: PagaditoEnv): Promise<Respo
     custom_params: JSON.stringify({ param1: id, param2: customerPhone }),
   });
   if (transaction.code !== "PG1002" || typeof transaction.value !== "string") {
-    await env.ORDERS_DB.prepare("UPDATE orders SET status = 'PAYMENT_ERROR', updated_at = ? WHERE id = ?")
-      .bind(new Date().toISOString(), id).run();
+    await releaseReservation(env, id, productId, quantity, "PAYMENT_ERROR");
     console.error(JSON.stringify({ event: "pagadito_transaction_rejected", orderId: id, code: transaction.code }));
     return json({ error: "Pagadito no pudo registrar el pago. Inténtalo nuevamente." }, 502);
   }
@@ -163,7 +255,8 @@ async function handlePagaditoReturn(url: URL, env: PagaditoEnv): Promise<Respons
     destination.searchParams.set("payment", "invalid");
     return Response.redirect(destination.toString(), 303);
   }
-  const order = await env.ORDERS_DB.prepare("SELECT id FROM orders WHERE ern = ?").bind(ern).first<{ id: string }>();
+  const order = await env.ORDERS_DB.prepare("SELECT id, product_id, quantity, stock_committed_at, reservation_released_at FROM orders WHERE ern = ?")
+    .bind(ern).first<{ id: string; product_id: string; quantity: number; stock_committed_at: string | null; reservation_released_at: string | null }>();
   if (!order) {
     destination.searchParams.set("payment", "not-found");
     return Response.redirect(destination.toString(), 303);
@@ -184,6 +277,27 @@ async function handlePagaditoReturn(url: URL, env: PagaditoEnv): Promise<Respons
   await env.ORDERS_DB.prepare(
     "UPDATE orders SET status = ?, pagadito_token = ?, pagadito_reference = ?, updated_at = ? WHERE id = ?",
   ).bind(paymentStatus, token, reference, new Date().toISOString(), order.id).run();
+  const normalizedStatus = paymentStatus.toUpperCase();
+  const paid = ["COMPLETED", "APPROVED", "SUCCESS"].includes(normalizedStatus);
+  if (paid && !order.stock_committed_at) {
+    const now = new Date().toISOString();
+    if (!order.reservation_released_at) {
+      await env.ORDERS_DB.batch([
+        env.ORDERS_DB.prepare("UPDATE inventory SET stock_reserved = MAX(0, stock_reserved - ?), stock_sold = stock_sold + ?, updated_at = ? WHERE product_id = ?")
+          .bind(order.quantity, order.quantity, now, order.product_id),
+        env.ORDERS_DB.prepare("UPDATE orders SET stock_committed_at = ?, updated_at = ? WHERE id = ? AND stock_committed_at IS NULL")
+          .bind(now, now, order.id),
+      ]);
+    } else {
+      const committed = await env.ORDERS_DB.prepare(
+        "UPDATE inventory SET stock_sold = stock_sold + ?, updated_at = ? WHERE product_id = ? AND stock_total-stock_reserved-stock_sold >= ?",
+      ).bind(order.quantity, now, order.product_id, order.quantity).run();
+      await env.ORDERS_DB.prepare("UPDATE orders SET status = ?, stock_committed_at = ?, updated_at = ? WHERE id = ?")
+        .bind(committed.meta.changes === 1 ? normalizedStatus : "PAID_STOCK_REVIEW", committed.meta.changes === 1 ? now : null, now, order.id).run();
+    }
+  } else if (["CANCELLED", "FAILED", "REJECTED"].includes(normalizedStatus) && !order.reservation_released_at && !order.stock_committed_at) {
+    await releaseReservation(env, order.id, order.product_id, order.quantity, normalizedStatus);
+  }
   destination.searchParams.set("payment", paymentStatus.toLowerCase());
   destination.searchParams.set("order", order.id);
   return Response.redirect(destination.toString(), 303);
@@ -201,6 +315,10 @@ export default {
         mode: env.PAGADITO_MODE,
       });
     }
+
+    if (request.method === "GET" && url.pathname === "/inventory") return inventoryResponse(env as PagaditoEnv);
+    if (request.method === "POST" && url.pathname === "/track") return trackFunnel(request, env as PagaditoEnv);
+    if (request.method === "GET" && url.pathname === "/admin/funnel") return adminFunnel(request, url, env as PagaditoEnv);
 
     if (request.method === "GET" && url.pathname === "/health/pagadito") {
       try {

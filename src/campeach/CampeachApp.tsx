@@ -38,6 +38,34 @@ const formatPrice = (value?: number) =>
 
 const unique = (items: string[]) => Array.from(new Set(items.filter(Boolean)));
 
+const SHOP_API = 'https://campeach-shop.nomanychat.workers.dev';
+
+const anonymousId = (storage: Storage, key: string) => {
+  const existing = storage.getItem(key);
+  if (existing) return existing;
+  const value = crypto.randomUUID();
+  storage.setItem(key, value);
+  return value;
+};
+
+const attribution = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    source: params.get('utm_source') || '', medium: params.get('utm_medium') || '',
+    campaign: params.get('utm_campaign') || '', content: params.get('utm_content') || '',
+  };
+};
+
+const trackShopEvent = (eventName: string, productId?: string, metadata?: Record<string, unknown>) => {
+  const referrerHost = (() => { try { return document.referrer ? new URL(document.referrer).hostname : ''; } catch { return ''; } })();
+  const payload = {
+    eventName, productId: productId || '', visitorId: anonymousId(localStorage, 'campeach-shop-visitor'),
+    sessionId: anonymousId(sessionStorage, 'campeach-shop-session'), referrerHost,
+    path: `${window.location.pathname}${window.location.search}`, ...attribution(), metadata,
+  };
+  void fetch(`${SHOP_API}/track`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(() => undefined);
+};
+
 const getCampIntro = (camp: Camp) => {
   if (camp.richInfo?.intro) return camp.richInfo.intro;
 
@@ -348,12 +376,20 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
   const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [checkoutError, setCheckoutError] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const maximumQuantity = Math.max(1, product.stock ?? 1);
+  const [availableStock, setAvailableStock] = useState(product.stock ?? 0);
+  const maximumQuantity = Math.max(1, availableStock);
   const subtotal = product.price * quantity;
   const referenceSubtotal = product.compareAt * quantity;
   const savings = Math.max(0, referenceSubtotal - subtotal);
   const delivery = 0;
   const total = subtotal + delivery;
+
+  useEffect(() => {
+    trackShopEvent('PRODUCT_VIEW', product.id);
+    void fetch(`${SHOP_API}/inventory`).then((response) => response.json()).then((result: { inventory?: Record<string, number> }) => {
+      if (typeof result.inventory?.[product.id] === 'number') setAvailableStock(result.inventory[product.id]);
+    }).catch(() => undefined);
+  }, [product.id]);
 
   const startCheckout = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -371,7 +407,9 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
     setCheckoutError('');
     const form = new FormData(event.currentTarget);
     try {
-      const response = await fetch('https://campeach-shop.nomanychat.workers.dev/checkout', {
+      trackShopEvent('BEGIN_CHECKOUT', product.id, { quantity });
+      const ids = { visitorId: anonymousId(localStorage, 'campeach-shop-visitor'), sessionId: anonymousId(sessionStorage, 'campeach-shop-session') };
+      const response = await fetch(`${SHOP_API}/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -382,10 +420,13 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           customerPhone: form.get('customerPhone'),
           deliveryAddress: form.get('deliveryAddress'),
           deliveryNotes: form.get('deliveryNotes'),
+          ...ids,
+          ...attribution(),
         }),
       });
       const result = await response.json() as { checkoutUrl?: string; error?: string };
       if (!response.ok || !result.checkoutUrl) throw new Error(result.error || 'No pudimos iniciar el pago.');
+      trackShopEvent('CHECKOUT_REDIRECT', product.id, { quantity });
       window.location.assign(result.checkoutUrl);
     } catch (error) {
       setCheckoutState('error');
@@ -409,7 +450,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <span className="eyebrow"><Tent size={16} /> {product.brand}</span>
           <h1>{product.name}</h1>
           <div className="shop-rating"><Star size={16} fill="currentColor" /> {product.rating.toFixed(1)} <span>{product.ratingCount.toLocaleString('es-DO')} valoraciones del producto</span></div>
-          <p className={`product-stock ${product.availability === 'available' ? 'is-available' : 'is-unavailable'}`}>{product.availability === 'available' ? `${product.stock ?? 1} unidades disponibles` : 'Agotado temporalmente'}</p>
+          <p className={`product-stock ${availableStock > 0 ? 'is-available' : 'is-unavailable'}`}>{availableStock > 0 ? `${availableStock} unidades disponibles` : 'Agotado temporalmente'}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
           <p className="product-delivery"><ShieldCheck size={18} /> Delivery estándar incluido hasta RD$500</p>
@@ -419,7 +460,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
             <div><span>Dimensiones</span><strong>{product.footprint}</strong></div>
           </div>
           <div className="product-buy-box">
-            {product.availability === 'available' ? <a className="online-pay-button" href="#pago"><CreditCard size={19} /> Pagar en línea</a> : <a className="online-pay-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><MessageCircle size={19} /> Avisarme cuando llegue</a>}
+            {availableStock > 0 ? <a className="online-pay-button" href="#pago"><CreditCard size={19} /> Pagar en línea</a> : <a className="online-pay-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><MessageCircle size={19} /> Avisarme cuando llegue</a>}
             <a className="whatsapp-buy-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><WhatsappIcon size={20} /> Comprar por WhatsApp</a>
           </div>
           <small>Confirmaremos existencia y plazo antes de procesar el pago.</small>
@@ -457,7 +498,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <label>Dirección de entrega<textarea name="deliveryAddress" autoComplete="street-address" minLength={10} required /></label>
           <label>Indicaciones adicionales<textarea name="deliveryNotes" placeholder="Sector, referencia o instrucciones para el delivery" /></label>
           {checkoutState === 'error' ? <p className="checkout-error" role="alert">{checkoutError}</p> : null}
-          <button type="submit" disabled={checkoutState === 'loading' || product.availability !== 'available'}><CreditCard size={19} /> {product.availability !== 'available' ? 'Agotado temporalmente' : checkoutState === 'loading' ? 'Conectando con Pagadito...' : `Continuar y pagar ${formatPrice(total)}`}</button>
+          <button type="submit" disabled={checkoutState === 'loading' || availableStock < 1}><CreditCard size={19} /> {availableStock < 1 ? 'Agotado temporalmente' : checkoutState === 'loading' ? 'Conectando con Pagadito...' : `Continuar y pagar ${formatPrice(total)}`}</button>
           <small>Serás redirigido a Pagadito para introducir los datos de pago.</small>
         </form>
       </section>
@@ -836,6 +877,10 @@ export default function CampeachApp() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (paymentResult) trackShopEvent('PAYMENT_RETURN', new URLSearchParams(window.location.search).get('product') || undefined, { status: paymentResult });
+  }, [paymentResult]);
 
   useEffect(() => {
     window.localStorage.setItem('campeach-rental-cart', JSON.stringify(rentalCart.map((line) => ({ id: line.equipment.id, quantity: line.quantity }))));
