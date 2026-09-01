@@ -207,14 +207,15 @@ async function createCheckout(request: Request, env: PagaditoEnv): Promise<Respo
   ).bind(quantity, now, productId, quantity).run();
   if (reserved.meta.changes !== 1) return json({ error: "Ya no quedan suficientes unidades disponibles." }, 409);
   const reservationExpiresAt = new Date(Date.now() + RESERVATION_MINUTES * 60000).toISOString();
-  await env.ORDERS_DB.prepare(
+  try {
+    await env.ORDERS_DB.prepare(
     `INSERT INTO orders (id, ern, product_id, product_name, unit_price_dop, quantity, total_dop,
       customer_name, customer_email, customer_phone, delivery_address, delivery_notes, status, created_at, updated_at,
       reservation_expires_at, visitor_id, session_id, utm_source, utm_medium, utm_campaign, utm_content)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CREATED', ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-  ).bind(id, ern, productId, product.name, product.price, quantity, total, customerName,
-    customerEmail, customerPhone, deliveryAddress, deliveryNotes, now, now, reservationExpiresAt, visitorId, sessionId,
-    cleanText(body?.source, 80), cleanText(body?.medium, 80), cleanText(body?.campaign, 120), cleanText(body?.content, 120)).run();
+    ).bind(id, ern, productId, product.name, product.price, quantity, total, customerName,
+      customerEmail, customerPhone, deliveryAddress, deliveryNotes, now, now, reservationExpiresAt, visitorId, sessionId,
+      cleanText(body?.source, 80), cleanText(body?.medium, 80), cleanText(body?.campaign, 120), cleanText(body?.content, 120)).run();
 
   const connection = await pagaditoConnect(env);
   if (connection.code !== "PG1001" || typeof connection.value !== "string") {
@@ -244,7 +245,11 @@ async function createCheckout(request: Request, env: PagaditoEnv): Promise<Respo
   }
   await env.ORDERS_DB.prepare("UPDATE orders SET status = 'REGISTERED', checkout_url = ?, updated_at = ? WHERE id = ?")
     .bind(transaction.value, new Date().toISOString(), id).run();
-  return json({ checkoutUrl: transaction.value, orderId: id });
+    return json({ checkoutUrl: transaction.value, orderId: id });
+  } catch (error) {
+    await releaseReservation(env, id, productId, quantity, "PAYMENT_ERROR");
+    throw error;
+  }
 }
 
 async function handlePagaditoReturn(url: URL, env: PagaditoEnv): Promise<Response> {
