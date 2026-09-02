@@ -137,6 +137,50 @@ const instagramGet = async <T>(path: string, env: Env) => {
   return response.json<T>();
 };
 
+type InstagramInsight = { name?: string; values?: Array<{ value?: number }> };
+type InstagramMediaSummary = {
+  id: string;
+  caption?: string;
+  media_type?: string;
+  media_product_type?: string;
+  permalink?: string;
+  timestamp?: string;
+  like_count?: number;
+  comments_count?: number;
+};
+
+const getPriorityReelInsights = async (env: Env) => {
+  const priorityCampIds = new Set(['el-valle', 'ocoa', 'bonao', 'santiago', 'villa-altagracia', 'monsenor', 'jarabacoa', 'hato-mayor']);
+  const media = await instagramGet<{ data?: InstagramMediaSummary[] }>(
+    `${env.INSTAGRAM_ACCOUNT_ID}/media?fields=id,caption,media_type,media_product_type,permalink,timestamp,like_count,comments_count&limit=100`,
+    env,
+  );
+  const reels = (media.data ?? []).flatMap((item) => {
+    const camp = findCampFromCaption(item.caption ?? '');
+    return camp && priorityCampIds.has(camp.id) && (item.media_product_type === 'REELS' || item.media_type === 'VIDEO')
+      ? [{ ...item, campId: camp.id, campName: camp.name }]
+      : [];
+  }).slice(0, 45);
+  const enriched: Array<InstagramMediaSummary & { campId: string; campName: string; insights: Record<string, number> }> = [];
+  for (let index = 0; index < reels.length; index += 5) {
+    const batch = reels.slice(index, index + 5);
+    const results = await Promise.all(batch.map(async (item) => {
+      let insights: Record<string, number> = {};
+      try {
+        const response = await instagramGet<{ data?: InstagramInsight[] }>(
+          `${item.id}/insights?metric=views,reach,saved,shares,total_interactions`, env,
+        );
+        insights = Object.fromEntries((response.data ?? []).map((metric) => [metric.name ?? '', Number(metric.values?.[0]?.value ?? 0)]));
+      } catch (error) {
+        console.error(JSON.stringify({ event: 'reel_insights_failed', mediaId: item.id, error: error instanceof Error ? error.message : 'unknown' }));
+      }
+      return { ...item, insights };
+    }));
+    enriched.push(...results);
+  }
+  return { reels: enriched };
+};
+
 const acquireCommentReply = async (key: string, env: Env) => {
   const raw = await env.DEDUP.get(key);
   if (raw === 'replied') return false;
@@ -454,6 +498,17 @@ export default {
       } catch (error) {
         console.error(JSON.stringify({ event: 'comment_recovery_error', error: error instanceof Error ? error.message : 'unknown' }));
         return json({ error: 'comment_recovery_failed', detail: error instanceof Error ? error.message.slice(0, 500) : 'unknown' }, 502);
+      }
+    }
+
+    if (url.pathname === '/instagram/admin/top-reels' && request.method === 'GET') {
+      const authorization = request.headers.get('authorization');
+      if (!safeSecretEqual(authorization, `Bearer ${env.ADMIN_API_TOKEN}`)) return new Response('Unauthorized', { status: 401 });
+      try {
+        return json(await getPriorityReelInsights(env));
+      } catch (error) {
+        console.error(JSON.stringify({ event: 'top_reels_failed', error: error instanceof Error ? error.message : 'unknown' }));
+        return json({ error: 'top_reels_failed', detail: error instanceof Error ? error.message.slice(0, 500) : 'unknown' }, 502);
       }
     }
 
