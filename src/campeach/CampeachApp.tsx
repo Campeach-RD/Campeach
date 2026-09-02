@@ -461,7 +461,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           </div>
           <div className="product-buy-box">
             {availableStock > 0 ? <a className="online-pay-button" href="#pago"><CreditCard size={19} /> Pagar en línea</a> : <a className="online-pay-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><MessageCircle size={19} /> Avisarme cuando llegue</a>}
-            <a className="whatsapp-buy-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer"><WhatsappIcon size={20} /> Comprar por WhatsApp</a>
+            <a className="whatsapp-buy-button" href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer" onClick={() => trackShopEvent('WHATSAPP_CLICK', product.id, { placement: 'product_detail' })}><WhatsappIcon size={20} /> Comprar por WhatsApp</a>
           </div>
           <small>Confirmaremos existencia y plazo antes de procesar el pago.</small>
         </div>
@@ -1144,7 +1144,7 @@ export default function CampeachApp() {
               <div className="shop-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
               <small>Precio con delivery estándar incluido. Disponibilidad sujeta a confirmación.</small>
               <button className="shop-details-button" type="button" onClick={() => openProduct(product)}>Ver producto</button>
-              <a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}><WhatsappIcon size={19} /> Comprar por WhatsApp</a>
+              <a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer" onClick={(event) => { event.stopPropagation(); trackShopEvent('WHATSAPP_CLICK', product.id, { placement: 'product_card' }); }}><WhatsappIcon size={19} /> Comprar por WhatsApp</a>
             </article>
           ))}
         </div>

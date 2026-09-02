@@ -17,7 +17,7 @@ type PagaditoEnv = Omit<Env, "PAGADITO_MODE"> & {
 };
 
 const RESERVATION_MINUTES = 60;
-const TRACK_EVENTS = new Set(["PRODUCT_VIEW", "BEGIN_CHECKOUT", "CHECKOUT_REDIRECT", "PAYMENT_RETURN"]);
+const TRACK_EVENTS = new Set(["PRODUCT_VIEW", "BEGIN_CHECKOUT", "CHECKOUT_REDIRECT", "PAYMENT_RETURN", "WHATSAPP_CLICK"]);
 
 type PagaditoResponse = { code: string; message: string; value?: string | Record<string, string> };
 
