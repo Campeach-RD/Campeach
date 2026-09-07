@@ -661,5 +661,32 @@
     "idempotencyKey": "reel:2026-09-06",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-09-06-villa-altagracia.mp4?rev=3fb0b2d",
     "instagramMediaId": "18126238529508008"
+  },
+  {
+    "date": "2026-09-07T18:55:22.854419+00:00",
+    "campId": "santiago",
+    "campName": "Santiago",
+    "files": [
+      "1ZxUTfVC7yysjl7MsZClJq8RLPBjmXiKI",
+      "1jxitRozvH1S8jjDppPFN9QOBFsKCrjIx",
+      "1paXKDIKNSWu9QaUAGltn2rsCCgAuH2bz",
+      "1C_cMtnBocEefCeF7LBIQruDew4AwmJoB"
+    ],
+    "fileNames": [
+      "2021-06-20 13.35.09.mp4",
+      "2021-06-20 14.48.26.mp4",
+      "2021-06-20 15.35.18.mp4",
+      "2021-06-20 14.18.38.mp4"
+    ],
+    "duration": 17.566667,
+    "voiceoverStyle": "guia",
+    "voiceProfile": "ramona",
+    "voiceoverText": "Te contamos lo esencial sobre Santiago: se encuentra en Santiago, cuenta con camping, glamping y habitaciones y cuenta con comida/restaurante. La estadía comienza en novecientos pesos dominicanos por noche. Confirma disponibilidad antes de reservar. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-09-07-santiago.mp4",
+    "caption": "🏕️ Santiago\n📍 Santiago\n💰 Desde RD$900 por noche\n\n• Camping, glamping y habitaciones\n• Cuenta con comida/restaurante\n• Balneario con presa y piscina\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #santiago #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/18Ky7j5vm7RC1ngksrIkqOh_yqXM-2j6V/preview",
+    "idempotencyKey": "reel:2026-09-07",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-09-07-santiago.mp4?rev=175c4b2",
+    "instagramMediaId": "18573451195068971"
   }
 ]
