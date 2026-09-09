@@ -194,7 +194,7 @@ const shopProducts: ShopProduct[] = [
     description: 'Espacio para un colchón queen, ventilación amplia y sobretecho removible.',
     image: `${import.meta.env.BASE_URL}shop-products/tent-4.jpg`,
     images: Array.from({ length: 8 }, (_, index) => `${import.meta.env.BASE_URL}shop-products/tent-4/frame-${String(index + 1).padStart(2, '0')}.jpeg`),
-    rating: 4.3, ratingCount: 1246, availability: 'available', stock: 4,
+    rating: 4.3, ratingCount: 1246, availability: 'available', stock: 3,
     highlights: ['Capacidad para cuatro personas', 'Sobretecho con costuras selladas', 'Techo y paredes de malla', 'Compartimento de acceso doble'],
     reviewSummary: 'La amplitud, la circulación de aire y la organización interior son sus puntos mejor valorados.',
   },

@@ -23,7 +23,7 @@ type PagaditoResponse = { code: string; message: string; value?: string | Record
 
 const PRODUCTS = {
   "ozark-3": { name: "Ozark Trail Clip & Camp para 3 personas", price: 5990, stock: 0 },
-  "ozark-4": { name: "Ozark Trail Clip & Camp para 4 personas", price: 7490, stock: 4 },
+  "ozark-4": { name: "Ozark Trail Clip & Camp para 4 personas", price: 7490, stock: 3 },
   "ozark-6": { name: "Ozark Trail Clip & Camp para 6 personas", price: 12490, stock: 0 },
   "ozark-8": { name: "Ozark Trail Clip & Camp para 8 personas", price: 17990, stock: 0 },
   "ozark-sleeping-pad": { name: "Sleeping pad Ozark Trail Essential", price: 3490, stock: 0 },
