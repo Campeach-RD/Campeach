@@ -875,6 +875,11 @@ export default function CampeachApp() {
       window.requestAnimationFrame(() => {
         document.getElementById(`equipo-${equipmentId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
+    } else if (window.location.hash === '#equipos') {
+      const frame = window.requestAnimationFrame(() => {
+        document.getElementById('equipos')?.scrollIntoView({ block: 'start' });
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
   }, []);
 
