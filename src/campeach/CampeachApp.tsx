@@ -453,7 +453,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <p className={`product-stock ${availableStock > 0 ? 'is-available' : 'is-unavailable'}`}>{availableStock > 0 ? `${availableStock} unidades disponibles` : 'Agotado temporalmente'}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
-          <p className="product-delivery"><ShieldCheck size={18} /> Delivery estándar incluido hasta RD$500</p>
+          <p className="product-delivery"><ShieldCheck size={18} /> Envío incluido a cualquier parte del país</p>
           <div className="product-key-specs">
             <div><span>Categoría</span><strong>{product.category}</strong></div>
             <div><span>Peso empacado</span><strong>{product.weight}</strong></div>
@@ -477,7 +477,7 @@ function ProductDetail({ product, onBack }: { product: ShopProduct; onBack: () =
           <p>Tu pago será procesado en la plataforma segura de Pagadito. Campeach no solicitará ni almacenará los datos de tu tarjeta.</p>
         </div>
         <form className="checkout-form" onSubmit={startCheckout}>
-          <div className="checkout-form-heading"><ShieldCheck size={28} /><div><strong>Pago seguro con Pagadito</strong><span>Delivery estándar incluido hasta RD$500.</span></div></div>
+          <div className="checkout-form-heading"><ShieldCheck size={28} /><div><strong>Pago seguro con Pagadito</strong><span>Envío incluido a cualquier parte del país.</span></div></div>
           <label>Cantidad<input name="quantity" type="number" min="1" max={maximumQuantity} value={quantity} onChange={(event) => {
             const nextQuantity = Number(event.target.value);
             setQuantity(Number.isFinite(nextQuantity) ? Math.min(maximumQuantity, Math.max(1, nextQuantity)) : 1);
@@ -1117,7 +1117,7 @@ export default function CampeachApp() {
       <section id="tienda" className="shop-section">
         <div className="shop-promo-bar">
           <span>Compra segura con Campeach RD</span>
-          <strong>Delivery estándar incluido</strong>
+          <strong>Envío incluido a cualquier parte del país</strong>
           <span>Soporte local por WhatsApp</span>
         </div>
         <div className="shop-hero">
@@ -1142,14 +1142,14 @@ export default function CampeachApp() {
               <p>{product.description}</p>
               <div className="shop-specs"><span>{product.category}</span><span>{product.weight}</span><span>{product.footprint}</span></div>
               <div className="shop-price"><strong>{formatPrice(product.price)}</strong><del>{formatPrice(product.compareAt)}</del></div>
-              <small>Precio con delivery estándar incluido. Disponibilidad sujeta a confirmación.</small>
+              <small>Precio con envío incluido. Disponibilidad sujeta a confirmación.</small>
               <button className="shop-details-button" type="button" onClick={() => openProduct(product)}>Ver producto</button>
               <a href={shopWhatsappFor(product.name)} target="_blank" rel="noreferrer" onClick={(event) => { event.stopPropagation(); trackShopEvent('WHATSAPP_CLICK', product.id, { placement: 'product_card' }); }}><WhatsappIcon size={19} /> Comprar por WhatsApp</a>
             </article>
           ))}
         </div>
         <div className="shop-conditions">
-          <div><strong>Entrega incluida</strong><span>Cobertura estándar de hasta RD$500; zonas especiales se cotizan antes del pago.</span></div>
+          <div><strong>Envío incluido a cualquier parte del país</strong><span>Confirma tu dirección y coordinamos la entrega.</span></div>
           <div><strong>Precios protegidos</strong><span>Calculados con importación, publicidad y variación cambiaria para evitar cargos sorpresa.</span></div>
           <div><strong>Pedido confirmado</strong><span>No cobramos hasta validar existencia y plazo estimado de entrega.</span></div>
         </div>
