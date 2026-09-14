@@ -1,5 +1,7 @@
 export const driveImage = (id: string) => `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;
-export const drivePreview = (id: string) => `https://drive.google.com/file/d/${id}/preview`;
+export const drivePreview = (id: string) => id === '1DvOxkUZk5gfL5G906xayOBZzTBbFT6lf'
+  ? 'https://drive.google.com/file/d/1DvOxkUZk5gfL5G906xayOBZzTBbFT6lf/view?usp=drive_link'
+  : `https://drive.google.com/file/d/${id}/preview`;
 
 export const campPdfIds: Record<string, string> = {
   taiku: '1xGw82VvD-aLzh8NgMQQ8PK3qQvMtr9c4',
@@ -14,7 +16,7 @@ export const campPdfIds: Record<string, string> = {
   'los-cacaos': '1Br-2KC2vU9NJA5hUY3CqZuNZBqZZyTHT',
   monsenor: '1chaVkGfTeZxd7UMigCdEQcPEWixvJNG-',
   montellano: '1H9pTCSSBb2hr-lHRGo3O0zOa0UZleRdx',
-  ocoa: '1rDd2S1WGlxMxShxhtFfUvlVcPwczbE0q',
+  ocoa: '1DvOxkUZk5gfL5G906xayOBZzTBbFT6lf',
   'pinar-del-valle': '1X9DmQkJxFI8YIdpBmhnuoR6qYmBPstXd',
   'punta-cana': '1wYDmyTSB6NglmNkZqcWc336huZw5qxPb',
   'rincon-samana': '1NUCMr3oA_Ysf06nBJpnY5XGsc7DDULrW',
