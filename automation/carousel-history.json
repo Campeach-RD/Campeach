@@ -878,5 +878,25 @@
       "public/carousels/2026-09-20-hato-mayor-05.jpg",
       "public/carousels/2026-09-20-hato-mayor-06.jpg"
     ]
+  },
+  {
+    "date": "2026-09-21",
+    "campId": "el-valle",
+    "files": [
+      "17Su25JZPKcR_MhgKp1Nfd9Q0dmY_PpGn",
+      "1QKY4Gi1ta7wVj-PKfO09VNQMih0LUpQW",
+      "1b2qQkVYHFK7syJUeUQsPH_YAxE4zLuq_",
+      "1LRs7kd2hiZG1caKUNHIG-2RQbPrLAuMx",
+      "1OaX9mqcFuV67QmVVIu6RV1_w5XH1FkIO",
+      "1AIdmlXt1DVcEr2ZPqqgh6HLXtKfV-Y0m"
+    ],
+    "outputs": [
+      "public/carousels/2026-09-21-el-valle-01.jpg",
+      "public/carousels/2026-09-21-el-valle-02.jpg",
+      "public/carousels/2026-09-21-el-valle-03.jpg",
+      "public/carousels/2026-09-21-el-valle-04.jpg",
+      "public/carousels/2026-09-21-el-valle-05.jpg",
+      "public/carousels/2026-09-21-el-valle-06.jpg"
+    ]
   }
 ]
