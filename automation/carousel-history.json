@@ -998,5 +998,25 @@
       "public/carousels/2026-09-26-monsenor-05.jpg",
       "public/carousels/2026-09-26-monsenor-06.jpg"
     ]
+  },
+  {
+    "date": "2026-09-27",
+    "campId": "jarabacoa",
+    "files": [
+      "15mvPegr3Z5u3SGKVLxp85jMxJzP8qV2S",
+      "1MhmXr-I7N2kpvXoy2F5zjecy7Gp9Xx7i",
+      "1rTpJsXzzNPNq-Ec7poeL-4nnZvxoMxj-",
+      "1pjCDzEycNopOi66rK11HE3bKeoQ8vjsD",
+      "1qpzO41r5BskxXst6S68UQlfYJQUHUkCF",
+      "1Eyi1wgSqtyQw69Y06ABaTg96x65xA9tL"
+    ],
+    "outputs": [
+      "public/carousels/2026-09-27-jarabacoa-01.jpg",
+      "public/carousels/2026-09-27-jarabacoa-02.jpg",
+      "public/carousels/2026-09-27-jarabacoa-03.jpg",
+      "public/carousels/2026-09-27-jarabacoa-04.jpg",
+      "public/carousels/2026-09-27-jarabacoa-05.jpg",
+      "public/carousels/2026-09-27-jarabacoa-06.jpg"
+    ]
   }
 ]
