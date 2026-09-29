@@ -1228,5 +1228,32 @@
     "idempotencyKey": "reel:2026-09-28",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-09-28-ocoa.mp4?rev=d2fbe8c",
     "instagramMediaId": "17908757208490178"
+  },
+  {
+    "date": "2026-09-29T19:42:38.132237+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1ERGZfk6ctmlIgTvvIPeelG8861POUi6A",
+      "1FP2xZLBhIB9d-w-aeyZKgbk1ch0WmpWi",
+      "1CPUfcLK8dhiVUf2STnE2gijzjhU0rS27",
+      "1FExvhNvaVsbiNXHft5Kg58B3BizZYTxn"
+    ],
+    "fileNames": [
+      "20241228_121401.mp4",
+      "20241228_092157.mp4",
+      "IMG_7351.MOV",
+      "20241228_090044.mp4"
+    ],
+    "duration": 21.666667,
+    "voiceoverStyle": "pregunta",
+    "voiceProfile": "dalia",
+    "voiceoverText": "¿Te imaginas despertar rodeado de naturaleza? Hoy te llevamos a El Valle, Samana, en El Valle, Samana. Camping de playa. Cuenta con comida/restaurante. setecientos pesos dominicanos por noche; camping no incluye equipos. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-09-29-el-valle.mp4",
+    "caption": "🏕️ El Valle, Samana\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n• Balneario de playa\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #elvalle #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-09-29",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-09-29-el-valle.mp4?rev=f59ab4e",
+    "instagramMediaId": "18077793788394288"
   }
 ]
