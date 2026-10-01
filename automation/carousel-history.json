@@ -1078,5 +1078,25 @@
       "public/carousels/2026-09-30-ocoa-05.jpg",
       "public/carousels/2026-09-30-ocoa-06.jpg"
     ]
+  },
+  {
+    "date": "2026-10-01",
+    "campId": "bonao",
+    "files": [
+      "1MtUEFrXH-2rxA5Hy3Disp3dlA2oQZWW8",
+      "1Ut5l74uOkvo39F0bANOodVASmFBXlbAO",
+      "1wn4u3qkYVBReATZwTQnyKymZFmJzMNSm",
+      "1waBVfDx94hJin6ZGNnuTgvaEnURf5VET",
+      "1yHuhAXJZ-7banndVmK596DOLXd1751Gt",
+      "1rxFkZ8nHsfFWqTq-q_KCsJn1byUjHm1L"
+    ],
+    "outputs": [
+      "public/carousels/2026-10-01-bonao-01.jpg",
+      "public/carousels/2026-10-01-bonao-02.jpg",
+      "public/carousels/2026-10-01-bonao-03.jpg",
+      "public/carousels/2026-10-01-bonao-04.jpg",
+      "public/carousels/2026-10-01-bonao-05.jpg",
+      "public/carousels/2026-10-01-bonao-06.jpg"
+    ]
   }
 ]
