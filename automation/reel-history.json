@@ -1282,5 +1282,32 @@
     "idempotencyKey": "reel:2026-09-30",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-09-30-ocoa.mp4?rev=1d8d615",
     "instagramMediaId": "17897563656607881"
+  },
+  {
+    "date": "2026-10-01T19:55:53.160388+00:00",
+    "campId": "santiago",
+    "campName": "Santiago",
+    "files": [
+      "1Cf1wNTNONHHU4q3LhBK9Z90V1j0L09P4",
+      "18l2gB-AyUc9ZN0OklaD-td_pGpd7k3Xh",
+      "1PhuRP6jYQjLv3xG0qz6vXo9RRgG07RHi",
+      "1ZxUTfVC7yysjl7MsZClJq8RLPBjmXiKI"
+    ],
+    "fileNames": [
+      "2021-06-20 15.34.37.mp4",
+      "2021-06-20 13.35.24.mp4",
+      "2021-06-20 15.36.54.mp4",
+      "2021-06-20 13.35.09.mp4"
+    ],
+    "duration": 16.933333,
+    "voiceoverStyle": "recomendacion",
+    "voiceProfile": "jorge",
+    "voiceoverText": "¿Buscas dónde acampar en República Dominicana? Una opción para considerar es Santiago, en Santiago. Lo mejor: camping, glamping y habitaciones y cuenta con comida/restaurante. La tarifa parte de novecientos pesos dominicanos por noche. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-10-01-santiago.mp4",
+    "caption": "🏕️ Santiago\n📍 Santiago\n💰 Desde RD$900 por noche\n\n• Camping, glamping y habitaciones\n• Cuenta con comida/restaurante\n• Balneario con presa y piscina\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #santiago #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/18Ky7j5vm7RC1ngksrIkqOh_yqXM-2j6V/preview",
+    "idempotencyKey": "reel:2026-10-01",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-01-santiago.mp4?rev=006fcd3",
+    "instagramMediaId": "17914344048461738"
   }
 ]
