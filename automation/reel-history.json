@@ -1336,5 +1336,32 @@
     "idempotencyKey": "reel:2026-10-02",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-02-villa-altagracia.mp4?rev=41285be",
     "instagramMediaId": "18088902593682921"
+  },
+  {
+    "date": "2026-10-03T18:21:41.564275+00:00",
+    "campId": "monsenor",
+    "campName": "Monseñor",
+    "files": [
+      "1UeYXsRfdeqN5Ws1E9ChUNSFU9U6UAU71",
+      "1S-SatXazakKSrj15C0450_ZDe3nzUVpr",
+      "1SVULb-jZ00j7rA7wxY_-QyXYYQi8gejh",
+      "1UD_qQwJNn-_VEPnnDz9FCHGUfpf7vQMt"
+    ],
+    "fileNames": [
+      "20250316_090414.mp4",
+      "20250316_093028.mp4",
+      "20250316_095856.mp4",
+      "20250316_091850.mp4"
+    ],
+    "duration": 24.021,
+    "voiceoverStyle": "descubrimiento",
+    "voiceProfile": "victor",
+    "voiceoverText": "Este rincón de República Dominicana merece estar en tu lista. Se llama Monseñor y está en Cañabón, Bonao. Camping en bosque. Balneario tipo presa. Puedes visitarlo desde mil pesos dominicanos por noche. Comenta INFO y recibe el PDF con todos los detalles.",
+    "output": "public/reels/2026-10-03-monsenor.mp4",
+    "caption": "🏕️ Monseñor\n📍 Cañabón, Bonao\n💰 Desde RD$1,000 por noche\n\n• Camping en bosque\n• Balneario tipo presa\n• Cuenta con comida/restaurante\n\nComenta INFO y te enviamos por DM todos los detalles y el PDF del campamento. También puedes abrir el enlace de nuestra biografía para ver toda la información.\n\n#CampeachRD #CampingRD #monseñor #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1chaVkGfTeZxd7UMigCdEQcPEWixvJNG-/preview",
+    "idempotencyKey": "reel:2026-10-03",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-03-monsenor.mp4?rev=30cf13c",
+    "instagramMediaId": "18108046279927110"
   }
 ]
