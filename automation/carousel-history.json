@@ -1158,5 +1158,25 @@
       "public/carousels/2026-10-04-monsenor-05.jpg",
       "public/carousels/2026-10-04-monsenor-06.jpg"
     ]
+  },
+  {
+    "date": "2026-10-06",
+    "campId": "hato-mayor",
+    "files": [
+      "1iJ9plhhKxTg-WBh396GcGO6shyaEWYzl",
+      "1jkFSYm9cOxu_sqLyPg4cafYe0islhbWy",
+      "1bAxtoPFZrZRgwoWhX17LaQVDohk3tVeK",
+      "1wJtXELx85BupbKsVGqvpYGBzEyCzpGZZ",
+      "1Q4zqRDyOe9P4nuBHlsiYkR4MdrCHWbVn",
+      "1WgllzMMKuYZmT_3Y-pSpZUQMMmvK63-5"
+    ],
+    "outputs": [
+      "public/carousels/2026-10-06-hato-mayor-01.jpg",
+      "public/carousels/2026-10-06-hato-mayor-02.jpg",
+      "public/carousels/2026-10-06-hato-mayor-03.jpg",
+      "public/carousels/2026-10-06-hato-mayor-04.jpg",
+      "public/carousels/2026-10-06-hato-mayor-05.jpg",
+      "public/carousels/2026-10-06-hato-mayor-06.jpg"
+    ]
   }
 ]
