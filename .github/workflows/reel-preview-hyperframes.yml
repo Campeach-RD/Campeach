@@ -28,6 +28,7 @@ jobs:
         with:
           node-version: 24
       - uses: actions/cache@v4
+        id: voice-cache
         with:
           path: /home/runner/.cache/campeach-voice
           key: campeach-mexican-voice-v1-pinned-cpu
@@ -48,6 +49,12 @@ jobs:
           result = json.loads(Path('automation/work/result.json').read_text(encoding='utf-8'))
           shutil.copyfile(result['output'], 'automation/work/preview.mp4')
           PY
+      - name: Conservar modelo incluso si la revisión visual bloquea el montaje
+        if: always() && steps.voice-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /home/runner/.cache/campeach-voice
+          key: campeach-mexican-voice-v1-pinned-cpu
       - name: Guardar resultado y diagnósticos
         if: always()
         uses: actions/upload-artifact@v4

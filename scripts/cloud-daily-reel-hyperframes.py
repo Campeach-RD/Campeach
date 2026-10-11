@@ -113,8 +113,8 @@ def render(paths,camp,output,history):
       #scene-1 h1{font-size:78px}#scene-3 h1{font-size:72px;color:#d9ff5c}
       </style></head><body><div id="main" data-composition-id="main" data-width="1080" data-height="1920"
       data-start="0" data-duration="TOTAL">SCENES
-      <audio id="voiceover" src="assets/voice.wav" data-start="0.25" data-duration="VOICE" data-track-index="10" />
-      <audio id="music-bed" src="assets/music.wav" data-start="0" data-duration="TOTAL" data-volume="0.18" data-track-index="11" />
+      <audio id="voiceover" src="assets/voice.wav" data-start="0.25" data-duration="VOICE" data-track-index="10"></audio>
+      <audio id="music-bed" src="assets/music.wav" data-start="0" data-duration="TOTAL" data-volume="0.18" data-track-index="11"></audio>
       </div><script>const tl=gsap.timeline({paused:true}),slots=SLOTS;
       slots.forEach((s,i)=>{const scene='#scene-'+i,copy=scene+' .copy';
         if(i){const prev='#scene-'+(i-1),t=s.start-.35;
@@ -158,7 +158,7 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
         for i,slot in enumerate(slots)),encoding='utf-8')
     legacy.save_json(project/'index.motion.json',{'duration':total,'assertions':[
         {'kind':'appearsBy','selector':'#title-0','bySec':.6},
-        {'kind':'staysInFrame','selector':'.copy'}]})
+        {'kind':'appearsBy','selector':'#title-5','bySec':total-1}]})
     legacy.save_json(project/'hyperframes.json',{'media':{'autoProxy':True}})
     legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'reference':'official es_mx_f1.wav',
       'duration':voice_seconds,'exaggeration':.72,'cfg':.38},'footage':[str(p.name) for p in paths],
