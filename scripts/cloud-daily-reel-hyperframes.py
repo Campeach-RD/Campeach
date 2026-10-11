@@ -88,7 +88,8 @@ def render(paths,camp,output,history):
         # .35s overlap gives the source video time to appear during the handoff.
         begin=max(0,slot['start']-.35);length=boundaries[i+1]-begin
         src=i%len(paths); offset=min(i*.53,max(0,total-length-.01))
-        headline=html.escape(title[0]);detail=html.escape(title[1])
+        headline=' '.join('<span class="word">'+html.escape(word)+'</span>' for word in title[0].split())
+        detail=html.escape(title[1])
         scenes.append(f'''<section id="scene-{i}" class="scene" style="z-index:{i+1};opacity:{1 if i==0 else 0}">
           <div class="picture"><video id="video-{i}" class="clip" src="assets/source-{src}.mp4" muted playsinline
           data-start="{begin:.3f}" data-duration="{length:.3f}" data-media-start="{offset:.3f}" data-track-index="{i}"></video></div>
@@ -106,6 +107,7 @@ def render(paths,camp,output,history):
       .copy{position:absolute;left:72px;right:115px;top:1120px}
       .eyebrow{font-size:27px;letter-spacing:3px;color:#d9ff5c;margin-bottom:24px}
       h1{font-size:82px;line-height:1.05;margin:0 0 28px;overflow-wrap:anywhere}
+      .word{display:inline-block;transform-origin:50% 80%}
       .detail{font-size:43px;line-height:1.18;color:#fffdf6;max-width:840px}
       #scene-0 h1,#scene-5 h1{color:#d9ff5c;font-size:99px}
       #scene-1 h1{font-size:78px}#scene-3 h1{font-size:72px;color:#d9ff5c}
@@ -122,11 +124,41 @@ def render(paths,camp,output,history):
             tl.fromTo(scene,{scale:.84,opacity:0},{scale:1,opacity:1,duration:.35,ease:'power3.out',immediateRender:false},t)}
           tl.set(prev,{opacity:0},s.start)}
         tl.fromTo(copy,{y:65,opacity:0},{y:0,opacity:1,duration:.5,ease:'power3.out',immediateRender:false},s.start+.04);
-        tl.fromTo(scene+' h1',{scale:.93},{scale:1,duration:.55,ease:'back.out(1.35)',immediateRender:false},s.start+.06);
+        const words=gsap.utils.toArray(scene+' .word'),stagger=Math.min(.06,.4/words.length);
+        words.forEach((word,j)=>{const from=i%3===0?{scale:1.2,opacity:0}:i%3===1?{x:-45,opacity:0}:{y:30,opacity:0};
+          tl.fromTo(word,from,{x:0,y:0,scale:1,opacity:1,duration:.4,ease:i%3===1?'expo.out':'power4.out',immediateRender:false},s.start+.08+j*stagger)});
       });window.__timelines={main:tl};</script></body></html>'''
     document=document.replace('TOTAL',f'{total:.3f}').replace('VOICE',f'{voice_seconds:.3f}')
     document=document.replace('SCENES','\n'.join(scenes)).replace('SLOTS',json.dumps(slots,ensure_ascii=False))
     (project/'index.html').write_text(document,encoding='utf-8')
+    (project/'BRIEF.md').write_text('''---
+workflow: general-video
+flow: automation
+storyboard: no
+---
+# Campeach campamento diario
+Formato previamente aprobado: metraje real, voz mexicana Chatterbox es_mx_f1,
+30-45 segundos, siempre hablar de acampar, precios en pesos dominicanos.
+Datos exclusivos del catálogo vigente. No revelar instrucciones internas al cliente.
+Destino: Instagram Reels. Preparación en nube, nunca depender del PC.
+''',encoding='utf-8')
+    (project/'design.md').write_text('''# Dirección visual
+Concepto: cambiar la rutina por una escapada real para acampar.
+Héroe: metraje real del campamento, sin escenarios generados.
+Paleta aprobada: verde bosque #10231c, lima #d9ff5c, blanco #fffdf6.
+Ancla: Campeach RD; foco: frases grandes sobre el camping; soporte: ubicación,
+beneficios y tarifa de referencia. Márgenes inferiores y derechos seguros de Reels.
+Tipografía incrustada: Liberation Sans Bold (misma familia en distintas jerarquías).
+Duración manda la voz medida: no truncar ni acelerar para rellenar un límite fijo.
+''',encoding='utf-8')
+    (project/'STORYBOARD.md').write_text('\n\n'.join(
+        f'## Frame {i+1}\nstatus: animated\nsrc: index.html#scene-{i}\n'
+        f'rules: spring-pop-entrance; transitions/css-push; transitions/css-scale\n'
+        f'beat: {slot["text"]}\nstart: {slot["start"]:.3f}\nduration: {slot["duration"]:.3f}'
+        for i,slot in enumerate(slots)),encoding='utf-8')
+    legacy.save_json(project/'index.motion.json',{'duration':total,'assertions':[
+        {'kind':'appearsBy','selector':'#title-0','bySec':.6},
+        {'kind':'staysInFrame','selector':'.copy'}]})
     legacy.save_json(project/'hyperframes.json',{'media':{'autoProxy':True}})
     legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'reference':'official es_mx_f1.wav',
       'duration':voice_seconds,'exaggeration':.72,'cfg':.38},'footage':[str(p.name) for p in paths],

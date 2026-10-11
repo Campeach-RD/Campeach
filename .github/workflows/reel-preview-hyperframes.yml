@@ -40,7 +40,14 @@ jobs:
       - name: Renderizar sin publicar ni cambiar historial
         env:
           CAMP: ${{ inputs.camp }}
-        run: python scripts/cloud-daily-reel-hyperframes.py --camp "$CAMP" --render-only
+        run: |
+          python scripts/cloud-daily-reel-hyperframes.py --camp "$CAMP" --render-only
+          python - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          result = json.loads(Path('automation/work/result.json').read_text(encoding='utf-8'))
+          shutil.copyfile(result['output'], 'automation/work/preview.mp4')
+          PY
       - name: Guardar resultado y diagnósticos
         if: always()
         uses: actions/upload-artifact@v4
@@ -53,6 +60,6 @@ jobs:
             automation/work/hyperframes-project/index.html
             automation/work/hyperframes-project/hyperframes.json
             automation/work/hyperframes-project/media-ledger.json
-            automation/work/hyperframes-project/assets/voice.wav
+            automation/work/hyperframes-project/assets/
             automation/work/hyperframes-project/snapshots/
-            public/reels/*${{ inputs.camp }}.mp4
+            automation/work/preview.mp4
