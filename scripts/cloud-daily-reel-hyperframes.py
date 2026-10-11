@@ -91,7 +91,7 @@ def render(paths,camp,output,history):
         headline=html.escape(title[0]);detail=html.escape(title[1])
         scenes.append(f'''<section id="scene-{i}" class="scene" style="z-index:{i+1};opacity:{1 if i==0 else 0}">
           <div class="picture"><video id="video-{i}" class="clip" src="assets/source-{src}.mp4" muted playsinline
-          data-start="{begin:.3f}" data-duration="{length:.3f}" data-media-start="{offset:.3f}" data-track-index="{i}" /></div>
+          data-start="{begin:.3f}" data-duration="{length:.3f}" data-media-start="{offset:.3f}" data-track-index="{i}"></video></div>
           <div class="shade"></div>
           <div class="copy"><div class="eyebrow">CAMPEACH RD • CAMPING</div>
           <h1 id="title-{i}">{headline}</h1><div class="detail">{detail}</div></div></section>''')
