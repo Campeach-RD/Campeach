@@ -2,8 +2,8 @@ name: Reel diario de Campeach
 
 on:
   schedule:
-    # Se inicia 5 minutos antes para compensar render y colas de GitHub; Meta publica cerca de las 11:00 AST.
-    - cron: "55 14 * * *"
+    # Chatterbox CPU necesita preparación; la publicación espera hasta las 11:00 AST.
+    - cron: "10 14 * * *"
   workflow_dispatch:
     inputs:
       camp:
@@ -23,7 +23,7 @@ concurrency:
 jobs:
   render-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,6 +31,8 @@ jobs:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
       CAMPEACH_ADMIN_API_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
       CAMPEACH_WORKER_URL: https://campeach-instagram.nomanychat.workers.dev
+      CAMPEACH_VOICE_CACHE: /home/runner/.cache/campeach-voice
+      HF_HUB_DISABLE_XET: '1'
     steps:
       - uses: actions/checkout@v6
         with:
@@ -38,15 +40,39 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.11"
           cache: pip
+          cache-dependency-path: |
+            automation/requirements.txt
+            automation/chatterbox-requirements.txt
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/campeach-voice
+          key: campeach-mexican-voice-v1-pinned-cpu
       - name: Instalar herramientas
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-liberation
-          python -m pip install -r automation/requirements.txt
+          python -m pip install torch==2.8.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r automation/requirements.txt -r automation/chatterbox-requirements.txt
       - name: Producir y validar Reel
-        run: python scripts/cloud-daily-reel.py --camp "${{ inputs.camp }}"
+        env:
+          CAMP: ${{ inputs.camp }}
+        run: python scripts/cloud-daily-reel-hyperframes.py --camp "$CAMP"
+      - name: Guardar diagnóstico privado del Reel
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: campamento-reel-diagnostico
+          retention-days: 3
+          path: |
+            automation/work/result.json
+            automation/work/voice-audit.json
+            automation/work/hyperframes-project/snapshots/
       - name: Publicar MP4 en GitHub Pages
         id: asset
         shell: bash
@@ -70,10 +96,6 @@ jobs:
           file_name=$(basename "$output")
           url="https://campeach-rd.github.io/Campeach/reels/${file_name}?rev=$(git rev-parse --short HEAD)"
           echo "url=$url" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: npm
       - name: Construir sitio con el nuevo Reel
         run: |
           npm ci
@@ -103,12 +125,21 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os
+          import json, os, time
+          from datetime import datetime, timezone, timedelta
           from pathlib import Path
           import requests
 
           root = Path.cwd()
           result = json.loads((root / "automation/work/result.json").read_text(encoding="utf-8"))
+          if os.environ.get("GITHUB_EVENT_NAME") == "schedule":
+              ast = timezone(timedelta(hours=-4))
+              now = datetime.now(ast)
+              target = now.replace(hour=11, minute=0, second=0, microsecond=0)
+              while datetime.now(ast) < target:
+                  time.sleep(min(30, (target - datetime.now(ast)).total_seconds()))
+              if datetime.now(ast).date().isoformat() != result["date"][:10]:
+                  raise RuntimeError("El Reel no corresponde a hoy; no publicar contenido atrasado")
           catalog = json.loads((root / "worker/catalog.generated.json").read_text(encoding="utf-8"))
           normalize_id = lambda value: str(value).replace("ñ", "n").replace("Ñ", "N")
           camp = next(item for item in catalog["camps"] if normalize_id(item["id"]) == normalize_id(result["campId"]))
