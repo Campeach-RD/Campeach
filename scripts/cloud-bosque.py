@@ -72,7 +72,7 @@ def render(date):
     WORK.mkdir(parents=True,exist_ok=True)
     out=ROOT/'public'/'reels'/f'ritmo-bosque-{date}.mp4';out.parent.mkdir(parents=True,exist_ok=True)
     hook=' '.join(HOOKS[day])
-    if day < 2:
+    if day < 2 and os.environ.get('BOSQUE_USE_LEGACY_REELS') == '1':
         download(f'{HOST}/ritmo-del-bosque-2026-{variant}.mp4',out)
     else:
         project=WORK/'project'; assets=project/'assets';assets.mkdir(parents=True,exist_ok=True)
