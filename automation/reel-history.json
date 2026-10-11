@@ -1525,5 +1525,32 @@
     "idempotencyKey": "reel:2026-10-10",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-10-monsenor.mp4?rev=32c6fdf",
     "instagramMediaId": "17936978844125898"
+  },
+  {
+    "date": "2026-10-11T19:14:46.249777+00:00",
+    "campId": "villa-altagracia",
+    "campName": "Villa Altagracia",
+    "files": [
+      "1XQoeGoXJcJPTCbxVtaEejl0m32Nl-OdD",
+      "1Y4jNrwLHVqDCmNYj_ljGWztvIb8Imkvs",
+      "1Mpj8UiDErMWuaRvJn1jRk0yC7k5O9mr2",
+      "1Y76cLJujLG7RVevcrcrjxyT9s3WOdvpN"
+    ],
+    "fileNames": [
+      "20240713_161119.mp4",
+      "IMG_1842.MOV",
+      "IMG_3184.MOV",
+      "20240324_094657.mp4"
+    ],
+    "duration": 32.704,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "¿Necesitas salir de la rutina? ¡Vámonos de camping! Ven a acampar en Villa Altagracia, en Los Arroyones, Villa Altagracia. Aquí encontrarás camping y cabana ecologica. Y también: balneario con rio, cascada y piscina. Desde setecientos cincuenta pesos dominicanos por noche. Confirma disponibilidad y tarifa final antes de reservar. Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.",
+    "output": "public/reels/2026-10-11-villa-altagracia.mp4",
+    "caption": "🏕️ Tu próxima escapada para acampar: Villa Altagracia\n📍 Los Arroyones, Villa Altagracia\n💰 Desde RD$750 por noche\n\n• Camping y cabana ecologica\n• Balneario con rio, cascada y piscina\n• No requiere vehiculo 4x4\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. Comenta INFO o INF para recibir la información del campamento por DM. Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n#CampeachRD #CampingRD #villaaltagracia #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/19DeWI8XrFFfgr_AP7XK5iQVoFi2gilOn/preview",
+    "idempotencyKey": "reel:2026-10-11",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-11-villa-altagracia.mp4?rev=72ebf1e",
+    "instagramMediaId": "17905919277592249"
   }
 ]
