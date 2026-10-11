@@ -1,0 +1,58 @@
+name: Ensayo privado Reel campamento HyperFrames mexicano
+on:
+  workflow_dispatch:
+    inputs:
+      camp:
+        description: Campamento para el ensayo sin publicar
+        default: ocoa
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: campeach-camp-reel-preview
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      CAMPEACH_VOICE_CACHE: /home/runner/.cache/campeach-voice
+      HF_HUB_DISABLE_XET: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/campeach-voice
+          key: campeach-mexican-voice-v1-pinned-cpu
+      - name: Instalar voz CPU y editor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-liberation
+          python -m pip install torch==2.8.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r automation/requirements.txt -r automation/chatterbox-requirements.txt
+      - name: Renderizar sin publicar ni cambiar historial
+        env:
+          CAMP: ${{ inputs.camp }}
+        run: python scripts/cloud-daily-reel-hyperframes.py --camp "$CAMP" --render-only
+      - name: Guardar resultado y diagnósticos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: camp-reel-hyperframes-preview
+          retention-days: 3
+          path: |
+            automation/work/result.json
+            automation/work/voice-audit.json
+            automation/work/hyperframes-project/index.html
+            automation/work/hyperframes-project/hyperframes.json
+            automation/work/hyperframes-project/media-ledger.json
+            automation/work/hyperframes-project/assets/voice.wav
+            automation/work/hyperframes-project/snapshots/
+            public/reels/*${{ inputs.camp }}.mp4
