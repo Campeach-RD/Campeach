@@ -1278,5 +1278,25 @@
       "public/carousels/2026-10-11-villa-altagracia-05.jpg",
       "public/carousels/2026-10-11-villa-altagracia-06.jpg"
     ]
+  },
+  {
+    "date": "2026-10-13",
+    "campId": "jarabacoa",
+    "files": [
+      "1og7wI1ZXLI3bGJZMbNtPPuk0FzDG3Ohj",
+      "1VtWU9G-kn7FUNZsgghcVgy3YDqwvmCX4",
+      "1byQlF4Q2t_10KRk6xwOznqwTuLj0RCQM",
+      "1OYlVZ9U187HVRCqci-8FpcausAWDo9QL",
+      "1meya_-hu5wQh3SHOFPyz6CT1lbAzF16t",
+      "1_JHp05YmL-Xpxx4ALkJ9UCsPjojNpHJO"
+    ],
+    "outputs": [
+      "public/carousels/2026-10-13-jarabacoa-01.jpg",
+      "public/carousels/2026-10-13-jarabacoa-02.jpg",
+      "public/carousels/2026-10-13-jarabacoa-03.jpg",
+      "public/carousels/2026-10-13-jarabacoa-04.jpg",
+      "public/carousels/2026-10-13-jarabacoa-05.jpg",
+      "public/carousels/2026-10-13-jarabacoa-06.jpg"
+    ]
   }
 ]
