@@ -1,0 +1,15 @@
+{
+  "name": "campeach-bosque-scheduler",
+  "account_id": "3f2f77ef991f4639a0b3a2b0630a20b7",
+  "main": "index.mjs",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "observability": {"enabled": true},
+  "services": [
+    {"binding": "INSTAGRAM", "service": "campeach-instagram"},
+    {"binding": "MEDIA", "service": "campeach-event-media"}
+  ],
+  "kv_namespaces": [{"binding": "RECEIPTS", "id": "6bac8c60cbe34764b67ac19c2dbacc45"}],
+  "triggers": {"crons": ["0,10,25 22 * * *"]}
+}
