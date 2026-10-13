@@ -1,12 +1,13 @@
 name: Ritmo del Bosque diario (nube)
 on:
   schedule:
-    - cron: '10 21 * * *'
+    # Preparar el día siguiente con margen; Cloudflare publica a las 18:00 AST.
+    - cron: '35 9 * * *'
   workflow_dispatch:
     inputs:
       date:
-        description: Fecha de ensayo (YYYY-MM-DD)
-        default: '2026-10-13'
+        description: Fecha del video (vacío = mañana)
+        default: ''
       publish:
         description: Publicar hoy en Instagram
         type: boolean
@@ -30,9 +31,9 @@ jobs:
         env:
           TEST_DATE: ${{ inputs.date }}
         run: |
-          DAY="${TEST_DATE:-$(TZ=America/Santo_Domingo date +%F)}"
+          DAY="${TEST_DATE:-$(TZ=America/Santo_Domingo date -d tomorrow +%F)}"
           echo "date=$DAY" >> "$GITHUB_OUTPUT"
-          if [[ "$DAY" < '2026-10-11' || "$DAY" > '2026-10-30' || -f "automation/bosque-receipts/$DAY.json" ]]; then
+          if [[ "$DAY" < '2026-10-11' || "$DAY" > '2026-10-30' || -f "automation/bosque-receipts/$DAY.json" || -f "public/reels/ritmo-bosque-$DAY.mp4" ]]; then
             echo 'skip=true' >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/setup-python@v6
@@ -79,12 +80,12 @@ jobs:
         env:
           CAMPEACH_ADMIN_API_TOKEN: ${{ secrets.CAMPEACH_ADMIN_API_TOKEN }}
           VIDEO_URL: https://campeach-rd.github.io/Campeach/reels/ritmo-bosque-${{ steps.day.outputs.date }}.mp4
-          LIVE: ${{ github.event_name == 'schedule' || inputs.publish }}
+          LIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
         run: |
           for i in {1..30}; do curl --fail --silent --head "$VIDEO_URL" >/dev/null && break; sleep 10; done
           if [[ "$LIVE" == 'true' ]]; then python scripts/cloud-bosque.py publish; else python scripts/cloud-bosque.py publish --dry-run; fi
       - name: Guardar comprobante de publicación
-        if: steps.day.outputs.skip != 'true' && (github.event_name == 'schedule' || inputs.publish)
+        if: steps.day.outputs.skip != 'true' && github.event_name == 'workflow_dispatch' && inputs.publish
         run: |
           git add automation/bosque-receipts
           git diff --cached --quiet || git commit -m 'Comprobante Instagram Ritmo del Bosque'
