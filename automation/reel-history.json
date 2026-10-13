@@ -1579,5 +1579,32 @@
     "idempotencyKey": "reel:2026-10-12",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-12-monsenor.mp4?rev=5ac838a",
     "instagramMediaId": "18031203152681582"
+  },
+  {
+    "date": "2026-10-13T20:35:51.853697+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1FUM4iL3iICiKffgiWOXymgqxM1FebOPB",
+      "1DrRbNqpMLdw72LM9NuV78iDOjMtiepsD",
+      "1EkwLAbNyWi7aUoJGc75UY7jQ7uBKopRM",
+      "1vj54z6p94JKEFxuqsrl7o6X0gYmZcvtq"
+    ],
+    "fileNames": [
+      "20241228_092000.mp4",
+      "20241228_140131.mp4",
+      "20241228_083728.mp4",
+      "IMG_7375.mov"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "¡Tu próximo plan es acampar! Ven a acampar en El Valle, Samana, en El Valle, Samana. Aquí encontrarás camping de playa. Y también: cuenta con comida/restaurante. Desde setecientos pesos dominicanos por noche; camping no incluye equipos. Confirma disponibilidad y tarifa final antes de reservar. Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.",
+    "output": "public/reels/2026-10-13-el-valle.mp4",
+    "caption": "🏕️ Tu próxima escapada para acampar: El Valle, Samana\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n• Balneario de playa\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. Comenta INFO o INF para recibir la información del campamento por DM. Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n#CampeachRD #CampingRD #elvalle #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-10-13",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-13-el-valle.mp4?rev=f3246e0",
+    "instagramMediaId": "18116217161327574"
   }
 ]
