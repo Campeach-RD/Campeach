@@ -10,6 +10,7 @@ import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import requests
+from reel_cover import apply_cover
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / 'automation' / 'bosque-work'
@@ -112,6 +113,8 @@ def render(date):
         document=re.sub(r'src="media/voice/[^"]+"','src="assets/voice.mp3"',document)
         document=re.sub(r'src="media/bgm/[^"]+"','src="assets/music.wav"',document)
         document=re.sub(r'(<audio id="vo"[^>]*data-duration=")[^"]+',lambda m:m[1]+f'{voice_duration:.3f}',document)
+        document=apply_cover(document,project,assets/f'source-{day%3+1}.mp4',
+          'Ritmo del Bosque','Halloween • 31 oct — 1 nov • Villa Altagracia',date)
         (project/'index.html').write_text(document,encoding='utf-8')
         save(project/'hyperframes.json',{'media':{'autoProxy':True}})
         subprocess.run(['npx','--yes',f'hyperframes@{HF}','check',str(project),'--snapshots'],check=True)

@@ -13,6 +13,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 import requests
+from reel_cover import apply_cover
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('camp_legacy',ROOT/'scripts/cloud-daily-reel.py')
@@ -78,7 +79,7 @@ def render(paths,camp,output,history):
       'aevalsrc=0.12*sin(2*PI*196*t)+0.07*sin(2*PI*246.94*t)+0.06*sin(2*PI*293.66*t):s=48000',
       '-t',str(total),assets/'music.wav')
     highlights=camp.get('highlights',[])[:2]
-    titles=[['TU PRÓXIMO PLAN:', 'ACAMPAR'], [camp['name'],camp['location']],
+    titles=[[camp['name'], 'Tu escapada para acampar'], [camp['name'],camp['location']],
             ['DESCONÉCTATE', highlights[0] if highlights else 'Naturaleza y camping'],
             [camp['priceNote'],highlights[1] if len(highlights)>1 else 'Escápate a la naturaleza'],
             ['ARMA TU ESCAPADA','Confirma disponibilidad y tarifa final'],
@@ -130,6 +131,8 @@ def render(paths,camp,output,history):
       });window.__timelines={main:tl};</script></body></html>'''
     document=document.replace('TOTAL',f'{total:.3f}').replace('VOICE',f'{voice_seconds:.3f}')
     document=document.replace('SCENES','\n'.join(scenes)).replace('SLOTS',json.dumps(slots,ensure_ascii=False))
+    document=apply_cover(document,project,assets/'source-0.mp4',camp['name'],
+      camp['location'])
     (project/'index.html').write_text(document,encoding='utf-8')
     (project/'BRIEF.md').write_text('''---
 workflow: general-video
@@ -157,7 +160,7 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
         f'beat: {slot["text"]}\nstart: {slot["start"]:.3f}\nduration: {slot["duration"]:.3f}'
         for i,slot in enumerate(slots)),encoding='utf-8')
     legacy.save_json(project/'index.motion.json',{'duration':total,'assertions':[
-        {'kind':'appearsBy','selector':'#title-0','bySec':.6},
+        {'kind':'appearsBy','selector':'#reel-cover .cover-title','bySec':.6},
         {'kind':'appearsBy','selector':'#title-5','bySec':total-1}]})
     legacy.save_json(project/'hyperframes.json',{'media':{'autoProxy':True}})
     legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'reference':'official es_mx_f1.wav',
