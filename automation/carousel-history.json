@@ -1338,5 +1338,25 @@
       "public/carousels/2026-10-15-el-valle-05.jpg",
       "public/carousels/2026-10-15-el-valle-06.jpg"
     ]
+  },
+  {
+    "date": "2026-10-16",
+    "campId": "ocoa",
+    "files": [
+      "1IEeyl_vr_9w9AaWpddxTkknu0UW7y7lc",
+      "1IY5k9qLWMIP6EhUZz1aXjFkEbHMzuc1g",
+      "1wixrgb_R57ei6dyqkTTEeZCqcRqzAX88",
+      "1GLVzdfHG4-OrYI5zpqHw4ELlIwcjOH7v",
+      "1BSBoqS1A8KJ7e5BPowX82K-qxvJxhI5S",
+      "1STyA5CwgM69i_50ZwGkG2gXtK5prHqJ2"
+    ],
+    "outputs": [
+      "public/carousels/2026-10-16-ocoa-01.jpg",
+      "public/carousels/2026-10-16-ocoa-02.jpg",
+      "public/carousels/2026-10-16-ocoa-03.jpg",
+      "public/carousels/2026-10-16-ocoa-04.jpg",
+      "public/carousels/2026-10-16-ocoa-05.jpg",
+      "public/carousels/2026-10-16-ocoa-06.jpg"
+    ]
   }
 ]
