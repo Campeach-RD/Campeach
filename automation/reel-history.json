@@ -1687,5 +1687,32 @@
     "idempotencyKey": "reel:2026-10-16",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-16-ocoa.mp4?rev=00ae088",
     "instagramMediaId": "18100544579065910"
+  },
+  {
+    "date": "2026-10-17T17:25:35.450415+00:00",
+    "campId": "santiago",
+    "campName": "Santiago",
+    "files": [
+      "1C_cMtnBocEefCeF7LBIQruDew4AwmJoB",
+      "18Zyb39c8lsMJGfdj_bcSURJtkQRy-rLn",
+      "1iY849JfA3JhHr06uojawxpqTqFSYPLkC",
+      "1paXKDIKNSWu9QaUAGltn2rsCCgAuH2bz"
+    ],
+    "fileNames": [
+      "2021-06-20 14.18.38.mp4",
+      "2021-06-20 14.47.00.mp4",
+      "2021-06-20 15.36.36.mp4",
+      "2021-06-20 15.35.18.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "¿Necesitas salir de la rutina? ¡Vámonos de camping! Ven a acampar en Santiago, en Santiago. Aquí encontrarás camping, glamping y habitaciones. Y también: cuenta con comida/restaurante. Desde novecientos pesos dominicanos por noche. Confirma disponibilidad y tarifa final antes de reservar. Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.",
+    "output": "public/reels/2026-10-17-santiago.mp4",
+    "caption": "🏕️ Tu próxima escapada para acampar: Santiago\n📍 Santiago\n💰 Desde RD$900 por noche\n\n• Camping, glamping y habitaciones\n• Cuenta con comida/restaurante\n• Balneario con presa y piscina\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. Comenta INFO o INF para recibir la información del campamento por DM. Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n#CampeachRD #CampingRD #santiago #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/18Ky7j5vm7RC1ngksrIkqOh_yqXM-2j6V/preview",
+    "idempotencyKey": "reel:2026-10-17",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-17-santiago.mp4?rev=4ac592b",
+    "instagramMediaId": "18450990568126244"
   }
 ]
