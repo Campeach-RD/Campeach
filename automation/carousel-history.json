@@ -1398,5 +1398,25 @@
       "public/carousels/2026-10-18-santiago-05.jpg",
       "public/carousels/2026-10-18-santiago-06.jpg"
     ]
+  },
+  {
+    "date": "2026-10-19",
+    "campId": "villa-altagracia",
+    "files": [
+      "1jlrnw27gZqq6cfI6e8SMG1FL87axZ1Xh",
+      "1nKqE7lUD7u3TK5gCXVPONoRIPmXTFaqP",
+      "1RBOLEkyEMgT6EEFn2d2dNCcM2u36RiWN",
+      "1MZLLB4GhFFxF5FtBZEL1q0jMs4Lp6r9E",
+      "1xFE1xNR7OaN4PafF0a7Psad2FVTs6_D3",
+      "1552z4mXsDvyVO2Uy-Sd2xzPDyAZiLR3g"
+    ],
+    "outputs": [
+      "public/carousels/2026-10-19-villa-altagracia-01.jpg",
+      "public/carousels/2026-10-19-villa-altagracia-02.jpg",
+      "public/carousels/2026-10-19-villa-altagracia-03.jpg",
+      "public/carousels/2026-10-19-villa-altagracia-04.jpg",
+      "public/carousels/2026-10-19-villa-altagracia-05.jpg",
+      "public/carousels/2026-10-19-villa-altagracia-06.jpg"
+    ]
   }
 ]
