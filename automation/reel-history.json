@@ -1768,5 +1768,32 @@
     "idempotencyKey": "reel:2026-10-19",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-19-monsenor.mp4?rev=14000f2",
     "instagramMediaId": "18640534294005738"
+  },
+  {
+    "date": "2026-10-20T18:53:54.502741+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1FPr2tk611Zxd1q2weAu5PcAk4j-e9blG",
+      "1F_ESoahWfef_5xkqdAnkASoiZ84Y2j00",
+      "1FUHbhJH0mbfAJuF6gCuodyYHtlMuvb8F",
+      "1KhI9wfZYS_WRVEAatf8m6WXDxyxE23Nn"
+    ],
+    "fileNames": [
+      "20241228_095544.mp4",
+      "20241228_091851.mp4",
+      "20241228_092055.mp4",
+      "20241228_085727.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "¿Necesitas salir de la rutina? ¡Vámonos de camping! Ven a acampar en El Valle, Samana, en El Valle, Samana. Aquí encontrarás camping de playa. Y también: cuenta con comida/restaurante. Desde setecientos pesos dominicanos por noche; camping no incluye equipos. Confirma disponibilidad y tarifa final antes de reservar. Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.",
+    "output": "public/reels/2026-10-20-el-valle.mp4",
+    "caption": "🏕️ Tu próxima escapada para acampar: El Valle, Samana\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n• Balneario de playa\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. Comenta INFO o INF para recibir la información del campamento por DM. Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n#CampeachRD #CampingRD #elvalle #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-10-20",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-20-el-valle.mp4?rev=c28c5f8",
+    "instagramMediaId": "17978737313923055"
   }
 ]
