@@ -1795,5 +1795,32 @@
     "idempotencyKey": "reel:2026-10-20",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-20-el-valle.mp4?rev=c28c5f8",
     "instagramMediaId": "17978737313923055"
+  },
+  {
+    "date": "2026-10-21T18:59:27.009586+00:00",
+    "campId": "ocoa",
+    "campName": "Ocoa",
+    "files": [
+      "1O4vxLFHoMaL1ms7eAy3UCAa46QF8FkSd",
+      "1H0a_SZaVNaymwPYph0xeUVVGB_YHnigz",
+      "1Mal4IwlAUrz4JmSbfQ2MuDVGAZqdWLQl",
+      "1QHzW86FuyZW3RSV-2MTJwqAPkRqbuBbW"
+    ],
+    "fileNames": [
+      "20250119_123847.mp4",
+      "20250119_135045.mp4",
+      "20250119_134042.mp4",
+      "20250119_123830.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "¡Guarda este lugar para tu próxima escapada! Ven a acampar en Ocoa, en Rancho Arriba, San Jose de Ocoa. Aquí encontrarás camping en montaña. Y también: balneario con rio y cascada. Desde ochocientos pesos dominicanos por noche. Confirma disponibilidad y tarifa final antes de reservar. Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.",
+    "output": "public/reels/2026-10-21-ocoa.mp4",
+    "caption": "🏕️ Tu próxima escapada para acampar: Ocoa\n📍 Rancho Arriba, San Jose de Ocoa\n💰 Desde RD$800 por noche\n\n• Camping en montaña\n• Balneario con rio y cascada\n• No requiere vehiculo 4x4\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. Comenta INFO o INF para recibir la información del campamento por DM. Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n#CampeachRD #CampingRD #ocoa #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1rDd2S1WGlxMxShxhtFfUvlVcPwczbE0q/preview",
+    "idempotencyKey": "reel:2026-10-21",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-21-ocoa.mp4?rev=167f8e4",
+    "instagramMediaId": "18108814895251790"
   }
 ]
