@@ -1822,5 +1822,32 @@
     "idempotencyKey": "reel:2026-10-21",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-21-ocoa.mp4?rev=167f8e4",
     "instagramMediaId": "18108814895251790"
+  },
+  {
+    "date": "2026-10-22T19:13:59.102479+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1Jtm0Y9eFTP40-T3-7a5MxQbfUEE1H-qV",
+      "1E1bvA-AXjUq3Y4NEZA-IHDpy-GNCrI9u",
+      "1EqkJKakd542u0KWTX1NHnEWa25XESncF",
+      "1FExvhNvaVsbiNXHft5Kg58B3BizZYTxn"
+    ],
+    "fileNames": [
+      "20241228_085842.mp4",
+      "20241228_143944.mp4",
+      "20241228_121342.mp4",
+      "20241228_090044.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "¡Tu próximo plan es acampar! Ven a acampar en El Valle, Samana, en El Valle, Samana. Aquí encontrarás camping de playa. Y también: cuenta con comida/restaurante. Desde setecientos pesos dominicanos por noche; camping no incluye equipos. Confirma disponibilidad y tarifa final antes de reservar. Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.",
+    "output": "public/reels/2026-10-22-el-valle.mp4",
+    "caption": "🏕️ Tu próxima escapada para acampar: El Valle, Samana\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n• Balneario de playa\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. Comenta INFO o INF para recibir la información del campamento por DM. Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n#CampeachRD #CampingRD #elvalle #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-10-22",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-22-el-valle.mp4?rev=420202e",
+    "instagramMediaId": "18114656324330857"
   }
 ]
