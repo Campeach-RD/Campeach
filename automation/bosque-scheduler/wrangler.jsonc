@@ -11,5 +11,6 @@
     {"binding": "MEDIA", "service": "campeach-event-media"}
   ],
   "kv_namespaces": [{"binding": "RECEIPTS", "id": "6bac8c60cbe34764b67ac19c2dbacc45"}],
-  "triggers": {"crons": ["0,10,25 22 * * *"]}
+  "triggers": {"crons": []},
+  "vars": {"CAMPAIGN_AUTOPUBLISH_ENABLED": "false"}
 }

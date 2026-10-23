@@ -1,8 +1,6 @@
 name: Ritmo del Bosque diario (nube)
 on:
-  schedule:
-    # Preparar el día siguiente con margen; Cloudflare publica a las 18:00 AST.
-    - cron: '35 9 * * *'
+  # Repetitive daily promotion paused after the 2026-10-23 review.
   workflow_dispatch:
     inputs:
       date:
