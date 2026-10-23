@@ -9,6 +9,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from content_strategy import camp_order
+
 import edge_tts
 import requests
 from google.auth.transport.requests import AuthorizedSession
@@ -54,10 +56,7 @@ def camp_candidates(requested, history):
         if requested not in PRIORITY:
             raise ValueError(f"Campamento no permitido: {requested}")
         return [requested]
-    last = history[-1]["campId"] if history else None
-    start = datetime.now(timezone.utc).toordinal() % len(PRIORITY)
-    ordered = PRIORITY[start:] + PRIORITY[:start]
-    return [camp for camp in ordered if camp != last] + ([last] if last in PRIORITY else [])
+    return camp_order(PRIORITY, history)
 
 
 def choose_camp(requested, history):
@@ -399,6 +398,8 @@ def main():
         "fileNames": [item["name"] for item in selected],
         "duration": seconds,
         "voiceoverStyle": narration["style"],
+        "contentAngle": narration.get("contentAngle"),
+        "strategyVersion": narration.get("strategyVersion"),
         "voiceProfile": narration["voiceProfile"],
         "voiceoverText": narration["text"],
         "output": str(output.relative_to(ROOT)).replace("\\", "/"),

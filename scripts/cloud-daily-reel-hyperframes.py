@@ -13,7 +13,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 import requests
-from reel_cover import apply_cover
+from content_strategy import content_plan
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('camp_legacy',ROOT/'scripts/cloud-daily-reel.py')
@@ -21,23 +21,14 @@ legacy=importlib.util.module_from_spec(spec);spec.loader.exec_module(legacy)
 HF='0.8.145'
 VOICE='chatterbox-es-mx-latam-es_mx_f1'
 
+CURRENT_PLAN = None
+
 def segments(camp, compact=False):
-    highlights=camp.get('highlights',[])[:2]
-    first=highlights[0] if highlights else 'una escapada en la naturaleza'
-    second=highlights[1] if len(highlights)>1 else 'un lugar para desconectarte'
-    price=legacy.voice_friendly_text(camp['priceNote'])
-    seed=datetime.now(timezone.utc).toordinal()
-    hooks=['¡Tu próximo plan es acampar!', '¿Necesitas salir de la rutina? ¡Vámonos de camping!',
-           '¡Guarda este lugar para tu próxima escapada!']
-    return [
-        hooks[seed%len(hooks)],
-        f"Ven a acampar en {camp['name']}, en {camp['location']}.",
-        f"Aquí encontrarás {first.lower()}.",
-        f"Y también: {second.lower()}. {price}.",
-        'Confirma disponibilidad y tarifa final antes de reservar.',
-        ('Comenta info y organiza tu camping con Campeach.' if compact else
-         'Comenta info para conocer todos los detalles, y reserva tu camping con Campeach por WhatsApp.'),
-    ]
+    plan = CURRENT_PLAN or content_plan(camp)
+    texts = list(plan['segments'])
+    if compact:
+        texts[4] = 'Disponibilidad, condiciones y tarifa final por confirmar.'
+    return [legacy.voice_friendly_text(text) for text in texts]
 
 def voice_script(camp, project):
     segments_file=project/'segments.json'; voice=project/'assets/voice.wav'
@@ -52,6 +43,8 @@ def voice_script(camp, project):
     raise RuntimeError('Voice exceeds 43 seconds. Never crop narration or publish the old voice.')
 
 def render(paths,camp,output,history):
+    global CURRENT_PLAN
+    CURRENT_PLAN = content_plan(camp, history)
     project=legacy.WORK_DIR/'hyperframes-project'; assets=project/'assets'
     assets.mkdir(parents=True,exist_ok=True)
     texts,timings,voice_seconds=voice_script(camp,project)
@@ -78,12 +71,7 @@ def render(paths,camp,output,history):
     legacy.run('ffmpeg','-y','-loglevel','error','-f','lavfi','-i',
       'aevalsrc=0.12*sin(2*PI*196*t)+0.07*sin(2*PI*246.94*t)+0.06*sin(2*PI*293.66*t):s=48000',
       '-t',str(total),assets/'music.wav')
-    highlights=camp.get('highlights',[])[:2]
-    titles=[[camp['name'], 'Tu escapada para acampar'], [camp['name'],camp['location']],
-            ['DESCONÉCTATE', highlights[0] if highlights else 'Naturaleza y camping'],
-            [camp['priceNote'],highlights[1] if len(highlights)>1 else 'Escápate a la naturaleza'],
-            ['ARMA TU ESCAPADA','Confirma disponibilidad y tarifa final'],
-            ['COMENTA INFO','Reserva con Campeach por WhatsApp']]
+    titles=CURRENT_PLAN['titles']
     scenes=[]
     for i,(slot,title) in enumerate(zip(slots,titles)):
         # .35s overlap gives the source video time to appear during the handoff.
@@ -131,8 +119,6 @@ def render(paths,camp,output,history):
       });window.__timelines={main:tl};</script></body></html>'''
     document=document.replace('TOTAL',f'{total:.3f}').replace('VOICE',f'{voice_seconds:.3f}')
     document=document.replace('SCENES','\n'.join(scenes)).replace('SLOTS',json.dumps(slots,ensure_ascii=False))
-    document=apply_cover(document,project,assets/'source-0.mp4',camp['name'],
-      camp['location'])
     (project/'index.html').write_text(document,encoding='utf-8')
     (project/'BRIEF.md').write_text('''---
 workflow: general-video
@@ -160,7 +146,7 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
         f'beat: {slot["text"]}\nstart: {slot["start"]:.3f}\nduration: {slot["duration"]:.3f}'
         for i,slot in enumerate(slots)),encoding='utf-8')
     legacy.save_json(project/'index.motion.json',{'duration':total,'assertions':[
-        {'kind':'appearsBy','selector':'#reel-cover .cover-title','bySec':.6},
+        {'kind':'appearsBy','selector':'#title-0','bySec':.6},
         {'kind':'appearsBy','selector':'#title-5','bySec':total-1}]})
     legacy.save_json(project/'hyperframes.json',{'media':{'autoProxy':True}})
     legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'reference':'official es_mx_f1.wav',
@@ -178,7 +164,8 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
     legacy.save_json(legacy.WORK_DIR/'voice-audit.json',{'voiceDuration':voice_seconds,
         'videoDuration':total,'voiceStart':.25,'voiceEnd':voice_seconds+.25,'segments':timings,
         'voiceEngine':VOICE,'hyperframesVersion':HF})
-    return {'style':'camping-kinetic-hyperframes','text':' '.join(texts),'voiceProfile':VOICE}
+    return {'style':'camping-kinetic-hyperframes','text':' '.join(texts),'voiceProfile':VOICE,
+            'contentAngle':CURRENT_PLAN['contentAngle'],'strategyVersion':CURRENT_PLAN['strategyVersion']}
 
 def validate(path):
     data=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(path)]))
@@ -193,12 +180,7 @@ def validate(path):
     return seconds
 
 def caption(camp):
-    features='\n'.join('• '+s for s in camp.get('highlights',[])[:3])
-    return (f"🏕️ Tu próxima escapada para acampar: {camp['name']}\n📍 {camp['location']}\n💰 {camp['priceNote']}\n\n"
-      f"{features}\n\nConfirma disponibilidad, condiciones y tarifa final antes de reservar. "
-      "Comenta INFO o INF para recibir la información del campamento por DM. "
-      "Consulta su ficha en la web del enlace de nuestra biografía y reserva con Campeach por WhatsApp.\n\n"
-      f"#CampeachRD #CampingRD #{camp['id'].replace('-','')} #RepublicaDominicana")
+    return (CURRENT_PLAN or content_plan(camp))['caption']
 
 if __name__=='__main__':
     legacy.render=render;legacy.validate=validate;legacy.caption=caption

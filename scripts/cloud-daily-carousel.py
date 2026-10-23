@@ -4,6 +4,8 @@ import os
 import random
 from datetime import datetime, timezone
 from pathlib import Path
+from content_strategy import camp_order, content_plan, local_day
+from carousel_layout import add_editorial_copy
 
 from google.auth.transport.requests import AuthorizedSession
 from google.oauth2 import service_account
@@ -56,24 +58,25 @@ def main():
     parser.add_argument("--camp", default="")
     args = parser.parse_args()
     history = read_json(HISTORY, [])
-    last = history[-1]["campId"] if history else None
     if args.camp:
         camp = args.camp
     else:
-        ordered = PRIORITY[datetime.now(timezone.utc).toordinal() % len(PRIORITY):] + PRIORITY[:datetime.now(timezone.utc).toordinal() % len(PRIORITY)]
-        camp = next(item for item in ordered if item != last)
+        camp = camp_order(PRIORITY, history)[0]
     if camp not in PRIORITY:
         raise ValueError(f"Campamento no permitido: {camp}")
+    catalog = read_json(ROOT / "worker/catalog.generated.json", {})
+    data = next(c for c in catalog["camps"] if c["id"].replace("ñ", "n") == camp)
+    plan = content_plan(data, history)
     client = session()
     images = list_images(client, FOLDERS[camp])
     recently_used = {file_id for entry in history[-20:] if entry.get("campId") == camp for file_id in entry.get("files", [])}
     fresh = [item for item in images if item["id"] not in recently_used]
     candidates = fresh if len(fresh) >= 6 else images
-    if len(candidates) < 4:
+    if len(candidates) < 6:
         raise RuntimeError(f"No hay suficientes fotos para {camp}")
     random.Random(int(datetime.now(timezone.utc).strftime("%Y%m%d"))).shuffle(candidates)
     selected = candidates
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    stamp = local_day().isoformat()
     outputs = []
     WORK.mkdir(parents=True, exist_ok=True)
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -91,15 +94,18 @@ def main():
             with Image.open(source) as image:
                 image.load()
                 image = ImageOps.exif_transpose(image).convert("RGB")
-                ImageOps.fit(image, (1080, 1350), method=Image.Resampling.LANCZOS).save(output, "JPEG", quality=90, optimize=True)
+                image = ImageOps.fit(image, (1080, 1350), method=Image.Resampling.LANCZOS)
+                title, detail = plan["titles"][index - 1]
+                add_editorial_copy(image, title, detail, index).save(output, "JPEG", quality=90, optimize=True)
             outputs.append(str(output.relative_to(ROOT)).replace("\\", "/"))
             used.append(item)
         except (UnidentifiedImageError, OSError, ValueError) as error:
             print(f"Se omite imagen incompatible {item['id']}: {type(error).__name__}")
             source.unlink(missing_ok=True)
-    if len(outputs) < 4:
-        raise RuntimeError(f"No hay cuatro fotos válidas para {camp}")
-    entry = {"date": stamp, "campId": camp, "files": [item["id"] for item in used], "outputs": outputs}
+    if len(outputs) < 6:
+        raise RuntimeError(f"Se requieren seis fotos válidas para {camp}")
+    entry = {"date": stamp, "campId": camp, "files": [item["id"] for item in used], "outputs": outputs,
+             "caption": plan["caption"], "contentAngle": plan["contentAngle"], "strategyVersion": plan["strategyVersion"]}
     if not any(item.get("date") == stamp for item in history):
         history.append(entry)
     write_json(HISTORY, history)

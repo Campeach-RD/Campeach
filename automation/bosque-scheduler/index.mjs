@@ -45,6 +45,7 @@ async function selectVideo(env,date,recovery,head=fetch){
 export async function run(env,date,{dry=false,recovery=false,now=new Date(),head=fetch}={}){
  const today=localDay(now),yesterday=localDay(new Date(now.getTime()-86400000));
  if(!campaign(date))return {skipped:true,reason:'outside-promotion'};
+ if(env.CAMPAIGN_AUTOPUBLISH_ENABLED!=='true')return {skipped:true,reason:'editorial-pause'};
  if(recovery ? date!==yesterday : date!==today)throw Error('Date must be today, or yesterday for explicit recovery');
  const hour=new Date(now.getTime()-4*3600000).getUTCHours();
  if(!dry&&!recovery&&(hour<18||hour>=21))return {skipped:true,reason:'outside-publish-window'};
@@ -80,7 +81,7 @@ export default {
  },
  async fetch(request,env){
   const url=new URL(request.url);
-  if(url.pathname==='/health')return Response.json({service:'bosque-scheduler',time:'18:00 America/Santo_Domingo',retries:'18:10,18:25',end:LAST});
+  if(url.pathname==='/health')return Response.json({service:'bosque-scheduler',enabled:env.CAMPAIGN_AUTOPUBLISH_ENABLED==='true',time:'18:00 America/Santo_Domingo',retries:'18:10,18:25',end:LAST});
   if(!authorized(request,env))return new Response('Unauthorized',{status:401});
   try{
    const date=url.searchParams.get('date')||localDay(new Date());

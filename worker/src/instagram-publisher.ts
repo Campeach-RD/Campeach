@@ -118,7 +118,7 @@ export const publishReel = async (
   }
 };
 
-export const publishDailyCarousel = async (env: Env, requestedCampId?: string, publicImageUrls?: string[]) => {
+export const publishDailyCarousel = async (env: Env, requestedCampId?: string, publicImageUrls?: string[], editorialCaption?: string) => {
   const today = new Date().toISOString().slice(0, 10);
   const dailyKey = `daily-publish:${today}`;
   const existing = await env.DEDUP.get(dailyKey);
@@ -162,7 +162,7 @@ export const publishDailyCarousel = async (env: Env, requestedCampId?: string, p
     const container = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media`, env, 'POST', {
       media_type: 'CAROUSEL',
       children,
-      caption: createCaption(camp),
+      caption: editorialCaption ?? createCaption(camp),
     });
     await waitForContainer(container.id, env);
     const published = await graphRequest<{ id: string }>(`${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env, 'POST', {

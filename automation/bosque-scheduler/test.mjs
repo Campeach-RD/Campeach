@@ -1,13 +1,15 @@
 import assert from 'node:assert/strict';
 import worker,{run,localDay,caption} from './index.mjs';
 const records=new Map();let publishes=0;
-const env={ADMIN_TOKEN:'test-only',RECEIPTS:{get:async(k)=>records.get(k)||null,put:async(k,v)=>records.set(k,JSON.parse(v))},
+const env={CAMPAIGN_AUTOPUBLISH_ENABLED:'true',ADMIN_TOKEN:'test-only',RECEIPTS:{get:async(k)=>records.get(k)||null,put:async(k,v)=>records.set(k,JSON.parse(v))},
  MEDIA:{fetch:async()=>new Response(null,{headers:{'content-type':'video/mp4'}})},
  INSTAGRAM:{fetch:async(url,o)=>{if(url.endsWith('/publish-reel')){publishes++;const b=JSON.parse(o.body);assert.equal(b.idempotencyKey,'bosque-daily-2026-10-13');assert.ok(b.caption.includes('829-937-0674'));return Response.json({mediaId:'123'});}return Response.json({permalink:'https://www.instagram.com/reel/test/'});}}};
 const head=async()=>new Response(null,{headers:{'content-type':'video/mp4'}});
 assert.equal(localDay(new Date('2026-10-13T02:30:00Z')),'2026-10-12');
 assert.equal((await run(env,'2026-10-13',{now:new Date('2026-10-13T21:59:00Z'),head})).reason,'outside-publish-window');
 assert.equal((await run(env,'2026-10-13',{now:new Date('2026-10-13T22:00:00Z'),head,dry:true})).dry,true);assert.equal(publishes,0);
+assert.equal((await run({...env,CAMPAIGN_AUTOPUBLISH_ENABLED:'false'},'2026-10-13',{now:new Date('2026-10-13T22:00:00Z'),head})).reason,'editorial-pause');
+assert.equal(publishes,0);
 const result=await run(env,'2026-10-13',{now:new Date('2026-10-13T22:00:00Z'),head});assert.equal(result.source,'daily-hyperframes');
 assert.equal((await run(env,'2026-10-13',{now:new Date('2026-10-13T22:10:00Z'),head})).skipped,true);assert.equal(publishes,1);
 assert.equal((await run(env,'2026-11-01',{now:new Date('2026-11-01T22:00:00Z'),head})).reason,'outside-promotion');
