@@ -1,5 +1,9 @@
 name: Ensayo privado Reel campamento HyperFrames mexicano
 on:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - '.github/workflows/reel-preview-hyperframes.yml'
   workflow_dispatch:
     inputs:
       camp:
@@ -13,6 +17,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   render:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.number == 5 && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -40,14 +45,20 @@ jobs:
           python -m pip install -r automation/requirements.txt -r automation/chatterbox-requirements.txt
       - name: Renderizar sin publicar ni cambiar historial
         env:
-          CAMP: ${{ inputs.camp }}
+          CAMP: ${{ inputs.camp || 'ocoa' }}
         run: |
           python scripts/cloud-daily-reel-hyperframes.py --camp "$CAMP" --render-only
+          python scripts/cloud-daily-carousel.py --camp "$CAMP"
           python - <<'PY'
           import json, shutil
           from pathlib import Path
           result = json.loads(Path('automation/work/result.json').read_text(encoding='utf-8'))
           shutil.copyfile(result['output'], 'automation/work/preview.mp4')
+          carousel = json.loads(Path('automation/work/carousel-result.json').read_text(encoding='utf-8'))
+          preview = Path('automation/work/carousel-preview')
+          preview.mkdir(exist_ok=True)
+          for source in carousel['outputs']:
+              shutil.copyfile(source, preview / Path(source).name)
           PY
       - name: Conservar modelo incluso si la revisión visual bloquea el montaje
         if: always() && steps.voice-cache.outputs.cache-hit != 'true'
@@ -67,6 +78,7 @@ jobs:
             automation/work/hyperframes-project/index.html
             automation/work/hyperframes-project/hyperframes.json
             automation/work/hyperframes-project/media-ledger.json
-            automation/work/hyperframes-project/assets/
             automation/work/hyperframes-project/snapshots/
             automation/work/preview.mp4
+            automation/work/carousel-result.json
+            automation/work/carousel-preview/
