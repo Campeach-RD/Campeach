@@ -18,6 +18,7 @@ class EditorialPlanTests(unittest.TestCase):
                     self.assertEqual(len(plan['segments']), 6)
                     self.assertEqual(len(plan['titles']), 6)
                     self.assertIn(camp['priceNote'], plan['caption'])
+                    self.assertTrue(any(camp['priceNote'] in text for text in plan['segments']))
                     self.assertLessEqual(len(plan['caption']), 2200)
                     self.assertEqual(plan['caption'].count('Comenta INFO'), 1)
                     self.assertNotIn('WhatsApp', plan['caption'])

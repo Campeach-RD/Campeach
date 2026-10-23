@@ -44,7 +44,7 @@ def content_plan(camp, history=(), day=None):
     detail = access if angle == "access" else first
     cta = "Comenta INFO y te enviamos la ficha de este campamento por DM."
     segments = [hooks[angle], f"En {camp['location']}: {detail.lower()}.",
-                f"La tarifa de referencia es {price.lower()}.",
+                f"La tarifa de referencia es {price}.",
                 f"También encontrarás: {second.lower()}.",
                 "La tarifa final, las condiciones y la disponibilidad requieren confirmación.", cta]
     titles = [[hooks[angle], camp["location"]], [name, detail],

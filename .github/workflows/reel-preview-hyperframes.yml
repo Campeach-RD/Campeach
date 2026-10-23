@@ -4,6 +4,7 @@ on:
     types: [synchronize]
     paths:
       - '.github/workflows/reel-preview-hyperframes.yml'
+      - 'scripts/**'
   workflow_dispatch:
     inputs:
       camp:
