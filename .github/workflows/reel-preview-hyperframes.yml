@@ -14,7 +14,7 @@ permissions:
   contents: read
 concurrency:
   group: campeach-camp-reel-preview
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   render:
     if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.number == 5 && github.event.pull_request.head.repo.full_name == github.repository)
@@ -26,6 +26,11 @@ jobs:
       HF_HUB_DISABLE_XET: '1'
     steps:
       - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            scripts
+            automation
+            worker
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
