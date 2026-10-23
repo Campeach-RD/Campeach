@@ -406,7 +406,7 @@ const processWebhook = async (payload: MetaPayload, env: Env) => {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
-    if (url.pathname === '/health' && request.method === 'GET') return json({ ok: true, service: 'campeach-instagram' });
+    if (url.pathname === '/health' && request.method === 'GET') return json({ ok: true, service: 'campeach-instagram', editorialVersion: '2026-10-23' });
 
     if (url.pathname === '/whatsapp/webhook' && request.method === 'GET') {
       const valid = url.searchParams.get('hub.mode') === 'subscribe' &&
