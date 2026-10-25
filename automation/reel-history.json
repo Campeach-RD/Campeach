@@ -1878,5 +1878,34 @@
     "idempotencyKey": "reel:2026-10-23",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-23-ocoa.mp4?rev=a24b411",
     "instagramMediaId": "18353939458220716"
+  },
+  {
+    "date": "2026-10-25T17:56:56.849429+00:00",
+    "campId": "villa-altagracia",
+    "campName": "Villa Altagracia",
+    "files": [
+      "1n6jnLba_4_HrHwIfwtF-MUth6RQzPy4V",
+      "16tEHcBK3UqAATcy2TRuYBk-xRutURaCV",
+      "1PJ4oAdMSzS3apmd-aeB_yCgX-2DTXk5y",
+      "1mraJUkLt0KvCX_5-7FgR63GOCnrtVijr"
+    ],
+    "fileNames": [
+      "IMG_1856.MOV",
+      "IMG_1845.MOV",
+      "IMG_1883.MOV",
+      "IMG_1563.MOV"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "contentAngle": "budget",
+    "strategyVersion": "2026-10-23",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "Camping en Villa Altagracia: ¿cuánto cuesta? La tarifa de referencia es Desde setecientos cincuenta pesos dominicanos por noche. En Los Arroyones, Villa Altagracia: camping y cabana ecologica. También encontrarás: balneario con rio, cascada y piscina. La tarifa final, las condiciones y la disponibilidad requieren confirmación. Comenta INFO y te enviamos la ficha de este campamento por DM.",
+    "output": "public/reels/2026-10-25-villa-altagracia.mp4",
+    "caption": "🏕️ Camping en Villa Altagracia: ¿cuánto cuesta?\n📍 Los Arroyones, Villa Altagracia\n💰 Desde RD$750 por noche\n\n• Camping y cabana ecologica\n• Balneario con rio, cascada y piscina\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/19DeWI8XrFFfgr_AP7XK5iQVoFi2gilOn/preview",
+    "idempotencyKey": "reel:2026-10-25",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-25-villa-altagracia.mp4?rev=92f3e31",
+    "instagramMediaId": "18039945899838279"
   }
 ]
