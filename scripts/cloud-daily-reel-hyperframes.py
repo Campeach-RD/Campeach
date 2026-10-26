@@ -67,10 +67,20 @@ def render(paths,camp,output,history):
     if not font.exists(): font=Path('/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf')
     if not font.exists(): raise RuntimeError('Embedded display font missing')
     shutil.copyfile(font,assets/'display.ttf')
-    # An original, deterministic ambient bed, never music scraped from social posts.
-    legacy.run('ffmpeg','-y','-loglevel','error','-f','lavfi','-i',
-      'aevalsrc=0.12*sin(2*PI*196*t)+0.07*sin(2*PI*246.94*t)+0.06*sin(2*PI*293.66*t):s=48000',
-      '-t',str(total),assets/'music.wav')
+    # Carefree by Kevin MacLeod, CC BY 4.0; attribution is appended below.
+    import hashlib
+    music_url='https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3'
+    music=requests.get(music_url,timeout=90)
+    music.raise_for_status()
+    expected='8433b770a630d9b1594fd484442c677907ece899a4d149954cd2e74fd733e311'
+    if hashlib.sha256(music.content).hexdigest()!=expected:
+        raise RuntimeError('Music source changed; review license and audio before publication')
+    (assets/'carefree.mp3').write_bytes(music.content)
+    legacy.run('ffmpeg','-y','-loglevel','error','-stream_loop','-1','-i',assets/'carefree.mp3',
+      '-t',str(total),'-af',f'afade=t=in:d=0.7,afade=t=out:st={total-2}:d=2',assets/'music.wav')
+    legacy.save_json(project/'music-license.json',{'title':'Carefree','author':'Kevin MacLeod',
+      'license':'CC BY 4.0','url':'https://creativecommons.org/licenses/by/4.0/',
+      'source':music_url,'sha256':expected,'changes':'Excerpt, fades and voiceover carve'})
     titles=CURRENT_PLAN['titles']
     scenes=[]
     for i,(slot,title) in enumerate(zip(slots,titles)):
@@ -151,7 +161,7 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
     legacy.save_json(project/'hyperframes.json',{'media':{'autoProxy':True}})
     legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'reference':'official es_mx_f1.wav',
       'duration':voice_seconds,'exaggeration':.72,'cfg':.38},'footage':[str(p.name) for p in paths],
-      'music':'Original mathematical ambient chords, generated for Campeach; no third-party recording'})
+      'music':'Carefree — Kevin MacLeod (incompetech.com), CC BY 4.0; see music-license.json'})
     legacy.run('npm','install','--prefix',project,'--no-audit','--no-fund','@hyperframes/core@0.8.145')
     carve=ROOT/'automation/hyperframes/carve.mjs'
     legacy.run('node',carve,'--comp',project/'index.html','--bed','music-bed','--voice','voiceover')
@@ -180,7 +190,7 @@ def validate(path):
     return seconds
 
 def caption(camp):
-    return (CURRENT_PLAN or content_plan(camp))['caption']
+    return (CURRENT_PLAN or content_plan(camp))['caption'] + '\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.'
 
 if __name__=='__main__':
     legacy.render=render;legacy.validate=validate;legacy.caption=caption
