@@ -1478,5 +1478,28 @@
       "public/carousels/2026-10-22-hato-mayor-05.jpg",
       "public/carousels/2026-10-22-hato-mayor-06.jpg"
     ]
+  },
+  {
+    "date": "2026-10-27",
+    "campId": "el-valle",
+    "files": [
+      "1qZ0qGWYp4BHcrdB5ZIeMwx5kqLiEW39C",
+      "1FxsN6A5lmd68YotyQJ1iMra2f_CRTFoC",
+      "17Su25JZPKcR_MhgKp1Nfd9Q0dmY_PpGn",
+      "1-_wSTB2ZrtpYIP2KYwYCImXoHBWh52xe",
+      "1yafeI0Wbl_GyPdhAVxm2oleJ98x-2Q14",
+      "1W-fOX3QEBzLafBP9W1RC_Wmp3cWLAgdG"
+    ],
+    "outputs": [
+      "public/carousels/2026-10-27-el-valle-01.jpg",
+      "public/carousels/2026-10-27-el-valle-02.jpg",
+      "public/carousels/2026-10-27-el-valle-03.jpg",
+      "public/carousels/2026-10-27-el-valle-04.jpg",
+      "public/carousels/2026-10-27-el-valle-05.jpg",
+      "public/carousels/2026-10-27-el-valle-06.jpg"
+    ],
+    "caption": "🏕️ Camping en El Valle, Samana: ¿cuánto cuesta?\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana",
+    "contentAngle": "budget",
+    "strategyVersion": "2026-10-23"
   }
 ]
