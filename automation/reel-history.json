@@ -1965,5 +1965,34 @@
     "idempotencyKey": "reel:2026-10-28",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-28-monsenor.mp4?rev=33e3578",
     "instagramMediaId": "18119121091790069"
+  },
+  {
+    "date": "2026-10-30T19:42:55.930840+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1IJF31-4JwJGdcjezlb2U3ENJlM98Lk6G",
+      "1ExH1ylTeEhjenGnKUyjF4jYB-KTGJumB",
+      "1K9Sqh8Bk49tZqAVSd6q9Z_OF8hC63VRu",
+      "1FP2xZLBhIB9d-w-aeyZKgbk1ch0WmpWi"
+    ],
+    "fileNames": [
+      "IMG_7362.mov",
+      "20241228_114435.mp4",
+      "20241228_085756.mp4",
+      "20241228_092157.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "camping-kinetic-hyperframes",
+    "contentAngle": "budget",
+    "strategyVersion": "2026-10-23",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "Camping en El Valle, Samana: ¿cuánto cuesta? La tarifa de referencia es Desde setecientos pesos dominicanos por noche; camping no incluye equipos. En El Valle, Samana: camping de playa. También encontrarás: cuenta con comida/restaurante. La tarifa final, las condiciones y la disponibilidad requieren confirmación. Comenta INFO y te enviamos la ficha de este campamento por DM.",
+    "output": "public/reels/2026-10-30-el-valle.mp4",
+    "caption": "🏕️ Camping en El Valle, Samana: ¿cuánto cuesta?\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-10-30",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-30-el-valle.mp4?rev=7812ae1",
+    "instagramMediaId": "18086405615706161"
   }
 ]
