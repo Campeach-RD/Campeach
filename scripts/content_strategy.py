@@ -2,7 +2,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-ANGLES = ("budget", "experience", "access", "checklist")
+ANGLES = ("experience", "checklist", "access", "budget")
 
 
 def local_day():
@@ -32,8 +32,10 @@ def content_plan(camp, history=(), day=None):
     second = highlights[1] if len(highlights) > 1 else camp["location"]
     access = next((h for h in highlights if "4x4" in h.lower()), None)
     eligible = [a for a in ANGLES if a != "access" or access]
-    unused = [a for a in eligible if a not in previous[-3:]]
-    angle = unused[0] if unused else next(a for a in eligible if a != previous[-1])
+    recent_global=[r.get('contentAngle') for r in history[-3:]]
+    preferred=[a for a in eligible if a not in recent_global and a not in previous[-2:]]
+    rotation=eligible[day.toordinal()%len(eligible):]+eligible[:day.toordinal()%len(eligible)]
+    angle=next((a for a in rotation if a in preferred), next((a for a in rotation if not history or a!=history[-1].get('contentAngle')),rotation[0]))
     name, price = camp["name"], camp["priceNote"]
     hooks = {
         "budget": f"Camping en {name}: ¿cuánto cuesta?",
@@ -41,6 +43,14 @@ def content_plan(camp, history=(), day=None):
         "access": f"Camping en {name}: ¿necesitas 4x4?",
         "checklist": f"Antes de acampar en {name}, mira esto.",
     }
+    # Hook families rotate globally; prices stay in the informative scene, not every cover.
+    hook_sets={
+      'experience':[f'Vámonos de camping a {name}',f'Tu próxima escapada: {name}',f'Desconecta y acampa en {name}'],
+      'budget':[f'Prepara tu camping en {name}',f'Acampar en {name}: haz tu plan',f'Tu plan para acampar en {name}'],
+      'access':[f'El camino para acampar en {name}',f'Antes de salir hacia {name}',f'Cómo llegar a tu camping en {name}'],
+      'checklist':[f'Antes de acampar en {name}',f'¿Listo para acampar en {name}?',f'Planea tu escapada a {name}'],
+    }
+    hooks[angle]=hook_sets[angle][len(history)%3]
     detail = access if angle == "access" else first
     cta = "Comenta INFO y te enviamos la ficha de este campamento por DM."
     segments = [hooks[angle], f"En {camp['location']}: {detail.lower()}.",
@@ -64,4 +74,4 @@ def content_plan(camp, history=(), day=None):
                f"Tarifa final, condiciones y disponibilidad por confirmar.\n{cta}\n\n"
                "#CampeachRD #CampingRD #RepublicaDominicana")
     return {"contentAngle": angle, "hook": hooks[angle], "segments": segments,
-            "titles": titles, "caption": caption, "strategyVersion": "2026-10-23"}
+            "titles": titles, "caption": caption, "strategyVersion": "2026-10-31-clear-cards"}

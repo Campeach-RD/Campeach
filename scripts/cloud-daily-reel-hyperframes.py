@@ -92,24 +92,25 @@ def render(paths,camp,output,history):
         scenes.append(f'''<section id="scene-{i}" class="scene" style="z-index:{i+1};opacity:{1 if i==0 else 0}">
           <div class="picture"><video id="video-{i}" class="clip" src="assets/source-{src}.mp4" muted playsinline
           data-start="{begin:.3f}" data-duration="{length:.3f}" data-media-start="{offset:.3f}" data-track-index="{i}"></video></div>
-          <div class="shade"></div>
+          <!-- Sin velo: el metraje conserva su luminosidad original. -->
           <div class="copy"><div class="eyebrow">CAMPEACH RD • CAMPING</div>
           <h1 id="title-{i}">{headline}</h1><div class="detail">{detail}</div></div></section>''')
     document='''<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
       <script src="assets/gsap.min.js"></script><style>
       @font-face{font-family:CampDisplay;src:url('assets/display.ttf')}*{box-sizing:border-box}
-      body{margin:0;background:#10231c;font-family:CampDisplay,sans-serif}
-      #main{width:1080px;height:1920px;position:relative;overflow:hidden;color:#fffdf6}
-      .scene,.picture,.shade{position:absolute;inset:0;overflow:hidden}
+      body{margin:0;background:#172321;font-family:CampDisplay,sans-serif}
+      #main{width:1080px;height:1920px;position:relative;overflow:hidden;color:#f6faf7}
+      .scene,.picture{position:absolute;inset:0;overflow:hidden}
       video{width:100%;height:100%;object-fit:cover}
-      .shade{background:linear-gradient(180deg,rgba(16,35,28,.07) 25%,rgba(16,35,28,.94) 64%)}
-      .copy{position:absolute;left:72px;right:115px;top:1120px}
-      .eyebrow{font-size:27px;letter-spacing:3px;color:#d9ff5c;margin-bottom:24px}
-      h1{font-size:82px;line-height:1.05;margin:0 0 28px;overflow-wrap:anywhere}
+      .copy{position:absolute;left:100px;right:140px;top:1180px;max-height:410px}
+      .eyebrow{display:table;font-size:25px;letter-spacing:2px;color:#172321;background:#ff9820;padding:10px 18px;margin-bottom:14px}
+      h1{display:table;font-size:65px;line-height:1.08;margin:0 0 12px;padding:18px 24px;max-width:100%;background:#01a1aa;color:#172321;border-radius:16px;overflow-wrap:anywhere}
       .word{display:inline-block;transform-origin:50% 80%}
-      .detail{font-size:43px;line-height:1.18;color:#fffdf6;max-width:840px}
-      #scene-0 h1,#scene-5 h1{color:#d9ff5c;font-size:99px}
-      #scene-1 h1{font-size:78px}#scene-3 h1{font-size:72px;color:#d9ff5c}
+      .detail{display:table;font-size:34px;line-height:1.16;color:#172321;background:#f6faf7;padding:12px 20px;max-width:100%;border-radius:10px}
+      #scene-0 .copy{top:300px}
+      #scene-0 h1{font-size:76px;background:#ff9820}
+      #scene-2 h1{background:#ff9820}
+      #scene-5 h1{font-size:76px}
       </style></head><body><div id="main" data-composition-id="main" data-width="1080" data-height="1920"
       data-start="0" data-duration="TOTAL">SCENES
       <audio id="voiceover" src="assets/voice.wav" data-start="0.25" data-duration="VOICE" data-track-index="10"></audio>
@@ -127,6 +128,13 @@ def render(paths,camp,output,history):
         words.forEach((word,j)=>{const from=i%3===0?{scale:1.2,opacity:0}:i%3===1?{x:-45,opacity:0}:{y:30,opacity:0};
           tl.fromTo(word,from,{x:0,y:0,scale:1,opacity:1,duration:.4,ease:i%3===1?'expo.out':'power4.out',immediateRender:false},s.start+.08+j*stagger)});
       });window.__timelines={main:tl};</script></body></html>'''
+    layout=len(history)%3
+    variants=[
+      '#scene-0 .copy{top:300px}',
+      '#scene-0 .copy{top:1120px}#scene-0 h1{background:#01a1aa}',
+      '#scene-0 .copy{top:440px;left:140px;right:100px}#scene-0 h1{background:#f6faf7;border-bottom:12px solid #ff9820}',
+    ]
+    document=document.replace('</style>','\n'+variants[layout]+'\n</style>')
     document=document.replace('TOTAL',f'{total:.3f}').replace('VOICE',f'{voice_seconds:.3f}')
     document=document.replace('SCENES','\n'.join(scenes)).replace('SLOTS',json.dumps(slots,ensure_ascii=False))
     (project/'index.html').write_text(document,encoding='utf-8')
@@ -144,7 +152,7 @@ Destino: Instagram Reels. Preparación en nube, nunca depender del PC.
     (project/'design.md').write_text('''# Dirección visual
 Concepto: cambiar la rutina por una escapada real para acampar.
 Héroe: metraje real del campamento, sin escenarios generados.
-Paleta aprobada: verde bosque #10231c, lima #d9ff5c, blanco #fffdf6.
+Paleta aprobada: turquesa #01a1aa, naranja #ff9820, tinta #172321 y papel #f6faf7. Sin velo ni degradado sobre el paisaje; tarjetas compactas.
 Ancla: Campeach RD; foco: frases grandes sobre el camping; soporte: ubicación,
 beneficios y tarifa de referencia. Márgenes inferiores y derechos seguros de Reels.
 Tipografía incrustada: Liberation Sans Bold (misma familia en distintas jerarquías).
@@ -174,7 +182,7 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
     legacy.save_json(legacy.WORK_DIR/'voice-audit.json',{'voiceDuration':voice_seconds,
         'videoDuration':total,'voiceStart':.25,'voiceEnd':voice_seconds+.25,'segments':timings,
         'voiceEngine':VOICE,'hyperframesVersion':HF})
-    return {'style':'camping-kinetic-hyperframes','text':' '.join(texts),'voiceProfile':VOICE,
+    return {'style':'campeach-clear-cards-v2','text':' '.join(texts),'voiceProfile':VOICE,
             'contentAngle':CURRENT_PLAN['contentAngle'],'strategyVersion':CURRENT_PLAN['strategyVersion']}
 
 def validate(path):
