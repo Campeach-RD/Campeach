@@ -1994,5 +1994,34 @@
     "idempotencyKey": "reel:2026-10-30",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-10-30-el-valle.mp4?rev=7812ae1",
     "instagramMediaId": "18086405615706161"
+  },
+  {
+    "date": "2026-11-01T19:13:36.141743+00:00",
+    "campId": "ocoa",
+    "campName": "Ocoa",
+    "files": [
+      "1JdY10wFHG5e0RhTF9YeN_Xd0C07a358D",
+      "1NUANf59AHeHxqdJWLsQ2794-zd8Ipyr6",
+      "1MTRIfZ5HZ42Sto9Sl_gb8iTiqx2dOp-s",
+      "1PP75jKbGK-HYlHWLaKoxrqpnO9SmmLe-"
+    ],
+    "fileNames": [
+      "IMG_0533.MOV",
+      "20250119_132459.mp4",
+      "20250119_134535.mp4",
+      "20250119_124119.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "campeach-clear-cards-v2",
+    "contentAngle": "checklist",
+    "strategyVersion": "2026-10-31-clear-cards",
+    "voiceProfile": "chatterbox-es-mx-latam-es_mx_f1",
+    "voiceoverText": "Antes de acampar en Ocoa En Ocoa, ten presente: no requiere vehiculo 4x4. La tarifa de referencia es Desde ochocientos pesos dominicanos por noche. También encontrarás: balneario con rio y cascada. La tarifa final, las condiciones y la disponibilidad requieren confirmación. Comenta INFO y te enviamos la ficha de este campamento por DM.",
+    "output": "public/reels/2026-11-01-ocoa.mp4",
+    "caption": "🏕️ Antes de acampar en Ocoa\n📍 Rancho Arriba, San Jose de Ocoa\n💰 Desde RD$800 por noche\n\n• Camping en montaña\n• Balneario con rio y cascada\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/1rDd2S1WGlxMxShxhtFfUvlVcPwczbE0q/preview",
+    "idempotencyKey": "reel:2026-11-01",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-01-ocoa.mp4?rev=33843de",
+    "instagramMediaId": "17944773429092546"
   }
 ]
