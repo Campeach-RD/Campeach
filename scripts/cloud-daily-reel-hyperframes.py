@@ -1,9 +1,9 @@
 """Upgrade the existing camp selection/history pipeline without changing publication.
 
-Real Drive footage -> approved Mexican Chatterbox -> measured 30-45s HyperFrames
+Real Drive footage -> configured narration -> measured 30-45s HyperFrames
 composition -> mandatory visual/audio checks. Errors stop publication, not fallback.
 """
-import html
+import os
 import importlib.util
 import json
 import math
@@ -14,12 +14,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 import requests
 from content_strategy import content_plan
+from reel_composition import build_composition, FONT_URLS
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('camp_legacy',ROOT/'scripts/cloud-daily-reel.py')
 legacy=importlib.util.module_from_spec(spec);spec.loader.exec_module(legacy)
 HF='0.8.145'
-VOICE='chatterbox-es-mx-latam-es_mx_f1'
+VOICE='elevenlabs-dominican' if os.environ.get('CAMPEACH_VOICE_ENGINE') == 'elevenlabs' else 'chatterbox-es-mx-latam-es_mx_f1'
 
 CURRENT_PLAN = None
 
@@ -32,6 +33,14 @@ def segments(camp, compact=False):
 
 def voice_script(camp, project):
     segments_file=project/'segments.json'; voice=project/'assets/voice.wav'
+    if VOICE == 'elevenlabs-dominican':
+        from reel_elevenlabs import generate_voice
+        texts=segments(camp)
+        timings=generate_voice(texts,voice)
+        seconds=legacy.duration(voice)
+        if seconds > 43:
+            raise RuntimeError('ElevenLabs narration exceeds 43 seconds; review the script')
+        return texts,timings,seconds
     for compact in (False,True):
         texts=segments(camp,compact)
         legacy.save_json(segments_file,texts)
@@ -60,13 +69,13 @@ def render(paths,camp,output,history):
         target=assets/f'source-{i}.mp4'
         legacy.run('ffmpeg','-y','-loglevel','error','-stream_loop','-1','-i',path,
               '-t',str(total),'-vf','scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30',
-              '-an','-c:v','libx264','-preset','fast','-crf','23',target)
+              '-an','-c:v','libx264','-preset','fast','-crf','23','-g','30','-keyint_min','30','-movflags','+faststart',target)
     response=requests.get('https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js',timeout=60)
     response.raise_for_status();(assets/'gsap.min.js').write_bytes(response.content)
-    font=Path('/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf')
-    if not font.exists(): font=Path('/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf')
-    if not font.exists(): raise RuntimeError('Embedded display font missing')
-    shutil.copyfile(font,assets/'display.ttf')
+    for name,url in FONT_URLS.items():
+        font_response=requests.get(url,timeout=60)
+        font_response.raise_for_status()
+        (assets/name).write_bytes(font_response.content)
     # Carefree by Kevin MacLeod, CC BY 4.0; attribution is appended below.
     import hashlib
     music_url='https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3'
@@ -81,62 +90,7 @@ def render(paths,camp,output,history):
     legacy.save_json(project/'music-license.json',{'title':'Carefree','author':'Kevin MacLeod',
       'license':'CC BY 4.0','url':'https://creativecommons.org/licenses/by/4.0/',
       'source':music_url,'sha256':expected,'changes':'Excerpt, fades and voiceover carve'})
-    titles=CURRENT_PLAN['titles']
-    scenes=[]
-    for i,(slot,title) in enumerate(zip(slots,titles)):
-        # .35s overlap gives the source video time to appear during the handoff.
-        begin=max(0,slot['start']-.35);length=boundaries[i+1]-begin
-        src=i%len(paths); offset=min(i*.53,max(0,total-length-.01))
-        headline=' '.join('<span class="word">'+html.escape(word)+'</span>' for word in title[0].split())
-        detail=html.escape(title[1])
-        scenes.append(f'''<section id="scene-{i}" class="scene" style="z-index:{i+1};opacity:{1 if i==0 else 0}">
-          <div class="picture"><video id="video-{i}" class="clip" src="assets/source-{src}.mp4" muted playsinline
-          data-start="{begin:.3f}" data-duration="{length:.3f}" data-media-start="{offset:.3f}" data-track-index="{i}"></video></div>
-          <!-- Sin velo: el metraje conserva su luminosidad original. -->
-          <div class="copy"><div class="eyebrow">CAMPEACH RD • CAMPING</div>
-          <h1 id="title-{i}">{headline}</h1><div class="detail">{detail}</div></div></section>''')
-    document='''<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
-      <script src="assets/gsap.min.js"></script><style>
-      @font-face{font-family:CampDisplay;src:url('assets/display.ttf')}*{box-sizing:border-box}
-      body{margin:0;background:#172321;font-family:CampDisplay,sans-serif}
-      #main{width:1080px;height:1920px;position:relative;overflow:hidden;color:#f6faf7}
-      .scene,.picture{position:absolute;inset:0;overflow:hidden}
-      video{width:100%;height:100%;object-fit:cover}
-      .copy{position:absolute;left:100px;right:140px;top:1180px;max-height:410px}
-      .eyebrow{display:table;font-size:25px;letter-spacing:2px;color:#172321;background:#ff9820;padding:10px 18px;margin-bottom:14px}
-      h1{display:table;font-size:65px;line-height:1.08;margin:0 0 12px;padding:18px 24px;max-width:100%;background:#01a1aa;color:#172321;border-radius:16px;overflow-wrap:anywhere}
-      .word{display:inline-block;transform-origin:50% 80%}
-      .detail{display:table;font-size:34px;line-height:1.16;color:#172321;background:#f6faf7;padding:12px 20px;max-width:100%;border-radius:10px}
-      #scene-0 .copy{top:300px}
-      #scene-0 h1{font-size:76px;background:#ff9820}
-      #scene-2 h1{background:#ff9820}
-      #scene-5 h1{font-size:76px}
-      </style></head><body><div id="main" data-composition-id="main" data-width="1080" data-height="1920"
-      data-start="0" data-duration="TOTAL">SCENES
-      <audio id="voiceover" src="assets/voice.wav" data-start="0.25" data-duration="VOICE" data-track-index="10"></audio>
-      <audio id="music-bed" src="assets/music.wav" data-start="0" data-duration="TOTAL" data-volume="0.18" data-track-index="11"></audio>
-      </div><script>const tl=gsap.timeline({paused:true}),slots=SLOTS;
-      slots.forEach((s,i)=>{const scene='#scene-'+i,copy=scene+' .copy';
-        if(i){const prev='#scene-'+(i-1),t=s.start-.35;
-          if(i%2){tl.to(prev,{x:-1080,duration:.35,ease:'power3.inOut'},t);
-            tl.fromTo(scene,{x:1080,opacity:1},{x:0,opacity:1,duration:.35,ease:'power3.inOut',immediateRender:false},t)}
-          else{tl.to(prev,{scale:1.35,opacity:0,duration:.35,ease:'power3.in'},t);
-            tl.fromTo(scene,{scale:.84,opacity:0},{scale:1,opacity:1,duration:.35,ease:'power3.out',immediateRender:false},t)}
-          tl.set(prev,{opacity:0},s.start)}
-        tl.fromTo(copy,{y:65,opacity:0},{y:0,opacity:1,duration:.5,ease:'power3.out',immediateRender:false},s.start+.04);
-        const words=gsap.utils.toArray(scene+' .word'),stagger=Math.min(.06,.4/words.length);
-        words.forEach((word,j)=>{const from=i%3===0?{scale:1.2,opacity:0}:i%3===1?{x:-45,opacity:0}:{y:30,opacity:0};
-          tl.fromTo(word,from,{x:0,y:0,scale:1,opacity:1,duration:.4,ease:i%3===1?'expo.out':'power4.out',immediateRender:false},s.start+.08+j*stagger)});
-      });window.__timelines={main:tl};</script></body></html>'''
-    layout=len(history)%3
-    variants=[
-      '#scene-0 .copy{top:300px}',
-      '#scene-0 .copy{top:1120px}#scene-0 h1{background:#01a1aa}',
-      '#scene-0 .copy{top:440px;left:140px;right:100px}#scene-0 h1{background:#f6faf7;border-bottom:12px solid #ff9820}',
-    ]
-    document=document.replace('</style>','\n'+variants[layout]+'\n</style>')
-    document=document.replace('TOTAL',f'{total:.3f}').replace('VOICE',f'{voice_seconds:.3f}')
-    document=document.replace('SCENES','\n'.join(scenes)).replace('SLOTS',json.dumps(slots,ensure_ascii=False))
+    document=build_composition(CURRENT_PLAN['titles'],slots,total,len(paths),voice_seconds)
     (project/'index.html').write_text(document,encoding='utf-8')
     (project/'BRIEF.md').write_text('''---
 workflow: general-video
@@ -144,31 +98,22 @@ flow: automation
 storyboard: no
 ---
 # Campeach campamento diario
-Formato previamente aprobado: metraje real, voz mexicana Chatterbox es_mx_f1,
+Metraje real, narración configurada y comprobada,
 30-45 segundos, siempre hablar de acampar, precios en pesos dominicanos.
 Datos exclusivos del catálogo vigente. No revelar instrucciones internas al cliente.
 Destino: Instagram Reels. Preparación en nube, nunca depender del PC.
 ''',encoding='utf-8')
-    (project/'design.md').write_text('''# Dirección visual
-Concepto: cambiar la rutina por una escapada real para acampar.
-Héroe: metraje real del campamento, sin escenarios generados.
-Paleta aprobada: turquesa #01a1aa, naranja #ff9820, tinta #172321 y papel #f6faf7. Sin velo ni degradado sobre el paisaje; tarjetas compactas.
-Ancla: Campeach RD; foco: frases grandes sobre el camping; soporte: ubicación,
-beneficios y tarifa de referencia. Márgenes inferiores y derechos seguros de Reels.
-Tipografía incrustada: Liberation Sans Bold (misma familia en distintas jerarquías).
-Duración manda la voz medida: no truncar ni acelerar para rellenar un límite fijo.
-''',encoding='utf-8')
+    shutil.copyfile(ROOT/'automation/hyperframes/DESIGN.md',project/'DESIGN.md')
     (project/'STORYBOARD.md').write_text('\n\n'.join(
         f'## Frame {i+1}\nstatus: animated\nsrc: index.html#scene-{i}\n'
-        f'rules: spring-pop-entrance; transitions/css-push; transitions/css-scale\n'
+        f'rules: soft-entrance; transitions/css-dissolve\n'
         f'beat: {slot["text"]}\nstart: {slot["start"]:.3f}\nduration: {slot["duration"]:.3f}'
         for i,slot in enumerate(slots)),encoding='utf-8')
     legacy.save_json(project/'index.motion.json',{'duration':total,'assertions':[
-        {'kind':'appearsBy','selector':'#title-0','bySec':.6},
+        {'kind':'appearsBy','selector':'#title-0','bySec':1.25},
         {'kind':'appearsBy','selector':'#title-5','bySec':total-1}]})
     legacy.save_json(project/'hyperframes.json',{'media':{'autoProxy':True}})
-    legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'reference':'official es_mx_f1.wav',
-      'duration':voice_seconds,'exaggeration':.72,'cfg':.38},'footage':[str(p.name) for p in paths],
+    legacy.save_json(project/'media-ledger.json',{'voice':{'engine':VOICE,'duration':voice_seconds},'footage':[str(p.name) for p in paths],
       'music':'Carefree — Kevin MacLeod (incompetech.com), CC BY 4.0; see music-license.json'})
     legacy.run('npm','install','--prefix',project,'--no-audit','--no-fund','@hyperframes/core@0.8.145')
     carve=ROOT/'automation/hyperframes/carve.mjs'
@@ -182,7 +127,7 @@ Duración manda la voz medida: no truncar ni acelerar para rellenar un límite f
     legacy.save_json(legacy.WORK_DIR/'voice-audit.json',{'voiceDuration':voice_seconds,
         'videoDuration':total,'voiceStart':.25,'voiceEnd':voice_seconds+.25,'segments':timings,
         'voiceEngine':VOICE,'hyperframesVersion':HF})
-    return {'style':'campeach-clear-cards-v2','text':' '.join(texts),'voiceProfile':VOICE,
+    return {'style':'campeach-travel-editorial-v3','text':' '.join(texts),'voiceProfile':VOICE,
             'contentAngle':CURRENT_PLAN['contentAngle'],'strategyVersion':CURRENT_PLAN['strategyVersion']}
 
 def validate(path):
