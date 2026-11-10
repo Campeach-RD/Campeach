@@ -49,6 +49,16 @@ class ReelRegressionTests(unittest.TestCase):
         self.assertIn('mar',story[0]);self.assertEqual(story[2],plan['segments'][2])
         camp['tags']=['Montaña']
         self.assertNotIn('mar',storytelling_segments(camp,plan)[0])
+    def test_commercial_access_blocks_free_and_api_errors(self):
+        from unittest.mock import patch, Mock
+        from reel_elevenlabs import check_commercial_access
+        with patch.dict('os.environ',{'ELEVENLABS_API_KEY':'test-key'}):
+            with patch('reel_elevenlabs.requests.get',return_value=Mock(status_code=200,json=lambda:{'tier':'free'})):
+                with self.assertRaisesRegex(RuntimeError,'Free'):check_commercial_access()
+            with patch('reel_elevenlabs.requests.get',return_value=Mock(status_code=401)):
+                with self.assertRaisesRegex(RuntimeError,'401'):check_commercial_access()
+            with patch('reel_elevenlabs.requests.get',return_value=Mock(status_code=200,json=lambda:{'tier':'starter'})):
+                self.assertEqual(check_commercial_access(),'test-key')
     def test_alignment_preserves_accents_and_segment_boundaries(self):
         texts=['¿Vamos a Samaná?','Comenta INFO.']; chars=list(' '.join(texts))
         alignment={'characters':chars,'character_start_times_seconds':[i*.1 for i in range(len(chars))],

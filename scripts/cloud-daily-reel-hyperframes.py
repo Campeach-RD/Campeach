@@ -36,12 +36,13 @@ def voice_script(camp, project):
     segments_file=project/'segments.json'; voice=project/'assets/voice.wav'
     if VOICE == 'elevenlabs-spanish-storytelling':
         from reel_elevenlabs import generate_voice
-        texts=segments(camp)
-        timings=generate_voice(texts,voice)
-        seconds=legacy.duration(voice)
-        if seconds > 43:
-            raise RuntimeError('ElevenLabs narration exceeds 43 seconds; review the script')
-        return texts,timings,seconds
+        for compact in (False,True):
+            texts=segments(camp,compact)
+            timings=generate_voice(texts,voice)
+            seconds=legacy.duration(voice)
+            if seconds <= 43:
+                return texts,timings,seconds
+        raise RuntimeError('ElevenLabs narration exceeds 43 seconds; review the script')
     for compact in (False,True):
         texts=segments(camp,compact)
         legacy.save_json(segments_file,texts)
