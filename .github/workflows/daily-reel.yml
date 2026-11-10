@@ -61,7 +61,7 @@ jobs:
           python -m pip install -r automation/requirements.txt
       - name: Comprobar texto y alineación
         run: python -m unittest discover -s scripts -p test_reel_composition.py
-      - name: Comprobar acceso comercial a la narración
+      - name: Comprobar acceso a la narración informativa
         run: python scripts/reel_elevenlabs.py --preflight
       - name: Producir y validar Reel
         env:
