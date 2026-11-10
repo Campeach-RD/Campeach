@@ -1,3 +1,4 @@
+import { instagramGraphOrigin } from './instagram-api';
 import { classificationCatalog, createReply, type Selection } from './reply';
 import { COMMENT_PRIVATE_REPLY, requestsInformation } from './comments';
 import { publishDailyCarousel, publishReel, serveDriveImage, verifyMediaSignature } from './instagram-publisher';
@@ -90,7 +91,7 @@ const stableHash = async (value: string) => {
 };
 
 const sendInstagramMessage = async (recipientId: string, text: string, env: Env) => {
-  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${env.INSTAGRAM_ACCOUNT_ID}/messages`, {
+  const response = await fetch(`${instagramGraphOrigin(env)}/${env.META_GRAPH_API_VERSION}/${env.INSTAGRAM_ACCOUNT_ID}/messages`, {
     method: 'POST',
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
     body: JSON.stringify({ recipient: { id: recipientId }, message: { text } }),
@@ -99,7 +100,7 @@ const sendInstagramMessage = async (recipientId: string, text: string, env: Env)
 };
 
 const sendInstagramPrivateReply = async (commentId: string, text: string, env: Env) => {
-  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${env.INSTAGRAM_ACCOUNT_ID}/messages`, {
+  const response = await fetch(`${instagramGraphOrigin(env)}/${env.META_GRAPH_API_VERSION}/${env.INSTAGRAM_ACCOUNT_ID}/messages`, {
     method: 'POST',
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
     body: JSON.stringify({ recipient: { comment_id: commentId }, message: { text } }),
@@ -115,7 +116,7 @@ const sendInstagramCommentReply = async (
   env: Env,
   message = '¡Hola! 👋 Te enviamos la información por mensaje privado.',
 ) => {
-  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${commentId}/replies`, {
+  const response = await fetch(`${instagramGraphOrigin(env)}/${env.META_GRAPH_API_VERSION}/${commentId}/replies`, {
     method: 'POST',
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}`, 'content-type': 'application/json' },
     body: JSON.stringify({ message }),
@@ -127,7 +128,7 @@ const sendInstagramCommentReply = async (
 };
 
 const instagramGet = async <T>(path: string, env: Env) => {
-  const response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${path}`, {
+  const response = await fetch(`${instagramGraphOrigin(env)}/${env.META_GRAPH_API_VERSION}/${path}`, {
     headers: { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
   });
   if (!response.ok) {

@@ -1,4 +1,5 @@
 import { fetchDriveImage, listDriveImages } from './google-drive';
+import { instagramGraphOrigin } from './instagram-api';
 import { CAMP_PHOTO_FOLDERS, chooseDailyCamp, choosePhotos, createCaption, normalizeCampId, publishableCamps } from './publishing';
 
 const graphRequest = async <T>(path: string, env: Env, method = 'GET', body?: Record<string, unknown>) => {
@@ -12,7 +13,7 @@ const graphRequest = async <T>(path: string, env: Env, method = 'GET', body?: Re
   let response: Response | undefined;
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
-      response = await fetch(`https://graph.instagram.com/${env.META_GRAPH_API_VERSION}/${path}`, {
+      response = await fetch(`${instagramGraphOrigin(env)}/${env.META_GRAPH_API_VERSION}/${path}`, {
         method,
         headers: formBody ? undefined : { authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
         body: formBody,

@@ -1,5 +1,6 @@
 // Remote-only secrets are not visible to `wrangler types`; this augments the generated binding.
 interface Env {
+  INSTAGRAM_AUTH_MODE?: 'instagram' | 'facebook';
   WHATSAPP_DB: D1Database;
   GOOGLE_SERVICE_ACCOUNT_JSON: string;
   ADMIN_API_TOKEN: string;

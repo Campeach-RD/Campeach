@@ -33,3 +33,9 @@ Desde otra cuenta de Instagram, envía estos mensajes y comprueba el resultado:
 - `Busco un campamento con río` → selección del catálogo o enlace general seguro.
 
 El bot ignora eventos enviados por sí mismo, valida la firma de Meta y solo publica precios e información que ya existen en el catálogo local. Si OpenAI no está disponible o una consulta no coincide claramente, dirige al catálogo general.
+
+## Autenticación de producción
+
+El publicador usa `INSTAGRAM_AUTH_MODE=facebook` con un token de usuario del sistema autorizado para Campeach. Las llamadas se envían a `graph.facebook.com`. El secreto `INSTAGRAM_ACCESS_TOKEN` debe corresponder a ese flujo, con `instagram_basic`, `instagram_content_publish`, `instagram_manage_comments` e `instagram_manage_messages` según las funciones utilizadas. No mezclar este token con la API de Instagram Login. Para ese flujo alternativo, configurar `INSTAGRAM_AUTH_MODE=instagram` y sus permisos `instagram_business_*`.
+
+La validación de cuenta y cuota de publicación se realiza sin publicar contenido.
