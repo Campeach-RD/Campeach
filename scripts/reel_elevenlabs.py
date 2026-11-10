@@ -1,4 +1,4 @@
-"""Paid ElevenLabs narration with character alignment and credential-free cache."""
+"""ElevenLabs narration with character alignment and credential-free cache."""
 import base64
 import hashlib
 import json
@@ -28,7 +28,7 @@ def aligned_segments(texts, alignment):
     return result
 
 
-def check_commercial_access():
+def check_voice_access():
     key = os.environ.get('ELEVENLABS_API_KEY')
     if not key:
         raise RuntimeError('Configure ELEVENLABS_API_KEY; publication stopped')
@@ -36,13 +36,21 @@ def check_commercial_access():
                             headers={'xi-api-key':key},timeout=30)
     if response.status_code != 200:
         raise RuntimeError(f'Cannot verify ElevenLabs account: HTTP {response.status_code}')
-    if response.json().get('tier') in (None, 'free'):
-        raise RuntimeError('ElevenLabs Free has no commercial voiceover license. Activate a compatible plan before publishing Campeach promotions.')
     return key
 
 
+def add_attribution(caption):
+    first, separator, rest = caption.partition('\n')
+    if 'elevenlabs.io' not in first:
+        first += ' · Narración: elevenlabs.io'
+    result = first + separator + rest
+    if len(result) > 2200:
+        raise ValueError('Instagram caption exceeds its limit after attribution')
+    return result
+
+
 def generate_voice(texts, output):
-    key = check_commercial_access()
+    key = check_voice_access()
     voice = os.environ.get('ELEVENLABS_VOICE_ID', DEFAULT_VOICE)
     payload = {'text': ' '.join(texts), 'model_id': 'eleven_multilingual_v2', 'language_code': 'es',
                'voice_settings': {'stability': .43, 'similarity_boost': .75,
@@ -79,5 +87,5 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--preflight',action='store_true',required=True)
     parser.parse_args()
-    check_commercial_access()
+    check_voice_access()
     print('ElevenLabs narration access verified')
