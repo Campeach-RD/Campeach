@@ -1,0 +1,66 @@
+"""Paid ElevenLabs narration with character alignment and credential-free cache."""
+import base64
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import requests
+
+DEFAULT_VOICE = 'RkTY0BBMA1oYqRLj7BnR'  # Ramses: Dominican Spanish, voice library.
+
+
+def aligned_segments(texts, alignment):
+    chars = alignment['characters']
+    starts = alignment['character_start_times_seconds']
+    ends = alignment['character_end_times_seconds']
+    full_text = ' '.join(texts)
+    if ''.join(chars) != full_text or len(chars) != len(starts) or len(chars) != len(ends):
+        raise RuntimeError('Voice alignment does not match the complete script')
+    result, cursor = [], 0
+    for text in texts:
+        if not text:
+            raise ValueError('Narration segments cannot be empty')
+        end = cursor + len(text)
+        result.append({'text': text, 'start': starts[cursor], 'end': ends[end-1],
+                       'duration': ends[end-1] - starts[cursor]})
+        cursor = end + 1
+    return result
+
+
+def generate_voice(texts, output):
+    key = os.environ.get('ELEVENLABS_API_KEY')
+    if not key:
+        raise RuntimeError('Set ELEVENLABS_API_KEY for Dominican narration; no alternate voice will be substituted')
+    voice = os.environ.get('ELEVENLABS_VOICE_ID', DEFAULT_VOICE)
+    payload = {'text': ' '.join(texts), 'model_id': 'eleven_multilingual_v2',
+               'voice_settings': {'stability': .45, 'similarity_boost': .8,
+                                  'style': .15, 'use_speaker_boost': True}}
+    digest = hashlib.sha256(json.dumps([voice,payload], sort_keys=True).encode()).hexdigest()
+    cache = Path(os.environ.get('CAMPEACH_VOICE_CACHE', '/tmp/campeach-voice')) / 'elevenlabs'
+    cache.mkdir(parents=True, exist_ok=True)
+    cached = cache / (digest + '.json')
+    if cached.exists():
+        data = json.loads(cached.read_text())
+    else:
+        headers = {'xi-api-key': key}
+        subscription = requests.get('https://api.elevenlabs.io/v1/user/subscription', headers=headers, timeout=30)
+        if subscription.status_code == 200 and subscription.json().get('tier') == 'free':
+            raise RuntimeError('ElevenLabs Free cannot supply a commercial Campeach voiceover. Activate a plan with commercial/API voice-library access first.')
+        response = requests.post(f'https://api.elevenlabs.io/v1/text-to-speech/{voice}/with-timestamps',
+                                 params={'output_format':'mp3_44100_128'}, headers=headers,
+                                 json=payload, timeout=120)
+        if response.status_code != 200:
+            # Do not log provider response bodies or request headers containing credentials.
+            raise RuntimeError(f'ElevenLabs HTTP {response.status_code}; check voice access, credits and plan. Publication stopped.')
+        data = response.json()
+        aligned_segments(texts, data['alignment'])
+        cached.write_text(json.dumps(data))
+    timings = aligned_segments(texts, data['alignment'])
+    output = Path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    mp3 = output.with_suffix('.mp3')
+    mp3.write_bytes(base64.b64decode(data['audio_base64'], validate=True))
+    subprocess.run(['ffmpeg','-y','-loglevel','error','-i',str(mp3),'-ar','48000','-ac','1',str(output)], check=True)
+    output.with_suffix('.json').write_text(json.dumps(timings, ensure_ascii=False))
+    return timings
