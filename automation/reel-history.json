@@ -2053,5 +2053,32 @@
     "videoUrl": "https://raw.githubusercontent.com/Campeach-RD/Campeach/main/public/reels/2026-11-10-el-valle.mp4",
     "instagramMediaId": "18097298315673771",
     "publishedAt": "2026-11-10T18:54:30.452342+00:00"
+  },
+  {
+    "date": "2026-11-10T20:49:02+0000",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "15kPYibD0c_vjnaxUshu6gmtsKf5Bt_6p",
+      "1u0-zk0tdH8l7M9UpVBZZ9A0-gtEzK01G",
+      "1EqhcmYXJlhUK5mHHBrfpv-j7Aa4t1Emq"
+    ],
+    "fileNames": [
+      "IMG_7430.MOV",
+      "IMG_7431.MOV",
+      "20241228_121330.mp4"
+    ],
+    "duration": 32,
+    "voiceoverStyle": "campeach-travel-editorial-v3",
+    "contentAngle": "access",
+    "strategyVersion": "2026-11-10-storytelling",
+    "voiceProfile": "elevenlabs-spanish-storytelling",
+    "caption": "🏕️ Playa El Valle, Samaná · Narración: elevenlabs.io\n\nUn recorrido visual por este campamento frente al mar.\n\n• Tarifa de referencia: desde RD$700 por noche.\n• Los equipos de camping no están incluidos.\n• No requiere vehículo 4x4; confirma las condiciones del camino antes de salir.\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO para recibir la ficha informativa por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-11-10:editorial-v3",
+    "instagramMediaId": "18332542579263419",
+    "permalink": "https://www.instagram.com/reel/DfkzL0UDeEk/",
+    "uploadMethod": "meta-resumable",
+    "libraryFileId": "libfile_576bbb813dec8191991b1cff4011eae6"
   }
 ]
