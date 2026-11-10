@@ -34,7 +34,7 @@ jobs:
       CAMPEACH_VOICE_CACHE: /home/runner/.cache/campeach-voice
       CAMPEACH_VOICE_ENGINE: elevenlabs
       ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-      ELEVENLABS_VOICE_ID: RkTY0BBMA1oYqRLj7BnR
+      ELEVENLABS_VOICE_ID: FGY2WhTYpPnrIDTdsKH5
     steps:
       - uses: actions/checkout@v6
         with:
@@ -53,7 +53,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: /home/runner/.cache/campeach-voice
-          key: campeach-elevenlabs-dominican-v1
+          key: campeach-elevenlabs-spanish-story-v2
       - name: Instalar herramientas
         run: |
           sudo apt-get update

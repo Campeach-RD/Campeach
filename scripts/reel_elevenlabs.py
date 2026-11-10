@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import requests
 
-DEFAULT_VOICE = 'RkTY0BBMA1oYqRLj7BnR'  # Ramses: Dominican Spanish, voice library.
+DEFAULT_VOICE = 'FGY2WhTYpPnrIDTdsKH5'  # Laura, standard multilingual voice; narration requested in Spanish.
 
 
 def aligned_segments(texts, alignment):
@@ -31,11 +31,11 @@ def aligned_segments(texts, alignment):
 def generate_voice(texts, output):
     key = os.environ.get('ELEVENLABS_API_KEY')
     if not key:
-        raise RuntimeError('Set ELEVENLABS_API_KEY for Dominican narration; no alternate voice will be substituted')
+        raise RuntimeError('Set ELEVENLABS_API_KEY for Spanish storytelling narration; no alternate voice will be substituted')
     voice = os.environ.get('ELEVENLABS_VOICE_ID', DEFAULT_VOICE)
-    payload = {'text': ' '.join(texts), 'model_id': 'eleven_multilingual_v2',
-               'voice_settings': {'stability': .45, 'similarity_boost': .8,
-                                  'style': .15, 'use_speaker_boost': True}}
+    payload = {'text': ' '.join(texts), 'model_id': 'eleven_multilingual_v2', 'language_code': 'es',
+               'voice_settings': {'stability': .43, 'similarity_boost': .75,
+                                  'style': .25, 'use_speaker_boost': True, 'speed': 1.04}}
     digest = hashlib.sha256(json.dumps([voice,payload], sort_keys=True).encode()).hexdigest()
     cache = Path(os.environ.get('CAMPEACH_VOICE_CACHE', '/tmp/campeach-voice')) / 'elevenlabs'
     cache.mkdir(parents=True, exist_ok=True)
@@ -46,7 +46,7 @@ def generate_voice(texts, output):
         headers = {'xi-api-key': key}
         subscription = requests.get('https://api.elevenlabs.io/v1/user/subscription', headers=headers, timeout=30)
         if subscription.status_code == 200 and subscription.json().get('tier') == 'free':
-            raise RuntimeError('ElevenLabs Free cannot supply a commercial Campeach voiceover. Activate a plan with commercial/API voice-library access first.')
+            raise RuntimeError('ElevenLabs Free cannot supply a commercial Campeach voiceover. Activate a plan with commercial/API access first.')
         response = requests.post(f'https://api.elevenlabs.io/v1/text-to-speech/{voice}/with-timestamps',
                                  params={'output_format':'mp3_44100_128'}, headers=headers,
                                  json=payload, timeout=120)

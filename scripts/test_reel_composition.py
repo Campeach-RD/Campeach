@@ -31,6 +31,24 @@ class ReelRegressionTests(unittest.TestCase):
     def test_unknown_price_format_keeps_all_conditions(self):
         original='Cotizar según grupo; sin equipos'
         self.assertEqual(display_copy([original,'Confirmar'],2)[1:],(original,'Confirmar'))
+    def test_only_narration_is_audible_when_music_disabled(self):
+        class Media(HTMLParser):
+            def __init__(self): super().__init__(); self.videos=[]; self.audio=[]
+            def handle_starttag(self,tag,attrs):
+                if tag=='video': self.videos.append(dict(attrs))
+                if tag=='audio': self.audio.append(dict(attrs))
+        parser=Media();parser.feed(build_composition([['Hola mundo','El Valle']],[{'start':0}],32,1,28,False))
+        self.assertTrue(parser.videos)
+        self.assertTrue(all('muted' in v for v in parser.videos))
+        self.assertEqual([a['src'] for a in parser.audio],['assets/voice.wav'])
+    def test_story_only_uses_beach_opening_for_confirmed_beach(self):
+        from reel_storytelling import storytelling_segments
+        camp={'name':'El Valle','location':'Samaná','tags':['Playa']}
+        plan={'segments':['hook','fact','Desde RD$700, sin equipos','second','confirm','cta']}
+        story=storytelling_segments(camp,plan)
+        self.assertIn('mar',story[0]);self.assertEqual(story[2],plan['segments'][2])
+        camp['tags']=['Montaña']
+        self.assertNotIn('mar',storytelling_segments(camp,plan)[0])
     def test_alignment_preserves_accents_and_segment_boundaries(self):
         texts=['¿Vamos a Samaná?','Comenta INFO.']; chars=list(' '.join(texts))
         alignment={'characters':chars,'character_start_times_seconds':[i*.1 for i in range(len(chars))],

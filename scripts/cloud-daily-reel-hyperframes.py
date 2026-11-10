@@ -15,25 +15,26 @@ from pathlib import Path
 import requests
 from content_strategy import content_plan
 from reel_composition import build_composition, FONT_URLS
+from reel_storytelling import storytelling_segments
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('camp_legacy',ROOT/'scripts/cloud-daily-reel.py')
 legacy=importlib.util.module_from_spec(spec);spec.loader.exec_module(legacy)
 HF='0.8.145'
-VOICE='elevenlabs-dominican' if os.environ.get('CAMPEACH_VOICE_ENGINE') == 'elevenlabs' else 'chatterbox-es-mx-latam-es_mx_f1'
+VOICE='elevenlabs-spanish-storytelling' if os.environ.get('CAMPEACH_VOICE_ENGINE') == 'elevenlabs' else 'chatterbox-es-mx-latam-es_mx_f1'
 
 CURRENT_PLAN = None
 
 def segments(camp, compact=False):
     plan = CURRENT_PLAN or content_plan(camp)
-    texts = list(plan['segments'])
+    texts = storytelling_segments(camp,plan,compact)
     if compact:
         texts[4] = 'Disponibilidad, condiciones y tarifa final por confirmar.'
     return [legacy.voice_friendly_text(text) for text in texts]
 
 def voice_script(camp, project):
     segments_file=project/'segments.json'; voice=project/'assets/voice.wav'
-    if VOICE == 'elevenlabs-dominican':
+    if VOICE == 'elevenlabs-spanish-storytelling':
         from reel_elevenlabs import generate_voice
         texts=segments(camp)
         timings=generate_voice(texts,voice)
