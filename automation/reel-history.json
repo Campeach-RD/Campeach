@@ -2080,5 +2080,34 @@
     "permalink": "https://www.instagram.com/reel/DfkzL0UDeEk/",
     "uploadMethod": "meta-resumable",
     "libraryFileId": "libfile_576bbb813dec8191991b1cff4011eae6"
+  },
+  {
+    "date": "2026-11-11T21:31:53.073387+00:00",
+    "campId": "santiago",
+    "campName": "Santiago",
+    "files": [
+      "1KgwRzYAwJVcjIu8e_F9Ig49EWOSKNayk",
+      "126se2F5jXL45xRiNV28GZPfmXtNHbkeq",
+      "1JLpwb7Sqr4qqTw4ZFzxQuJAsqpXe-3kd",
+      "18l2gB-AyUc9ZN0OklaD-td_pGpd7k3Xh"
+    ],
+    "fileNames": [
+      "2021-06-20 12.42.18.mp4",
+      "2021-06-20 14.43.41.mp4",
+      "2021-06-20 15.34.22.mp4",
+      "2021-06-20 13.35.24.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "campeach-travel-editorial-v3",
+    "contentAngle": "budget",
+    "strategyVersion": "2026-10-31-clear-cards",
+    "voiceProfile": "elevenlabs-spanish-storytelling",
+    "voiceoverText": "Imagínate dejar atrás la rutina y cambiar de ambiente por una noche. Tu próxima escapada puede ser en Santiago. La tarifa de referencia es Desde novecientos pesos dominicanos por noche. En Santiago: camping, glamping y habitaciones. También encontrarás: cuenta con comida/restaurante. Antes de salir, confirma la tarifa final, las condiciones y la disponibilidad. ¿Te ves aquí? Comenta INFO y te enviamos la ficha del campamento por mensaje directo.",
+    "output": "public/reels/2026-11-11-santiago.mp4",
+    "caption": "🏕️ Prepara tu camping en Santiago · Narración: elevenlabs.io\n📍 Santiago\n💰 Desde RD$900 por noche\n\n• Camping, glamping y habitaciones\n• Cuenta con comida/restaurante\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/18Ky7j5vm7RC1ngksrIkqOh_yqXM-2j6V/preview",
+    "idempotencyKey": "reel:2026-11-11",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-11-santiago.mp4?rev=7096eba",
+    "instagramMediaId": "18187218703441678"
   }
 ]
