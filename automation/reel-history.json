@@ -2167,5 +2167,34 @@
     "idempotencyKey": "reel:2026-11-13",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-13-el-valle.mp4?rev=ef62881",
     "instagramMediaId": "18150009319566521"
+  },
+  {
+    "date": "2026-11-14T19:24:58.943141+00:00",
+    "campId": "villa-altagracia",
+    "campName": "Villa Altagracia",
+    "files": [
+      "1kI5Plt3FbztllT9R1E7lyNSwQHquwp5V",
+      "1dMJWMEzUjImkc6qQEJGglHcH966PWQ6x",
+      "16qxJ1xJjNyeNOhjFVVRS4oqplDkUgF3H",
+      "16NeOKQ3NP7Dx_-HSJ1Mrjlqiux3y57QI"
+    ],
+    "fileNames": [
+      "IMG_2688.mov",
+      "IMG_1521.MOV",
+      "IMG_1858.MOV",
+      "IMG_3212.MOV"
+    ],
+    "duration": 35.52,
+    "voiceoverStyle": "campeach-travel-editorial-v3",
+    "contentAngle": "access",
+    "strategyVersion": "2026-10-31-clear-cards",
+    "voiceProfile": "elevenlabs-spanish-storytelling",
+    "voiceoverText": "Imagínate dejar atrás la rutina y cambiar de ambiente por una noche. Tu próxima escapada puede ser en Villa Altagracia. En Los Arroyones, Villa Altagracia: no requiere vehiculo 4x4. La tarifa de referencia es Desde setecientos cincuenta pesos dominicanos por noche. También encontrarás: balneario con rio, cascada y piscina. Antes de salir, confirma la tarifa final, las condiciones y la disponibilidad. ¿Te ves aquí? Comenta INFO y te enviamos la ficha del campamento por mensaje directo.",
+    "output": "public/reels/2026-11-14-villa-altagracia.mp4",
+    "caption": "🏕️ El camino para acampar en Villa Altagracia\n📍 Los Arroyones, Villa Altagracia\n💰 Desde RD$750 por noche\n\n• No requiere vehiculo 4x4\n• Balneario con rio, cascada y piscina\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/19DeWI8XrFFfgr_AP7XK5iQVoFi2gilOn/preview",
+    "idempotencyKey": "reel:2026-11-14",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-14-villa-altagracia.mp4?rev=6275ed9",
+    "instagramMediaId": "18098080799259115"
   }
 ]
