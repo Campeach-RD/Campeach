@@ -146,9 +146,6 @@ def validate(path):
 
 def caption(camp):
     text = (CURRENT_PLAN or content_plan(camp))['caption']
-    if VOICE == 'elevenlabs-spanish-storytelling':
-        from reel_elevenlabs import add_attribution
-        text = add_attribution(text)
     return text + '\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.'
 
 if __name__=='__main__':

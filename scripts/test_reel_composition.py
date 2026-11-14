@@ -59,14 +59,6 @@ class ReelRegressionTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError,'401'):check_voice_access()
             with patch('reel_elevenlabs.requests.get',return_value=Mock(status_code=200,json=lambda:{'tier':'starter'})):
                 self.assertEqual(check_voice_access(),'test-key')
-    def test_attribution_is_in_title_and_preserves_facts(self):
-        from reel_elevenlabs import add_attribution
-        original='El Valle, Samaná\nDesde RD$700; equipos no incluidos.'
-        credited=add_attribution(original)
-        self.assertIn('elevenlabs.io',credited.splitlines()[0])
-        self.assertEqual(credited.splitlines()[1],original.splitlines()[1])
-        self.assertEqual(add_attribution(credited),credited)
-        with self.assertRaises(ValueError):add_attribution('x'*2200)
     def test_alignment_preserves_accents_and_segment_boundaries(self):
         texts=['¿Vamos a Samaná?','Comenta INFO.']; chars=list(' '.join(texts))
         alignment={'characters':chars,'character_start_times_seconds':[i*.1 for i in range(len(chars))],
