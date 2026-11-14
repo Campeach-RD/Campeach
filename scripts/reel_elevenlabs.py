@@ -39,15 +39,6 @@ def check_voice_access():
     return key
 
 
-def add_attribution(caption):
-    first, separator, rest = caption.partition('\n')
-    if 'elevenlabs.io' not in first:
-        first += ' · Narración: elevenlabs.io'
-    result = first + separator + rest
-    if len(result) > 2200:
-        raise ValueError('Instagram caption exceeds its limit after attribution')
-    return result
-
 
 def generate_voice(texts, output):
     key = check_voice_access()
