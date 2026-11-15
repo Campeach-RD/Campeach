@@ -2196,5 +2196,34 @@
     "idempotencyKey": "reel:2026-11-14",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-14-villa-altagracia.mp4?rev=6275ed9",
     "instagramMediaId": "18098080799259115"
+  },
+  {
+    "date": "2026-11-15T19:57:48.838966+00:00",
+    "campId": "monsenor",
+    "campName": "Monseñor",
+    "files": [
+      "1SVULb-jZ00j7rA7wxY_-QyXYYQi8gejh",
+      "1QJBx82t3Ll-mDjJI16416LHkQ18YvcEB",
+      "1UHfZ6qpj4oWOakLIjjaRF9Mc2QHD_WjB",
+      "1SCyR09R70_jBgQNdSKFdr8_2Eux4IDX9"
+    ],
+    "fileNames": [
+      "20250316_095856.mp4",
+      "20250316_093213.mp4",
+      "20250316_091705.mp4",
+      "20250316_093413.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "campeach-travel-editorial-v3",
+    "contentAngle": "budget",
+    "strategyVersion": "2026-10-31-clear-cards",
+    "voiceProfile": "elevenlabs-spanish-storytelling",
+    "voiceoverText": "Imagínate dejar atrás la rutina y cambiar de ambiente por una noche. Tu próxima escapada puede ser en Monseñor. La tarifa de referencia es Desde mil pesos dominicanos por noche. En Cañabón, Bonao: camping en bosque. También encontrarás: balneario tipo presa. Antes de salir, confirma la tarifa final, las condiciones y la disponibilidad. ¿Te ves aquí? Comenta INFO y te enviamos la ficha del campamento por mensaje directo.",
+    "output": "public/reels/2026-11-15-monsenor.mp4",
+    "caption": "🏕️ Acampar en Monseñor: haz tu plan\n📍 Cañabón, Bonao\n💰 Desde RD$1,000 por noche\n\n• Camping en bosque\n• Balneario tipo presa\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/1chaVkGfTeZxd7UMigCdEQcPEWixvJNG-/preview",
+    "idempotencyKey": "reel:2026-11-15",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-15-monsenor.mp4?rev=c4ed694",
+    "instagramMediaId": "18005081754001694"
   }
 ]
