@@ -2254,5 +2254,34 @@
     "idempotencyKey": "reel:2026-11-16",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-16-ocoa.mp4?rev=c4eebb9",
     "instagramMediaId": "18139015696561237"
+  },
+  {
+    "date": "2026-11-17T22:25:08.977011+00:00",
+    "campId": "el-valle",
+    "campName": "El Valle, Samana",
+    "files": [
+      "1vj54z6p94JKEFxuqsrl7o6X0gYmZcvtq",
+      "1FSynry5eWBSEL0rL-z_r8OA_J-Tx-jj2",
+      "1J_np_nE-cL_o55jZmkdMad5v0_JruuwA",
+      "1Ko01-rVQt9DfKe2Vi5FsPGpPFd4NThdU"
+    ],
+    "fileNames": [
+      "IMG_7375.mov",
+      "20241228_092024.mp4",
+      "20241228_090459.mp4",
+      "20241228_084822.mp4"
+    ],
+    "duration": 35.648,
+    "voiceoverStyle": "campeach-travel-editorial-v3",
+    "contentAngle": "checklist",
+    "strategyVersion": "2026-10-31-clear-cards",
+    "voiceProfile": "elevenlabs-spanish-storytelling",
+    "voiceoverText": "Imagínate cambiar el ruido de la ciudad por una noche cerca del mar. Tu próxima escapada puede ser en El Valle, Samana. En El Valle, Samana, ten presente: cuenta con comida/restaurante. La tarifa de referencia es Desde setecientos pesos dominicanos por noche; camping no incluye equipos. También encontrarás: cuenta con comida/restaurante. Antes de salir, confirma la tarifa final, las condiciones y la disponibilidad. ¿Te ves aquí? Comenta INFO y te enviamos la ficha del campamento por mensaje directo.",
+    "output": "public/reels/2026-11-17-el-valle.mp4",
+    "caption": "🏕️ Antes de acampar en El Valle, Samana\n📍 El Valle, Samana\n💰 Desde RD$700 por noche; camping no incluye equipos\n\n• Camping de playa\n• Cuenta con comida/restaurante\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/1yVMFT4FCLcD2FF5Jlg0xHBs5IL5QjvHR/preview",
+    "idempotencyKey": "reel:2026-11-17",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-17-el-valle.mp4?rev=4f0555b",
+    "instagramMediaId": "17916901701493249"
   }
 ]
