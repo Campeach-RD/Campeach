@@ -2428,5 +2428,34 @@
     "idempotencyKey": "reel:2026-11-22",
     "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-22-el-valle.mp4?rev=9d73fc9",
     "instagramMediaId": "17959367499271030"
+  },
+  {
+    "date": "2026-11-25T23:17:10.167338+00:00",
+    "campId": "ocoa",
+    "campName": "Ocoa",
+    "files": [
+      "1Po8_T78YzmuVxYjbU7Li793ophxC-gbf",
+      "1M26dGkPOYn3plvPC68wqAoAbh8L5ZICu",
+      "108THuXfl3GZLQZcwONCHCLOMNhcc6a6H",
+      "1Q3xXx0MIDap4j-9eMetQhQumLPsVv09f"
+    ],
+    "fileNames": [
+      "20240331_095543.mp4",
+      "20250119_135026.mp4",
+      "IMG_0535.MOV",
+      "20250119_123816.mp4"
+    ],
+    "duration": 32.0,
+    "voiceoverStyle": "campeach-travel-editorial-v3",
+    "contentAngle": "budget",
+    "strategyVersion": "2026-10-31-clear-cards",
+    "voiceProfile": "elevenlabs-spanish-storytelling",
+    "voiceoverText": "Imagínate dejar atrás la rutina y cambiar de ambiente por una noche. Tu próxima escapada puede ser en Ocoa. La tarifa de referencia es Desde ochocientos pesos dominicanos por noche. En Rancho Arriba, San Jose de Ocoa: camping en montaña. También encontrarás: balneario con rio y cascada. Antes de salir, confirma la tarifa final, las condiciones y la disponibilidad. ¿Te ves aquí? Comenta INFO y te enviamos la ficha del campamento por mensaje directo.",
+    "output": "public/reels/2026-11-25-ocoa.mp4",
+    "caption": "🏕️ Prepara tu camping en Ocoa\n📍 Rancho Arriba, San Jose de Ocoa\n💰 Desde RD$800 por noche\n\n• Camping en montaña\n• Balneario con rio y cascada\n\nTarifa final, condiciones y disponibilidad por confirmar.\nComenta INFO y te enviamos la ficha de este campamento por DM.\n\n#CampeachRD #CampingRD #RepublicaDominicana\n\nMúsica: Carefree — Kevin MacLeod (incompetech.com). CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Fragmento mezclado bajo narración.",
+    "pdfUrl": "https://drive.google.com/file/d/1rDd2S1WGlxMxShxhtFfUvlVcPwczbE0q/preview",
+    "idempotencyKey": "reel:2026-11-25",
+    "videoUrl": "https://campeach-rd.github.io/Campeach/reels/2026-11-25-ocoa.mp4?rev=9068c5f",
+    "instagramMediaId": "18500746918100925"
   }
 ]
